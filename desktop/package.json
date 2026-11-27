@@ -1,0 +1,72 @@
+{
+  "name": "calendar-rpg",
+  "productName": "Calendar RPG",
+  "version": "0.2.0",
+  "description": "일정·일일임무를 RPG처럼 — 작업표시줄 위에서 싸우는 도트 용사 캘린더 위젯",
+  "author": "Calendar RPG",
+  "type": "module",
+  "main": "src/main/main.js",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "test": "node --test \"test/**/*.test.js\"",
+    "icons": "node scripts/make-icons.mjs",
+    "dist": "electron-builder --win nsis portable --publish never",
+    "dist:dir": "electron-builder --win dir --publish never"
+  },
+  "devDependencies": {
+    "electron": "45.5.0",
+    "electron-builder": "26.18.0"
+  },
+  "build": {
+    "appId": "com.calendarrpg.app",
+    "productName": "Calendar RPG",
+    "executableName": "CalendarRPG",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "package.json",
+      "src/**/*",
+      "assets/**/*",
+      "!src/renderer/preview.html"
+    ],
+    "asar": true,
+    "asarUnpack": [
+      "assets/icons/**"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Calendar RPG",
+      "runAfterFinish": true,
+      "artifactName": "CalendarRPG-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "CalendarRPG-Portable-${version}.${ext}"
+    }
+  }
+}

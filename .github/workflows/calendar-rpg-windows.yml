@@ -1,0 +1,98 @@
+# Calendar RPG Windows 설치 파일 빌드 (desktop/ 폴더가 바뀔 때, 또는 Actions 탭에서 수동 실행)
+# Calendar-RPG 브랜치에 푸시하면 Releases 에 바로 받을 수 있는 다운로드 링크도 올린다.
+name: Calendar RPG Windows build
+
+on:
+  push:
+    paths:
+      - 'desktop/**'
+      - '.github/workflows/calendar-rpg-windows.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write # Releases 업로드용
+
+concurrency:
+  group: calendar-rpg-windows-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: desktop
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build installer + portable exe
+        run: npx electron-builder --win nsis portable --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+      - name: Upload installers
+        uses: actions/upload-artifact@v4
+        with:
+          name: CalendarRPG-Windows
+          path: |
+            desktop/dist/CalendarRPG-Setup-*.exe
+            desktop/dist/CalendarRPG-Portable-*.exe
+          if-no-files-found: error
+
+      - name: Publish download links (Calendar-RPG branch only)
+        if: github.ref == 'refs/heads/Calendar-RPG'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ver = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          $tag = "calendar-rpg-v$ver"
+          $files = @(Get-ChildItem dist -Filter 'CalendarRPG-*.exe' | ForEach-Object { $_.FullName })
+          if ($files.Count -lt 2) { throw "installers not found" }
+          $notes = @"
+          Calendar RPG Windows 위젯 $ver
+
+          - CalendarRPG-Setup-$ver.exe : 설치판 (Windows 알림, 시작 메뉴, Windows 시작 시 실행)
+          - CalendarRPG-Portable-$ver.exe : 설치 없이 바로 실행
+
+          이전 이름(QuestBar) 판을 쓰던 경우: 데이터는 처음 실행할 때 자동으로 옮겨집니다. 예전 QuestBar는 제거해 주세요.
+
+          코드 서명이 없어 처음 실행할 때 'Windows의 PC 보호' 창이 뜨면 [추가 정보] → [실행]을 누르세요.
+          "@
+          # 같은 버전으로 다시 빌드하면 기존 릴리스를 지우고 새 파일로 올린다 (다운로드 주소는 그대로)
+          try { gh release delete $tag --yes --cleanup-tag 2>$null } catch { }
+          $global:LASTEXITCODE = 0
+          gh release create $tag @files --target $env:GITHUB_SHA --title "Calendar RPG $ver" --notes $notes --prerelease
+          if ($LASTEXITCODE -ne 0) { throw "release create failed" }
+
+      # 실제 Windows에서 두 창을 띄워 보상 처리·화면 캡처까지 확인 (실패해도 설치 파일은 위에서 이미 올라감)
+      - name: Smoke test on Windows
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $out = Join-Path $PWD 'smoke'
+          $p = Start-Process -FilePath 'dist\win-unpacked\CalendarRPG.exe' -ArgumentList '--smoke-test', "--smoke-out=$out" -PassThru
+          if (-not $p.WaitForExit(120000)) { $p.Kill(); throw 'smoke test timed out' }
+          Get-Content (Join-Path $out 'smoke-result.json')
+          if ($p.ExitCode -ne 0) { throw "smoke test failed: $($p.ExitCode)" }
+
+      - name: Upload smoke screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: CalendarRPG-smoke
+          path: desktop/smoke/
+          if-no-files-found: ignore
