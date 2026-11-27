@@ -65,6 +65,16 @@
                 android:resource="@xml/wallpaper" />
         </service>
 
+        <!-- 화면 위 용사 (다른 앱 위에 표시) -->
+        <service
+            android:name=".HeroOverlayService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Shows the user's game character walking at the bottom of the screen over other apps (desktop pet)" />
+        </service>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -79,6 +89,9 @@
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-feature android:name="android.software.live_wallpaper" android:required="false" />
     <uses-feature android:name="android.software.app_widgets" android:required="false" />
 </manifest>

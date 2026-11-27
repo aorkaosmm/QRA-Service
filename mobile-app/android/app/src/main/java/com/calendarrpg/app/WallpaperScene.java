@@ -13,7 +13,9 @@ import java.util.Iterator;
 import java.util.Random;
 
 /**
- * 라이브 배경화면 장면: 도트 밤하늘 + 땅 위에서 용사가 슬라임을 찾아가 싸운다.
+ * 용사가 슬라임을 찾아가 싸우는 장면.
+ * - 라이브 배경화면: 도트 밤하늘 + 땅 (overlay=false)
+ * - 화면 위 용사(다른 앱 위에 표시): 배경 없이 투명한 띠, 띠 바닥이 땅 (overlay=true)
  * 단위는 '도트'(art px). 화면 픽셀 = 도트 × S.
  */
 final class WallpaperScene {
@@ -21,6 +23,7 @@ final class WallpaperScene {
     private static final float GRAVITY = 520f;
 
     private final Context ctx;
+    private final boolean overlay;
     private final Random rnd = new Random();
     private final Paint paint = new Paint();
     private int width = 1;
@@ -66,7 +69,12 @@ final class WallpaperScene {
     private final ArrayList<Part> parts = new ArrayList<>();
 
     WallpaperScene(Context c) {
+        this(c, false);
+    }
+
+    WallpaperScene(Context c, boolean overlay) {
         ctx = c;
+        this.overlay = overlay;
         paint.setAntiAlias(false);
         paint.setFilterBitmap(false);
     }
@@ -74,10 +82,11 @@ final class WallpaperScene {
     void resize(int w, int h, float density) {
         width = Math.max(1, w);
         height = Math.max(1, h);
-        S = Math.max(3, Math.round(density * 2.6f));
+        S = Math.max(3, Math.round(density * (overlay ? 2.2f : 2.6f)));
         W = (int) Math.ceil(width / (float) S);
         H = (int) Math.ceil(height / (float) S);
-        ground = Math.round(H * 0.80f);
+        // 배경화면은 화면 80% 높이가 땅, 화면 위 용사는 띠 맨 아래가 땅
+        ground = overlay ? (float) Math.floor(height / (float) S) : Math.round(H * 0.80f);
         bg = null;
         int n = Math.max(30, W * H / 160);
         starX = new int[n];
@@ -117,6 +126,48 @@ final class WallpaperScene {
         dead = 0;
         sface = fromLeft ? 1 : -1;
         scolor = COLORS[rnd.nextInt(COLORS.length)];
+    }
+
+    /** 앱에서 임무를 끝냈을 때: 머리 위로 경험치·골드, 장비가 나오면 등급색 반짝임 */
+    void reward(int xp, int gold, String rarity) {
+        // 화면 위 용사는 띠가 낮아서 글자를 조금 아래에서 시작
+        float base = overlay ? 22 : 30;
+        float lift = 0;
+        if (xp > 0) { addText("+" + xp + " EXP", hx, base + lift, Color.parseColor("#7fe3ff"), 1); lift += 7; }
+        if (gold > 0) { addText("+" + gold + "G", hx, base + lift, Color.parseColor("#ffd447"), 1); lift += 7; }
+        if (rarity != null && !rarity.isEmpty() && !"null".equals(rarity)) {
+            int col = rarityColor(rarity);
+            addText("legendary".equals(rarity) ? "LEGENDARY!" : "epic".equals(rarity) ? "EPIC!" : "ITEM!", hx, base + lift, col, 2);
+            for (int i = 0; i < 18; i++) {
+                Part p = new Part();
+                p.x = hx + (rnd.nextFloat() - 0.5f) * 20;
+                p.y = 4 + rnd.nextFloat() * 10;
+                p.vx = (rnd.nextFloat() - 0.5f) * 40;
+                p.vy = 80 + rnd.nextFloat() * 80;
+                p.color = col;
+                parts.add(p);
+            }
+        }
+        if (hy == 0) hvy = 120;
+    }
+
+    private void addText(String s, float x, float y, int color, int size) {
+        Text t = new Text();
+        t.x = x;
+        t.y = y;
+        t.s = s;
+        t.color = color;
+        t.size = size;
+        texts.add(t);
+    }
+
+    private static int rarityColor(String r) {
+        switch (r) {
+            case "rare": return Color.parseColor("#4aa8ff");
+            case "epic": return Color.parseColor("#c07bff");
+            case "legendary": return Color.parseColor("#ffb52e");
+            default: return Color.parseColor("#d6dae2");
+        }
     }
 
     void tap(float px, float py) {
@@ -175,8 +226,8 @@ final class WallpaperScene {
         for (Iterator<Text> it = texts.iterator(); it.hasNext(); ) {
             Text t = it.next();
             t.t += dt;
-            t.y += 16 * dt;
-            if (t.t > 0.9f) it.remove();
+            t.y += (overlay ? 9 : 16) * dt;
+            if (t.t > (t.s.length() > 4 ? 1.6f : 0.9f)) it.remove();
         }
         for (Iterator<Part> it = parts.iterator(); it.hasNext(); ) {
             Part p = it.next();
@@ -234,20 +285,26 @@ final class WallpaperScene {
     }
 
     void draw(Canvas c) {
-        if (bg == null || bg.getWidth() != width || bg.getHeight() != height) bg = buildBackground();
-        c.drawBitmap(bg, 0, 0, null);
-        // 반짝이는 별
-        for (int i = 0; i < starX.length; i += 3) {
+        if (overlay) {
+            c.drawColor(Color.TRANSPARENT, android.graphics.PorterDuff.Mode.CLEAR);
+        } else {
+            if (bg == null || bg.getWidth() != width || bg.getHeight() != height) bg = buildBackground();
+            c.drawBitmap(bg, 0, 0, null);
+        }
+        // 반짝이는 별 (배경화면만)
+        for (int i = 0; !overlay && i < starX.length; i += 3) {
             float a = (float) (0.5 + 0.5 * Math.sin(time * 2.2 + i));
             paint.setColor(i % 2 == 0 ? Color.WHITE : Color.parseColor("#7fe3ff"));
             paint.setAlpha((int) (60 + 195 * a));
             c.drawRect(starX[i] * S, starY[i] * S, starX[i] * S + S, starY[i] * S + S, paint);
         }
         paint.setAlpha(255);
-        // 그림자
-        paint.setColor(Color.argb(70, 0, 0, 0));
-        c.drawRect((hx - 5) * S, ground * S - S, (hx + 5) * S, ground * S, paint);
-        if (dead == 0) c.drawRect((sx - 6) * S, ground * S - S, (sx + 6) * S, ground * S, paint);
+        // 그림자 (배경화면만)
+        if (!overlay) {
+            paint.setColor(Color.argb(70, 0, 0, 0));
+            c.drawRect((hx - 5) * S, ground * S - S, (hx + 5) * S, ground * S, paint);
+            if (dead == 0) c.drawRect((sx - 6) * S, ground * S - S, (sx + 6) * S, ground * S, paint);
+        }
         // 슬라임
         if (dead == 0) {
             String frame = flash > 0 ? "hurt" : sy > 0 ? "stretch" : "idle";
@@ -271,7 +328,8 @@ final class WallpaperScene {
         }
         paint.setAlpha(255);
         for (Text t : texts) {
-            int alpha = (int) (255 * Math.max(0, 1 - t.t / 0.9f));
+            float life = t.s.length() > 4 ? 1.6f : 0.9f;
+            int alpha = (int) (255 * Math.max(0, 1 - t.t / life));
             PixelArt.drawText(ctx, c, t.s, t.x * S, (ground - 8 - t.y) * S, t.color, Math.max(2, S / 2) * t.size, alpha);
         }
     }

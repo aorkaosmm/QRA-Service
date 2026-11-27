@@ -1,6 +1,7 @@
 package com.calendarrpg.app;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -21,7 +22,11 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.Shadows;
+import org.robolectric.android.controller.ServiceController;
+import org.robolectric.shadows.ShadowSettings;
 import org.robolectric.annotation.Config;
 import org.robolectric.annotation.GraphicsMode;
 
@@ -129,5 +134,58 @@ public class NativeTest {
         assertEquals(View.VISIBLE, v.findViewById(R.id.wq_empty).getVisibility());
         View h = HeroWidgetProvider.build(ctx, 1).apply(ctx, parent);
         assertNotNull(h);
+    }
+
+    @Test
+    public void heroWidgetPlaysBattleLoop() throws Exception {
+        JSONObject gear = new JSONObject(SNAP).getJSONObject("gear");
+        Bitmap[] frames = BattleLoop.frames(ctx, gear, 6, "blue");
+        assertEquals(BattleLoop.FRAMES, frames.length);
+        assertFalse("공격 장면은 첫 장과 달라야 함", frames[0].sameAs(frames[3]));
+        assertFalse("슬라임이 터진 장면은 달라야 함", frames[8].sameAs(frames[9]));
+        // 한 장으로 이어 붙여 저장 (눈으로 확인용)
+        int w = frames[0].getWidth();
+        int h = frames[0].getHeight();
+        Bitmap sheet = Bitmap.createBitmap(w * 6, h * 2, Bitmap.Config.ARGB_8888);
+        Canvas cv = new Canvas(sheet);
+        cv.drawColor(Color.parseColor("#191626"));
+        for (int i = 0; i < frames.length; i++) cv.drawBitmap(frames[i], (i % 6) * w, (i / 6) * h, null);
+        save(sheet, "widget-battle-loop.png");
+    }
+
+    @Test
+    public void overlayStripIsTransparentWithReward() throws Exception {
+        WallpaperScene s = new WallpaperScene(ctx, true);
+        s.reloadState();
+        s.resize(1080, 385, 2.75f);
+        for (int i = 0; i < 70; i++) s.step(1 / 30f);
+        s.reward(20, 8, "legendary");
+        for (int i = 0; i < 8; i++) s.step(1 / 30f);
+        Bitmap out = Bitmap.createBitmap(1080, 385, Bitmap.Config.ARGB_8888);
+        s.draw(new Canvas(out));
+        assertEquals("배경은 투명", 0, Color.alpha(out.getPixel(2, 2)));
+        int painted = 0;
+        for (int y = 0; y < out.getHeight(); y += 3) for (int x = 0; x < out.getWidth(); x += 3) if (Color.alpha(out.getPixel(x, y)) > 0) painted++;
+        assertTrue("용사·슬라임이 그려져야 함", painted > 200);
+        save(out, "overlay-strip.png");
+    }
+
+    @Test
+    public void overlayServiceRunsWithPermission() {
+        ShadowSettings.setCanDrawOverlays(true);
+        ServiceController<HeroOverlayService> sc = Robolectric.buildService(HeroOverlayService.class).create().startCommand(0, 1);
+        assertTrue(HeroOverlayService.isRunning());
+        assertNotNull(Shadows.shadowOf(sc.get()).getLastForegroundNotification());
+        sc.get().reward(10, 4, "rare");
+        sc.destroy();
+        assertFalse(HeroOverlayService.isRunning());
+    }
+
+    @Test
+    public void overlayServiceRefusesWithoutPermission() {
+        ShadowSettings.setCanDrawOverlays(false);
+        ServiceController<HeroOverlayService> sc = Robolectric.buildService(HeroOverlayService.class).create().startCommand(0, 1);
+        assertFalse(HeroOverlayService.isRunning());
+        sc.destroy();
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 홈 화면 위젯: 용사 -->
+<!-- 홈 화면 위젯: 용사 (슬라임과 싸우는 반복 장면) -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/wh_root"
     android:layout_width="match_parent"
@@ -10,10 +10,10 @@
     android:padding="10dp">
     <ViewFlipper
         android:id="@+id/wh_flipper"
-        android:layout_width="96dp"
-        android:layout_height="72dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
         android:autoStart="true"
-        android:flipInterval="600">
+        android:flipInterval="150">
         <ImageView
             android:id="@+id/wh_f0"
             android:layout_width="match_parent"
@@ -22,6 +22,66 @@
             android:scaleType="center" />
         <ImageView
             android:id="@+id/wh_f1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/widget_hero_name"
+            android:scaleType="center" />
+        <ImageView
+            android:id="@+id/wh_f2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/widget_hero_name"
+            android:scaleType="center" />
+        <ImageView
+            android:id="@+id/wh_f3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/widget_hero_name"
+            android:scaleType="center" />
+        <ImageView
+            android:id="@+id/wh_f4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/widget_hero_name"
+            android:scaleType="center" />
+        <ImageView
+            android:id="@+id/wh_f5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/widget_hero_name"
+            android:scaleType="center" />
+        <ImageView
+            android:id="@+id/wh_f6"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/widget_hero_name"
+            android:scaleType="center" />
+        <ImageView
+            android:id="@+id/wh_f7"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/widget_hero_name"
+            android:scaleType="center" />
+        <ImageView
+            android:id="@+id/wh_f8"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/widget_hero_name"
+            android:scaleType="center" />
+        <ImageView
+            android:id="@+id/wh_f9"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/widget_hero_name"
+            android:scaleType="center" />
+        <ImageView
+            android:id="@+id/wh_f10"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/widget_hero_name"
+            android:scaleType="center" />
+        <ImageView
+            android:id="@+id/wh_f11"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/widget_hero_name"

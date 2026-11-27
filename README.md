@@ -14,7 +14,7 @@
 
 ### Android
 
-[CalendarRPG-0.3.0.apk](https://github.com/aorkaosmm/QRA-Service/releases/download/calendar-rpg-android-v0.3.0/CalendarRPG-0.3.0.apk) — 홈 화면 위젯(오늘의 임무·용사)과 라이브 배경화면 포함. 폰에서 내려받아 설치하고, 막히면 "출처를 알 수 없는 앱 설치"를 허용해 주세요.
+[CalendarRPG-0.4.0.apk](https://github.com/aorkaosmm/QRA-Service/releases/download/calendar-rpg-android-v0.4.0/CalendarRPG-0.4.0.apk) — 화면 위 용사(다른 앱 위에서 슬라임과 싸움), 홈 화면 위젯(오늘의 임무·용사 전투 장면), 라이브 배경화면 포함. 폰에서 내려받아 설치하고, 막히면 "출처를 알 수 없는 앱 설치"를 허용해 주세요.
 
 ### Windows 참고
 

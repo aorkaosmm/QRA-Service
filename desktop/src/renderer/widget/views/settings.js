@@ -118,6 +118,7 @@ export const settingsView = {
       if (!ctx.api.runPlatformAction) return;
       const res = await ctx.api.runPlatformAction(el.dataset.id);
       if (res && res.message) toast(esc(res.message), { life: 3200 });
+      ctx.rerender(true); // 켜기/끄기 같은 버튼 글자 갱신
     },
     'group-add': async (_el, ctx) => {
       const input = document.getElementById('group-name-input');

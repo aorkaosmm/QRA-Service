@@ -13,6 +13,7 @@ import {
   dailiesForDay, isDailyDone, tasksForDay, isTaskDone, taskColor, timedItemsForDay,
 } from '../../desktop/src/core/selectors.js';
 import { WEEKDAYS_KO, SLOT_ORDER } from '../../desktop/src/core/constants.js';
+import { toast } from '../../desktop/src/renderer/widget/ui.js';
 
 const SAVE_KEY = 'calendar_rpg_save';
 const SNAPSHOT_KEY = 'widget_snapshot';
@@ -162,15 +163,37 @@ function scheduleNotifications(state) {
   };
   const api = createWebBackend({ storage });
   window.calendarRpg = api;
+  // 화면 위 용사(다른 앱 위에 표시) 상태
+  let overlay = { permission: false, running: false, wanted: false };
+  let overlayPendingEnable = false;
+  const refreshOverlay = async () => {
+    try { overlay = await WidgetBridge.overlayStatus(); } catch { /* 웹 */ }
+    return overlay;
+  };
   if (native) {
     api.platformTitle = '안드로이드 홈 화면';
     api.platformSettings = () => [
+      { id: 'overlay', label: '화면 위 용사', desc: '고양이 키우기 앱처럼, 다른 앱을 쓰는 중에도 화면 아래에서 용사가 슬라임과 싸워요', button: overlay.running ? '끄기' : '켜기' },
+      { id: 'pin-hero', label: '위젯 · 용사', desc: '용사가 슬라임과 싸우는 장면이 반복돼요 + 레벨·체력·경험치', button: '추가' },
       { id: 'pin-quests', label: '위젯 · 오늘의 임무', desc: '홈 화면에서 바로 체크 (보상은 앱을 열 때 받아요)', button: '추가' },
-      { id: 'pin-hero', label: '위젯 · 용사', desc: '레벨·체력·경험치, 숨쉬는 움직임', button: '추가' },
-      { id: 'wallpaper', label: '라이브 배경화면', desc: '홈 화면에서 내 용사가 슬라임과 싸워요', button: '설정' },
+      { id: 'wallpaper', label: '라이브 배경화면', desc: '홈 화면 배경에서 내 용사가 슬라임과 싸워요', button: '설정' },
     ];
     api.runPlatformAction = async (id) => {
       try {
+        if (id === 'overlay') {
+          await refreshOverlay();
+          if (overlay.running) {
+            overlay = { ...overlay, ...(await WidgetBridge.setOverlay({ enabled: false })), wanted: false };
+            return { message: '화면 위 용사를 숨겼어요' };
+          }
+          if (!overlay.permission) {
+            overlayPendingEnable = true;
+            await WidgetBridge.requestOverlayPermission();
+            return { message: "'다른 앱 위에 표시'를 허용하고 돌아오면 용사가 나와요" };
+          }
+          overlay = { ...overlay, ...(await WidgetBridge.setOverlay({ enabled: true })), wanted: true };
+          return { message: '용사가 화면 아래로 나왔어요! 알림의 [숨기기]로 끌 수 있어요' };
+        }
         if (id === 'wallpaper') {
           const r = await WidgetBridge.openWallpaperPicker();
           return { message: r.opened ? '[배경화면 설정]을 누르면 적용돼요' : '이 기기는 라이브 배경화면을 지원하지 않아요' };
@@ -199,11 +222,35 @@ function scheduleNotifications(state) {
     syncWidgets(state, hp, { now: true });
     return n;
   };
+  // 화면 위 용사: 허용하고 돌아왔거나, 켜 두었는데 꺼져 있으면(재부팅 등) 다시 켠다
+  const restoreOverlay = async () => {
+    if (!native) return;
+    await refreshOverlay();
+    if (overlay.permission && !overlay.running && (overlay.wanted || overlayPendingEnable)) {
+      const fromPermission = overlayPendingEnable;
+      overlayPendingEnable = false;
+      overlay = { ...overlay, ...(await WidgetBridge.setOverlay({ enabled: true })), wanted: true };
+      if (fromPermission) toast('용사가 화면 아래로 나왔어요! 알림의 [숨기기]로 끌 수 있어요', { life: 3500 });
+    } else if (overlayPendingEnable && !overlay.permission) {
+      overlayPendingEnable = false;
+      toast("'다른 앱 위에 표시'가 꺼져 있어서 용사를 띄우지 못했어요", { kind: 'error', life: 3500 });
+    }
+  };
+  // 임무 보상 → 화면 위 용사 머리 위 연출
+  api.onEvents((events) => {
+    if (!native) return;
+    for (const ev of events) {
+      if (ev.type === 'reward' && (ev.xp || ev.gold || ev.item)) {
+        WidgetBridge.notifyReward({ xp: ev.xp || 0, gold: ev.gold || 0, rarity: ev.item ? ev.item.rarity : null }).catch(() => {});
+      }
+    }
+  });
   await handlePending();
+  await restoreOverlay();
   scheduleNotifications(state);
 
   if (native) {
-    App.addListener('resume', () => { handlePending(); });
+    App.addListener('resume', () => { handlePending(); restoreOverlay(); });
     App.addListener('pause', () => syncWidgets(state, hp, { now: true }));
     // 뒤로 가기: 창 닫기 → 캘린더 탭 → 앱 내리기
     App.addListener('backButton', () => {

@@ -7,8 +7,13 @@ import android.widget.RemoteViews;
 
 import org.json.JSONObject;
 
-/** 홈 화면 위젯: 용사 (숨쉬는 2장 움직임 + 체력·경험치) */
+/** 홈 화면 위젯: 용사 (슬라임과 싸우는 반복 장면 + 체력·경험치) */
 public class HeroWidgetProvider extends AppWidgetProvider {
+    static final int[] FRAME_IDS = {
+        R.id.wh_f0, R.id.wh_f1, R.id.wh_f2, R.id.wh_f3, R.id.wh_f4, R.id.wh_f5,
+        R.id.wh_f6, R.id.wh_f7, R.id.wh_f8, R.id.wh_f9, R.id.wh_f10, R.id.wh_f11,
+    };
+
     @Override
     public void onUpdate(Context context, AppWidgetManager manager, int[] ids) {
         for (int id : ids) manager.updateAppWidget(id, build(context, id));
@@ -24,11 +29,13 @@ public class HeroWidgetProvider extends AppWidgetProvider {
             gear = new JSONObject();
             try { gear.put("weapon", "common"); } catch (Exception ignored) { }
         }
-        // 96dp × 72dp 칸에 딱 맞는 정수 배율로 그려 번지지 않게
+        // 슬라임과 싸우는 12장 반복 장면. 칸(약 90dp × 60dp)에 맞는 정수 배율로 그려 번지지 않게
         float density = c.getResources().getDisplayMetrics().density;
-        int scale = Math.max(2, (int) Math.floor(96 * density / 32f));
-        v.setImageViewBitmap(R.id.wh_f0, PixelArt.hero(c, "idle0", gear, scale, false));
-        v.setImageViewBitmap(R.id.wh_f1, PixelArt.hero(c, "idle1", gear, scale, false));
+        int scale = Math.max(2, (int) Math.floor(Math.min(90 * density / BattleLoop.W, 60 * density / BattleLoop.H)));
+        String[] colors = {"green", "blue", "red", "purple", "gold"};
+        String slime = colors[java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_YEAR) % colors.length];
+        android.graphics.Bitmap[] frames = BattleLoop.frames(c, gear, scale, slime);
+        for (int i = 0; i < FRAME_IDS.length; i++) v.setImageViewBitmap(FRAME_IDS[i], frames[i]);
         if (hero == null) {
             v.setTextViewText(R.id.wh_name, "용사 Lv.1");
             v.setProgressBar(R.id.wh_hp, 1, 1, false);

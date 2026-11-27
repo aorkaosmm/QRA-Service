@@ -12,4 +12,8 @@
     <string name="widget_check">완료 표시</string>
     <string name="wallpaper_name">Calendar RPG 용사</string>
     <string name="wallpaper_desc">홈 화면에서 내 용사가 슬라임과 싸워요</string>
+    <string name="overlay_channel">화면 위 용사</string>
+    <string name="overlay_title">용사가 화면 아래에서 싸우는 중</string>
+    <string name="overlay_text">눌러서 앱 열기 · [숨기기]로 끌 수 있어요</string>
+    <string name="overlay_hide">숨기기</string>
 </resources>
