@@ -1,6 +1,6 @@
 // 레벨·경험치·능력치 계산.
 
-import { xpToNext, SLOT_ORDER } from './constants.js';
+import { xpToNext, SLOT_ORDER, POWER_BANDS } from './constants.js';
 
 export function equippedItems(state) {
   const byId = new Map(state.inventory.map((it) => [it.id, it]));
@@ -58,4 +58,29 @@ export function removeXp(hero, amount) {
     hero.xp += xpToNext(hero.level);
   }
   if (hero.xp < 0) hero.xp = 0;
+}
+
+/** 전투력: 능력치를 한 숫자로 (랭킹·던전·레이드 단계 기준) */
+export function powerFromStats(st) {
+  return Math.round(st.atk * 4 + st.def * 5 + st.maxHp * 0.8 + st.luck * 3 + st.level * 10);
+}
+
+export function combatPower(state) {
+  return powerFromStats(heroStats(state));
+}
+
+/** 전투력 단계 1~10 */
+export function powerBand(cp) {
+  let band = 1;
+  for (let i = 0; i < POWER_BANDS.length; i++) if (cp >= POWER_BANDS[i]) band = i + 1;
+  return band;
+}
+
+/** 다음 단계까지 진행률 (0~1, 10단계는 1) */
+export function bandProgress(cp) {
+  const b = powerBand(cp);
+  if (b >= POWER_BANDS.length) return { band: b, next: null, ratio: 1 };
+  const lo = POWER_BANDS[b - 1];
+  const hi = POWER_BANDS[b];
+  return { band: b, next: hi, ratio: Math.max(0, Math.min(1, (cp - lo) / (hi - lo))) };
 }

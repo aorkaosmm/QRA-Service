@@ -99,8 +99,16 @@ jobs:
             --notes "Calendar RPG 안드로이드 앱 $VER
 
           폰에서 CalendarRPG-$VER.apk 를 내려받아 설치하세요. 설치가 막히면 '출처를 알 수 없는 앱 설치'를 허용해 주세요.
+          던전(필드 보스·요일 던전·레이드)·전투력 랭킹·채팅은 아래 탭에서 바로 들어갈 수 있어요.
           홈 화면 위젯(오늘의 임무·용사)과 라이브 배경화면은 앱의 설정 탭 → '안드로이드 홈 화면'에서 추가할 수 있어요.
           같은 서명으로 빌드되므로 새 버전을 설치하면 기록을 유지한 채 업데이트됩니다."
+
+      # 빌드가 다시 성공하면 예전 실패 기록 릴리스는 지운다
+      - name: Remove old failure log
+        if: success() && github.ref == 'refs/heads/Calendar-RPG'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release delete ci-log-android --yes --cleanup-tag 2>/dev/null || true
 
       # 실패하면 빌드 기록을 릴리스(ci-log-android)에 올려 원인을 볼 수 있게 한다
       - name: Publish failure log

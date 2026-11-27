@@ -9,18 +9,31 @@
 
 | 파일 | 설명 |
 |---|---|
-| [CalendarRPG-Setup-0.2.0.exe](https://github.com/aorkaosmm/QRA-Service/releases/download/calendar-rpg-v0.2.0/CalendarRPG-Setup-0.2.0.exe) | 설치판 — Windows 알림, 시작 메뉴, Windows 시작 시 실행 |
-| [CalendarRPG-Portable-0.2.0.exe](https://github.com/aorkaosmm/QRA-Service/releases/download/calendar-rpg-v0.2.0/CalendarRPG-Portable-0.2.0.exe) | 포터블 — 설치 없이 바로 실행 |
+| [CalendarRPG-Setup-0.3.0.exe](https://github.com/aorkaosmm/QRA-Service/releases/download/calendar-rpg-v0.3.0/CalendarRPG-Setup-0.3.0.exe) | 설치판 — Windows 알림, 시작 메뉴, Windows 시작 시 실행 |
+| [CalendarRPG-Portable-0.3.0.exe](https://github.com/aorkaosmm/QRA-Service/releases/download/calendar-rpg-v0.3.0/CalendarRPG-Portable-0.3.0.exe) | 포터블 — 설치 없이 바로 실행 |
 
 ### Android
 
-[CalendarRPG-0.4.0.apk](https://github.com/aorkaosmm/QRA-Service/releases/download/calendar-rpg-android-v0.4.0/CalendarRPG-0.4.0.apk) — 화면 위 용사(다른 앱 위에서 슬라임과 싸움), 홈 화면 위젯(오늘의 임무·용사 전투 장면), 라이브 배경화면 포함. 폰에서 내려받아 설치하고, 막히면 "출처를 알 수 없는 앱 설치"를 허용해 주세요.
+[CalendarRPG-0.5.0.apk](https://github.com/aorkaosmm/QRA-Service/releases/download/calendar-rpg-android-v0.5.0/CalendarRPG-0.5.0.apk) — 던전(필드 보스·요일 던전·레이드)·전투력 랭킹·채팅, 화면 위 용사(다른 앱 위에서 슬라임과 싸움), 홈 화면 위젯(오늘의 임무·용사 전투 장면), 라이브 배경화면 포함. 폰에서 내려받아 설치하고, 막히면 "출처를 알 수 없는 앱 설치"를 허용해 주세요.
 
 ### Windows 참고
 
 코드 서명이 없어서 처음 실행할 때 "Windows의 PC 보호" 창이 뜨면 **추가 정보 → 실행**을 누르세요.
 이 브랜치(`Calendar-RPG`)에 `desktop/`이 바뀌어 푸시되면 GitHub Actions가 Windows에서 다시 빌드해 위 링크의 파일을 새로 올립니다.
 이전 이름(QuestBar)으로 쓰던 데이터는 처음 실행할 때 자동으로 옮겨집니다.
+
+## 던전 · 랭킹 · 채팅
+
+| 콘텐츠 | 규칙 |
+|---|---|
+| **필드 보스** | 매일 **오후 9시**에 '거대 황금 슬라임 왕'이 나타나 **5분** 동안 싸웁니다. 한 맵 **20명**, 파티는 **4명까지** 함께 입장. 들어가면 끝날 때까지 자동으로 싸우고(앱을 닫아도), 화면을 누르거나(초당 5번까지) 필살기(15초마다)를 쓰면 피해가 커집니다. **딜 누적 순위**대로 보상: 1위 골드 600·보석 30·영웅 이상 장비 / 2~3위 400·20·희귀 이상 장비 / 4~10위 250·12·장비 60% / 11~20위 120·6 (골드는 전투력 단계마다 +15%). 언제든 **연습하기**로 미리 해 볼 수 있어요(보상 없음) |
+| **요일 던전** | 요일마다 다른 던전에 **하루 1시간** 들어갈 수 있고, 들어가 있는 동안 용사가 자동으로 사냥해 보석을 모읍니다(1분에 1개, 전투력 단계마다 +10%). 월 루비(불꽃 동굴) · 화 호박석(호박빛 사막) · 수 토파즈(번개 탑) · 목 에메랄드(이끼 숲) · 금 사파이어(심해 신전) · 토 자수정(그림자 성) · **일요일은 6색 모두**(무지개 보물고) |
+| **레이드** | 입장권이 **매일 1개씩**(최대 10개, 처음 3개) 채워집니다. 전투력 **10단계**마다 레이드 보스가 있고 내 단계까지 도전 가능. 60초 안에 쓰러뜨리면 **레이드 보물상자**(레이드 전용 장비 — 같은 레벨보다 능력치 35%↑ — + 골드·보석·경험치, 확률로 장비 1개 더·황금 상자 장비). **성공할 때만** 입장권을 씁니다 |
+| **전투력** | 공격·방어·체력·행운·레벨로 계산한 한 숫자. 10단계(0 · 300 · 600 · 1000 · 1500 · 2100 · 2800 · 3600 · 4500 · 5500~) |
+| **전투력 랭킹** | 1~3위는 금·은·동 시상대 위에 캐릭터가 서고, 아래는 순위 목록, 맨 아래 줄은 항상 내 순위 |
+| **채팅** | 필드(지금 필드의 무작위 대화) · 파티 · 길드 · 시스템(내 전설 획득·레벨 업·레이드 토벌·필드 보스 결과·오후 9시 예고) |
+
+> 계정 서버 연결 전이라 **다른 플레이어(필드 보스 참가자·파티원·길드원·랭킹·채팅 상대)는 고정 시드로 만든 가상 플레이어 300명**입니다. 모든 기기에서 같은 플레이어가 보이고, 서버가 생기면 `src/core/world.js` 자리를 서버 응답으로 바꿉니다.
 
 ## 구성
 

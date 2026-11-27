@@ -40,6 +40,7 @@ export const bagView = {
         ${itemIcon(it, 3)}
         ${equippedIds.has(it.id) ? '<span class="tag">E</span>' : ''}
         ${it.locked ? `<span class="lk">${uiIcon('lock', 1)}</span>` : ''}
+        ${it.raid ? '<span class="raid-tag">R</span>' : ''}
       </div>`).join('');
 
     return `

@@ -90,3 +90,67 @@ export const DEFAULT_SETTINGS = {
 export function xpToNext(level) {
   return 60 + (level - 1) * 40;
 }
+
+/* ── 던전 · 레이드 · 랭킹 ─────────────────────────────── */
+
+/** 보석 6색 (요일 던전 재화) */
+export const GEMS = {
+  ruby:     { key: 'ruby',     label: '루비',     color: '#ff4d6d', shade: '#b82a48', light: '#ffc2cf' },
+  amber:    { key: 'amber',    label: '호박석',   color: '#ff9f43', shade: '#c2621a', light: '#ffd9b0' },
+  topaz:    { key: 'topaz',    label: '토파즈',   color: '#ffd447', shade: '#c28a14', light: '#fff3a8' },
+  emerald:  { key: 'emerald',  label: '에메랄드', color: '#4cd98a', shade: '#21875a', light: '#b8f5d2' },
+  sapphire: { key: 'sapphire', label: '사파이어', color: '#4aa8ff', shade: '#2763c4', light: '#bfe0ff' },
+  amethyst: { key: 'amethyst', label: '자수정',   color: '#b46cff', shade: '#6c3fc1', light: '#e1ccff' },
+};
+export const GEM_ORDER = ['ruby', 'amber', 'topaz', 'emerald', 'sapphire', 'amethyst'];
+
+/** 요일 던전 (인덱스 = 요일, 0=일). 일요일은 6색 보석이 모두 나온다 */
+export const DAY_DUNGEONS = [
+  { day: 0, key: 'rainbow', name: '무지개 보물고', gems: GEM_ORDER,    monster: 'gold',   sky: ['#2b1d4a', '#5a3d8a'], ground: '#6b5aa8' },
+  { day: 1, key: 'flame',   name: '불꽃 동굴',     gems: ['ruby'],     monster: 'red',    sky: ['#2a0f14', '#6b1d22'], ground: '#8a3a2a' },
+  { day: 2, key: 'desert',  name: '호박빛 사막',   gems: ['amber'],    monster: 'amber',  sky: ['#3a2210', '#9a5a22'], ground: '#c9893f' },
+  { day: 3, key: 'thunder', name: '번개 탑',       gems: ['topaz'],    monster: 'gold',   sky: ['#1c1b2e', '#4a4470'], ground: '#77708f' },
+  { day: 4, key: 'forest',  name: '이끼 숲',       gems: ['emerald'],  monster: 'green',  sky: ['#0f2418', '#24553a'], ground: '#3f7a43' },
+  { day: 5, key: 'abyss',   name: '심해 신전',     gems: ['sapphire'], monster: 'blue',   sky: ['#081a33', '#14457a'], ground: '#2a5d8c' },
+  { day: 6, key: 'shadow',  name: '그림자 성',     gems: ['amethyst'], monster: 'purple', sky: ['#160f24', '#3a2458'], ground: '#4d3a6e' },
+];
+/** 요일 던전: 하루 1시간, 1분마다 보석 1개(전투력 단계마다 +10%) */
+export const DAY_DUNGEON = { dailySec: 3600, gemsPerMin: 1, bandBonus: 0.1 };
+
+/** 필드 보스: 매일 21:00에 나타나 5분 동안 싸운다. 한 맵 20명, 파티는 4명까지 함께 입장 */
+export const FIELD_BOSS = {
+  name: '거대 황금 슬라임 왕',
+  openHour: 21,
+  durationSec: 300,
+  mapSize: 20,
+  partyMax: 4,
+  skillCooldownSec: 15,
+  tapsPerSecMax: 5,
+};
+/** 필드 보스 딜 순위별 보상 (gold 는 전투력 단계마다 +15%) */
+export const FIELD_BOSS_REWARDS = [
+  { maxRank: 1,  label: '1위',     gold: 600, gems: 30, item: 1,   weights: { common: 0, rare: 0, epic: 70, legendary: 30 } },
+  { maxRank: 3,  label: '2~3위',   gold: 400, gems: 20, item: 1,   weights: { common: 0, rare: 40, epic: 48, legendary: 12 } },
+  { maxRank: 10, label: '4~10위',  gold: 250, gems: 12, item: 0.6, weights: { common: 0, rare: 70, epic: 25, legendary: 5 } },
+  { maxRank: 20, label: '11~20위', gold: 120, gems: 6,  item: 0,   weights: null },
+];
+
+/** 전투력 단계(밴드) 1~10의 시작 전투력 */
+export const POWER_BANDS = [0, 300, 600, 1000, 1500, 2100, 2800, 3600, 4500, 5500];
+
+/** 레이드: 입장권 하루 1개(최대 10개), 전투 60초, 파티 4명까지. 토벌에 성공할 때만 입장권을 쓴다 */
+export const RAID = { ticketMax: 10, startTickets: 3, durationSec: 60, partyMax: 4, skillCooldownSec: 15, tapsPerSecMax: 5 };
+export const RAID_BOSSES = [
+  { tier: 1,  name: '끈적끈적 왕슬라임',   set: '끈적이',     color: 'green',  horns: false, crown: true },
+  { tier: 2,  name: '독버섯 슬라임',       set: '독버섯',     color: 'poison', horns: false, crown: false },
+  { tier: 3,  name: '화염 슬라임 군주',    set: '화염군주',   color: 'red',    horns: true,  crown: false },
+  { tier: 4,  name: '서리 슬라임 여왕',    set: '서리여왕',   color: 'frost',  horns: false, crown: true },
+  { tier: 5,  name: '강철 슬라임 기사',    set: '강철기사',   color: 'metal',  horns: true,  crown: false },
+  { tier: 6,  name: '번개 슬라임 거인',    set: '뇌전거인',   color: 'gold',   horns: true,  crown: false },
+  { tier: 7,  name: '심연의 슬라임',       set: '심연',       color: 'abyss',  horns: true,  crown: false },
+  { tier: 8,  name: '황금 슬라임 황제',    set: '황금황제',   color: 'gold',   horns: false, crown: true },
+  { tier: 9,  name: '그림자 슬라임 마왕',  set: '그림자마왕', color: 'shadow', horns: true,  crown: true },
+  { tier: 10, name: '태초의 무지개 슬라임', set: '태초',       color: 'rainbow', horns: true, crown: true },
+];
+/** 레이드 장비는 같은 레벨 일반 장비보다 능력치가 35% 높다 */
+export const RAID_GEAR_MULT = 1.35;

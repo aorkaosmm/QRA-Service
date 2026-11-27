@@ -8,7 +8,7 @@ import { uiIcon, catIcon, itemIcon } from '../shared/sprite-canvas.js';
 import { esc, stars, openModal, confirmDialog } from './ui.js';
 
 export const STAT_LABELS = { atk: '공격력', def: '방어력', hp: '체력', luck: '행운' };
-export const SOURCE_LABELS = { quest: '임무 보상', daily: '임무 보상', task: '임무 보상', perfect: '퍼펙트 데이', levelup: '레벨 달성 보상', shop: '상점', starter: '기본 지급' };
+export const SOURCE_LABELS = { quest: '임무 보상', daily: '임무 보상', task: '임무 보상', perfect: '퍼펙트 데이', levelup: '레벨 달성 보상', shop: '상점', starter: '기본 지급', fieldBoss: '필드 보스', raid: '레이드' };
 
 const seg = (name, options, value) => `<div class="seg" data-name="${name}">${options
   .map((o) => `<button type="button" data-v="${o.v}" class="${String(o.v) === String(value) ? 'on' : ''}">${o.html}</button>`)

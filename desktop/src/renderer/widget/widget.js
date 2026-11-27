@@ -13,11 +13,16 @@ import { todayView } from './views/today.js';
 import { bagView } from './views/bag.js';
 import { shopView } from './views/shop.js';
 import { settingsView } from './views/settings.js';
+import { dungeonView, dungeonBack, openGuilds } from './views/dungeon.js';
+import { rankingView } from './views/ranking.js';
 import { rowActions } from './views/rows.js';
+import { mountChat } from './chat.js';
 
 const TABS = [
   { key: 'calendar', label: '캘린더', icon: 'calendar', view: calendarView },
   { key: 'today', label: '오늘', icon: 'sword', view: todayView },
+  { key: 'dungeon', label: '던전', icon: 'dungeon', view: dungeonView },
+  { key: 'ranking', label: '랭킹', icon: 'trophy', view: rankingView },
   { key: 'bag', label: '가방', icon: 'bag', view: bagView },
   { key: 'shop', label: '상점', icon: 'shop', view: shopView },
   { key: 'settings', label: '설정', icon: 'gear', view: settingsView },
@@ -270,7 +275,7 @@ async function main() {
   }, { passive: false });
 
   document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && !e.altKey && /^[1-5]$/.test(e.key)) {
+    if (e.ctrlKey && !e.altKey && /^[1-7]$/.test(e.key)) {
       e.preventDefault();
       switchTab(TABS[Number(e.key) - 1].key);
     }
@@ -319,7 +324,7 @@ async function main() {
           if (ev.streak >= 3) toast(`${uiIcon('flame', 1)} ${ev.streak}일 연속 달성! 보너스 경험치`, { life: 1800 });
           if (ev.source === 'perfect') toast(`${uiIcon('crown', 1)} 퍼펙트 데이! 오늘의 일일임무를 모두 끝냈어요`, { kind: 'level', life: 3200 });
           if (ev.item) {
-            const title = ev.source === 'perfect' ? '퍼펙트 데이 보너스 상자!' : ev.source === 'shop' ? `${ev.title} 개봉!` : `「${ev.title}」 완료 보상!`;
+            const title = ev.source === 'perfect' ? '퍼펙트 데이 보너스 상자!' : ev.source === 'shop' ? `${ev.title} 개봉!` : ev.source === 'fieldBoss' || ev.source === 'raid' ? `${ev.title} 보상!` : `「${ev.title}」 완료 보상!`;
             lootQueue.push({ item: ev.item, title });
           }
           if (ev.soldOverflow) toast(`가방이 가득 차서 자동 판매 (+${ev.soldOverflow}G)`);
@@ -368,6 +373,9 @@ async function main() {
 
   api.onState(onState);
   api.onEvents(handleEvents);
+  // 채팅(아래 한 줄 + 채팅 창), 안드로이드 뒤로 가기: 던전 전투 화면이면 허브로
+  ctx.chat = mountChat(ctx, api, { openGuilds });
+  window.__calendarRpgBack = () => ctx.ui.tab === 'dungeon' && dungeonBack(ctx);
 
   // 날짜가 바뀌었는지 1분마다 확인 (화면 갱신)
   setInterval(() => {

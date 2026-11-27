@@ -367,6 +367,50 @@ export const UI_ICONS = {
     rows: ['..........', '...ooo....', '...owo....', '.oooweooo.', '.owwwwwwo.', '.oooweooo.', '...owo....', '...ooo....', '..........', '..........'],
     palette: { o: INK, w: '#ffffff', e: '#ffffff' },
   },
+  dungeon: {
+    rows: ['..oooooo..', '.oggggggo.', 'oggokkoggo', 'ogokkkkogo', 'ogokkkkogo', 'ogokykyogo', 'ogokkkkogo', 'ogokkkkogo', 'ogokkkkogo', 'oooooooooo'],
+    palette: { o: INK, g: '#9aa3b5', k: '#2a2238', y: '#ffd447' },
+  },
+  trophy: {
+    rows: ['.oooooooo.', 'oyyywyyyyo', 'oyoywyyoyo', 'oyoyyyyoyo', '.oyyyyyyo.', '..oyyyyo..', '...oyyo...', '...oYYo...', '..oYYYYo..', '..oooooo..'],
+    palette: { o: INK, y: '#ffd447', Y: '#c28a14', w: '#fff8d0' },
+  },
+  chat: {
+    rows: ['..oooooo..', '.owwwwwwo.', 'owwwwwwwwo', 'owwkwkwkwo', 'owwwwwwwwo', '.owwwwwwo.', '.oowoooo..', '.owo......', '.oo.......', '..........'],
+    palette: { o: INK, w: '#f4f1ea', k: '#4a4458' },
+  },
+  ticket: {
+    rows: ['..........', 'oooooooooo', 'oyyyyyoyyo', '.oyrryoyyo', '.oyrryoyyo', 'oyyyyyoyyo', 'oooooooooo', '..........', '..........', '..........'],
+    palette: { o: INK, y: '#b46cff', r: '#ffd447' },
+  },
+  party: {
+    rows: ['..........', '.oo...oo..', 'oyyo.oyyo.', 'oyyo.oyyo.', '.oo...oo..', 'obbo.occo.', 'obbbooccco', 'obbbooccco', 'oooooooooo', '..........'],
+    palette: { o: INK, y: '#ffd0a8', b: '#4aa8ff', c: '#ff8a5c' },
+  },
+};
+
+/* ───────────── 던전 · 레이드 ───────────── */
+
+/** 보석 (10×10). 팔레트는 GEMS 색으로 */
+export const GEM_ROWS = ['..........', '..oooooo..', '.olwlccco.', 'ollccccCCo', '.occcccCo.', '..occcCo..', '...occo...', '....oo....', '..........', '..........'];
+export function gemPalette(g) {
+  return { o: INK, c: g.color, C: g.shade, l: g.light, w: '#ffffff' };
+}
+
+/** 보스 뿔 (왼쪽, 오른쪽은 좌우 반전) */
+export const HORN = ['o...', 'wo..', 'wwo.', '.wwo', '..wo'];
+export const HORN_PALETTE = { o: INK, w: '#f4e9d0' };
+
+/** 레이드 보물상자 색 */
+export const CHEST_RAID_PALETTE = { o: INK, n: '#8a5ad6', d: '#4f2d91', y: '#7fe3ff', k: INK, i: '#1a1030' };
+
+/** 몬스터·보스 색 (슬라임 팔레트 문자 g/G/l/w/e/o) */
+export const MONSTER_COLORS = {
+  amber:  { g: '#ffb35c', G: '#c2621a', l: '#ffe0b3', w: '#ffffff', e: INK, o: INK },
+  poison: { g: '#9be15d', G: '#5a8f2a', l: '#e4ffb0', w: '#ffffff', e: '#b0306a', o: INK },
+  frost:  { g: '#c8f1ff', G: '#5aa9d6', l: '#ffffff', w: '#ffffff', e: '#2a4a8a', o: INK },
+  abyss:  { g: '#2d3f7a', G: '#151f45', l: '#5a7bd6', w: '#bfe0ff', e: '#7fe3ff', o: INK },
+  shadow: { g: '#3a2a52', G: '#1c1230', l: '#6a4f8f', w: '#e1ccff', e: '#ff4d6d', o: INK },
 };
 
 /* ───────────── 분류 아이콘 (10×10) ───────────── */

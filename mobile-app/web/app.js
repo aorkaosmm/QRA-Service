@@ -259,6 +259,8 @@ function scheduleNotifications(state) {
         document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
         return;
       }
+      // 던전 전투 화면 → 던전 허브
+      if (window.__calendarRpgBack && window.__calendarRpgBack()) return;
       const active = document.querySelector('#tabs button.active');
       if (active && active.dataset.tab !== 'calendar') {
         document.querySelector('#tabs button[data-tab="calendar"]').click();

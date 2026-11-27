@@ -4,11 +4,17 @@
 import {
   SAVE_VERSION, CATEGORIES, DIFFICULTIES, RARITIES, SLOTS, SHOP, BATTLE,
   GOLD_CHEST_WEIGHTS, PERFECT_DAY_WEIGHTS, DEFAULT_SETTINGS, DEFAULT_GROUPS, DEFAULT_GROUP_ID, GROUP_COLORS,
+  GEMS, GEM_ORDER, DAY_DUNGEON, FIELD_BOSS, FIELD_BOSS_REWARDS, RAID, RAID_GEAR_MULT, SLOT_ORDER,
 } from './constants.js';
 import { createRng, newId } from './rng.js';
 import { dayKey, addDays, diffDays } from './dates.js';
 import { rollRarity, generateItem, makeItem, sellPrice } from './items.js';
-import { heroStats, addXp, removeXp } from './progression.js';
+import { heroStats, addXp, removeXp, combatPower, powerBand } from './progression.js';
+import {
+  fieldBossWindow, fieldBossRoom, simulateFieldBoss, raidBoss, simulateRaid, raidWeights, RAID_SLOT_NAMES,
+  dayDungeonFor, dungeonGems, randomGems,
+} from './adventure.js';
+import { findPlayer, playersById, guildById } from './world.js';
 import {
   isDailyScheduled, isDailyDone, computeStreak, dailiesForDay, occurrenceStart,
 } from './selectors.js';
@@ -71,8 +77,10 @@ export function createInitialState(now = Date.now(), { seed } = {}) {
     stats: {
       questsDone: 0, slimesDefeated: 0, kingsDefeated: 0, faints: 0, itemsFound: 0,
       legendaryFound: 0, goldEarned: 0, chestsOpened: 0, rewardsBought: 0,
+      gemsEarned: 0, dungeonSec: 0, fieldBossRuns: 0, fieldBossBest: 0, raidClears: 0, raidBest: 0,
     },
     daily: { day: today, coins: 0 },
+    ...adventureDefaults(today),
     log: [],
     settings: { ...DEFAULT_SETTINGS },
     meta: { createdAt: now, updatedAt: now },
@@ -102,6 +110,11 @@ export function migrate(raw, now = Date.now()) {
     pity: { ...base.pity, ...(raw.pity || {}) },
     stats: { ...base.stats, ...(raw.stats || {}) },
     daily: { ...base.daily, ...(raw.daily || {}) },
+    gems: { ...base.gems, ...(raw.gems || {}) },
+    raid: { ...base.raid, ...(raw.raid || {}) },
+    dungeon: { ...base.dungeon, ...(raw.dungeon || {}) },
+    fieldBoss: { ...base.fieldBoss, ...(raw.fieldBoss || {}) },
+    social: { ...base.social, ...(raw.social || {}) },
     settings: { ...DEFAULT_SETTINGS, ...(raw.settings || {}) },
     meta: { ...base.meta, ...(raw.meta || {}) },
   };
@@ -110,6 +123,8 @@ export function migrate(raw, now = Date.now()) {
     if (s.hero.equipment[slot] && !ids.has(s.hero.equipment[slot])) s.hero.equipment[slot] = null;
   }
   for (const d of s.dailies) d.history = d.history || {};
+  s.social.party = (Array.isArray(s.social.party) ? s.social.party : []).filter((id) => findPlayer(id)).slice(0, RAID.partyMax - 1);
+  if (s.social.guild && !guildById(s.social.guild)) s.social.guild = null;
   if (!s.groups.some((g) => g.id === DEFAULT_GROUP_ID)) s.groups.unshift({ ...DEFAULT_GROUPS[0], createdAt: now });
   const groupIds = new Set(s.groups.map((g) => g.id));
   for (const t of s.tasks) {
@@ -137,6 +152,7 @@ export function applyAction(state, action, ctx = {}) {
     events.push({ type: 'dayChanged', day: today });
   }
   const c = { now, today, events };
+  rollover(s, c, action.type);
   handler(s, action.payload || {}, c);
   s.meta.updatedAt = now;
   return { state: s, events };
@@ -370,6 +386,106 @@ const HANDLERS = {
     s.stats.goldEarned += gained;
   },
 
+
+  /* 파티 · 길드 (지금은 가상 플레이어, 서버가 생기면 실제 플레이어) */
+  'party/invite'(s, p, c) {
+    const pl = findPlayer(p.id);
+    if (!pl) throw new ActionError('플레이어를 찾을 수 없어요.');
+    if (s.social.party.includes(pl.id)) throw new ActionError('이미 파티에 있어요.');
+    if (s.social.party.length >= RAID.partyMax - 1) throw new ActionError(`파티는 나를 포함해 ${RAID.partyMax}명까지예요.`);
+    s.social.party.push(pl.id);
+    c.events.push({ type: 'party', action: 'join', id: pl.id, name: pl.name });
+  },
+  'party/kick'(s, p, c) {
+    if (!s.social.party.includes(p.id)) throw new ActionError('파티원이 아니에요.');
+    s.social.party = s.social.party.filter((id) => id !== p.id);
+    const pl = findPlayer(p.id);
+    c.events.push({ type: 'party', action: 'leave', id: p.id, name: pl ? pl.name : '' });
+  },
+  'party/disband'(s, p, c) {
+    if (!s.social.party.length) throw new ActionError('파티가 없어요.');
+    s.social.party = [];
+    c.events.push({ type: 'party', action: 'disband' });
+  },
+  'guild/join'(s, p, c) {
+    const g = guildById(p.id);
+    if (!g) throw new ActionError('길드를 찾을 수 없어요.');
+    if (s.social.guild === g.id) throw new ActionError('이미 가입한 길드예요.');
+    s.social.guild = g.id;
+    pushLog(s, c.now, { kind: 'guild', text: `${g.name} 길드에 가입했어요` });
+    c.events.push({ type: 'guild', action: 'join', id: g.id, name: g.name });
+  },
+  'guild/leave'(s, p, c) {
+    const g = guildById(s.social.guild);
+    if (!g) throw new ActionError('가입한 길드가 없어요.');
+    s.social.guild = null;
+    c.events.push({ type: 'guild', action: 'leave', id: g.id, name: g.name });
+  },
+
+  /* 요일 던전: 들어가 있는 동안(하루 최대 1시간) 용사가 자동으로 사냥해 보석을 모은다 */
+  'dungeon/enter'(s, p, c) {
+    const d = s.dungeon;
+    if (d.activeSince) throw new ActionError('이미 던전에서 사냥 중이에요.');
+    if (d.usedSec >= DAY_DUNGEON.dailySec) throw new ActionError('오늘 입장 시간을 모두 썼어요. 내일 다시 열려요.');
+    d.activeSince = c.now;
+    const dg = dayDungeonFor(d.day);
+    c.events.push({ type: 'dungeon', action: 'enter', name: dg.name });
+  },
+  'dungeon/leave'(s, p, c) {
+    if (!s.dungeon.activeSince) throw new ActionError('던전에 들어가 있지 않아요.');
+    settleDungeon(s, c, c.now);
+  },
+
+  /* 필드 보스: 21:00~21:05, 들어가면 끝날 때까지 자동으로 싸운다(앱을 닫아도) */
+  'fieldBoss/enter'(s, p, c) {
+    const w = fieldBossWindow(c.now);
+    if (w.phase === 'before') throw new ActionError('필드 보스는 오후 9시에 나타나요.');
+    if (w.phase === 'closed') throw new ActionError('오늘 필드 보스는 끝났어요. 내일 오후 9시에 다시 나타나요.');
+    if (s.fieldBoss.day === w.day && s.fieldBoss.enteredAt) throw new ActionError('오늘은 이미 입장했어요.');
+    s.fieldBoss = { day: w.day, enteredAt: c.now, enteredSec: w.sec, cp: combatPower(s), party: [...s.social.party], result: null };
+    s.stats.fieldBossRuns += 1;
+    c.events.push({ type: 'fieldBoss', action: 'enter', sec: w.sec });
+  },
+  'fieldBoss/finish'(s, p, c) {
+    if (!s.fieldBoss.enteredAt || s.fieldBoss.result) throw new ActionError('정산할 필드 보스 전투가 없어요.');
+    settleFieldBoss(s, c, p);
+  },
+
+  /* 레이드: 전투력 단계 이하의 보스만 도전, 토벌에 성공할 때만 입장권 1개를 쓴다 */
+  'raid/start'(s, p, c) {
+    const tier = clampInt(p.tier, 1, 10);
+    const cp = combatPower(s);
+    const band = powerBand(cp);
+    if (tier > band) throw new ActionError(`전투력 ${band}단계예요. ${tier}단계 레이드는 전투력을 더 올려야 열려요.`);
+    if (s.raid.tickets < 1) throw new ActionError('레이드 입장권이 없어요. 매일 1개씩 채워져요.');
+    s.raid.session = { tier, startedAt: c.now, cp, party: [...s.social.party] };
+    c.events.push({ type: 'raid', action: 'start', tier });
+  },
+  'raid/finish'(s, p, c) {
+    const ses = s.raid.session;
+    if (!ses) throw new ActionError('진행 중인 레이드가 없어요.');
+    s.raid.session = null;
+    const boss = raidBoss(ses.tier);
+    if (p.giveUp) {
+      c.events.push({ type: 'raidResult', win: false, giveUp: true, tier: ses.tier, boss: boss.name });
+      return;
+    }
+    const reportSec = (c.now - ses.startedAt) / 1000;
+    const members = raidMembers(s, ses);
+    const res = simulateRaid(boss, members, { seed: `${s.profile.seed}|raid|${ses.startedAt}`, reportSec, taps: p.taps, skills: p.skills });
+    if (!res.win) {
+      c.events.push({ type: 'raidResult', win: false, tier: ses.tier, boss: boss.name, hp: boss.hp, total: res.total, damage: res.damage, sec: res.sec });
+      return;
+    }
+    s.raid.tickets -= 1;
+    s.raid.clears += 1;
+    s.stats.raidClears += 1;
+    s.stats.raidBest = Math.max(s.stats.raidBest, ses.tier);
+    const chest = grantRaidChest(s, c, ses.tier);
+    pushLog(s, c.now, { kind: 'raid', text: `레이드 ${ses.tier}단계 「${boss.name}」 토벌!` });
+    c.events.push({ type: 'raidResult', win: true, tier: ses.tier, boss: boss.name, hp: boss.hp, total: res.total, damage: res.damage, sec: res.sec, chest });
+  },
+
   /* 프로필·설정 */
   'hero/rename'(s, p) {
     const name = String(p.name || '').trim().slice(0, 12);
@@ -513,6 +629,145 @@ function spendGold(s, amount) {
 function pushLog(s, at, entry) {
   s.log.unshift({ id: newId('l_'), at, ...entry });
   if (s.log.length > LOG_CAP) s.log.length = LOG_CAP;
+}
+
+
+/* ── 던전 · 레이드 ─────────────────────────────── */
+
+function adventureDefaults(today) {
+  return {
+    gems: Object.fromEntries(GEM_ORDER.map((k) => [k, 0])),
+    raid: { tickets: RAID.startTickets, day: today, clears: 0, session: null },
+    dungeon: { day: today, usedSec: 0, activeSince: null, frac: 0, count: 0 },
+    fieldBoss: { day: null, enteredAt: null, enteredSec: 0, cp: 0, party: [], result: null },
+    social: { party: [], guild: null },
+  };
+}
+
+/** 날짜가 바뀌면: 레이드 입장권 채우기, 어제 던전 정산, 끝난 필드 보스 정산 */
+function rollover(s, c, type) {
+  if (s.raid.day !== c.today) {
+    const days = diffDays(s.raid.day, c.today);
+    if (days > 0) s.raid.tickets = Math.min(RAID.ticketMax, s.raid.tickets + days);
+    s.raid.day = c.today;
+  }
+  if (s.dungeon.day !== c.today) {
+    if (s.dungeon.activeSince) settleDungeon(s, c, c.now);
+    s.dungeon = { day: c.today, usedSec: 0, activeSince: null, frac: 0, count: 0 };
+  }
+  // 끝난 필드 보스를 화면이 정산하지 못했으면(앱을 닫음 등) 10분 뒤 자동 정산. 화면의 정산 요청은 터치 횟수를 지킨다
+  const fb = s.fieldBoss;
+  if (type !== 'fieldBoss/finish' && fb.enteredAt && !fb.result
+    && c.now >= fieldBossWindow(fb.enteredAt).closeAt + FIELD_BOSS_GRACE_MS) settleFieldBoss(s, c, {});
+}
+const FIELD_BOSS_GRACE_MS = 10 * 60 * 1000;
+
+function addGems(s, gems) {
+  let n = 0;
+  for (const [k, v] of Object.entries(gems)) {
+    if (!GEMS[k] || !v) continue;
+    s.gems[k] = (s.gems[k] || 0) + v;
+    n += v;
+  }
+  s.stats.gemsEarned += n;
+  return n;
+}
+
+function settleDungeon(s, c, now) {
+  const d = s.dungeon;
+  const left = Math.max(0, DAY_DUNGEON.dailySec - d.usedSec);
+  const sec = Math.max(0, Math.min(left, Math.floor((now - d.activeSince) / 1000)));
+  d.activeSince = null;
+  d.usedSec += sec;
+  s.stats.dungeonSec += sec;
+  const band = powerBand(combatPower(s));
+  const got = dungeonGems(d.day, sec, band, { count: d.count, frac: d.frac });
+  d.count += got.whole;
+  d.frac = got.frac;
+  addGems(s, got.gems);
+  const dg = dayDungeonFor(d.day);
+  if (got.whole) pushLog(s, c.now, { kind: 'dungeon', text: `${dg.name}: 보석 ${got.whole}개` });
+  c.events.push({ type: 'dungeonResult', name: dg.name, sec, gems: got.gems, count: got.whole, left: DAY_DUNGEON.dailySec - d.usedSec });
+}
+
+/** 필드 보스 방을 입장 때 모습(전투력·파티)으로 다시 만든다 */
+export function fieldBossRoomFor(s, fb = s.fieldBoss) {
+  const st = heroStats(s);
+  const gear = {};
+  for (const slot of SLOT_ORDER) gear[slot] = st.gear[slot] ? { rarity: st.gear[slot].rarity } : null;
+  return fieldBossRoom({
+    day: fb.day,
+    me: { name: s.profile.name, cp: fb.cp, level: st.level, gear, guild: s.social.guild },
+    party: playersById(fb.party || [], fb.day),
+  });
+}
+
+function settleFieldBoss(s, c, p) {
+  const fb = s.fieldBoss;
+  const w = fieldBossWindow(fb.enteredAt);
+  const room = fieldBossRoomFor(s);
+  const reportSec = Math.min(FIELD_BOSS.durationSec, Math.max(fb.enteredSec + 1, (Math.min(c.now, w.closeAt) - w.openAt) / 1000));
+  const sim = simulateFieldBoss(room, { enteredSec: fb.enteredSec, reportSec, taps: p.taps, skills: p.skills });
+  const rank = sim.me.rank;
+  const tier = FIELD_BOSS_REWARDS.find((r) => rank <= r.maxRank) || FIELD_BOSS_REWARDS[FIELD_BOSS_REWARDS.length - 1];
+  const band = powerBand(fb.cp);
+  const rng = createRng(`${s.profile.seed}|fb|${fb.day}`);
+  const gold = Math.round(tier.gold * (1 + 0.15 * (band - 1)));
+  const gems = randomGems(rng, tier.gems);
+  let item = null;
+  if (tier.weights && rng.chance(tier.item)) {
+    const rarity = rollRarity(rng, s.pity, tier.weights);
+    item = generateItem(rng, { level: s.hero.level, rarity, source: 'fieldBoss', now: c.now });
+    addItem(s, c, item);
+  }
+  addGems(s, gems);
+  s.stats.fieldBossBest = s.stats.fieldBossBest ? Math.min(s.stats.fieldBossBest, rank) : rank;
+  fb.result = {
+    rank, damage: sim.me.damage, total: sim.total, killed: sim.killed, endSec: sim.endSec, hp: sim.hp,
+    reward: { label: tier.label, gold, gems, itemId: item ? item.id : null }, at: c.now,
+    top: sim.ranking.slice(0, 5).map((m) => ({ name: m.name, damage: m.damage, isMe: Boolean(m.isMe), party: Boolean(m.party) })),
+  };
+  pushLog(s, c.now, { kind: 'fieldBoss', text: `필드 보스 딜 ${rank}위 (${tier.label} 보상)` });
+  grant(s, c, { gold, source: 'fieldBoss', title: '필드 보스' });
+  c.events.push({ type: 'fieldBossResult', ...fb.result, item });
+}
+
+function raidMembers(s, ses) {
+  const day = s.raid.day;
+  return [
+    { id: 'me', name: s.profile.name, cp: ses.cp, isMe: true },
+    ...playersById(ses.party || [], day).map((p) => ({ id: p.id, name: p.name, cp: p.cp })),
+  ];
+}
+
+function raidItem(rng, s, tier, now) {
+  const boss = raidBoss(tier);
+  const rarity = rollRarity(rng, s.pity, raidWeights(tier));
+  const slot = rng.pick(SLOT_ORDER);
+  const item = generateItem(rng, { level: Math.max(s.hero.level, tier * 5), rarity, slot, source: 'raid', now });
+  for (const k of ['atk', 'def', 'hp', 'luck']) item[k] = Math.round(item[k] * RAID_GEAR_MULT);
+  item.name = `${boss.set}의 ${RAID_SLOT_NAMES[slot]}`;
+  item.raid = tier;
+  return item;
+}
+
+/** 레이드 보물상자: 레이드 전용 장비 1개(+확률로 1개 더), 골드·보석·경험치, 확률로 황금 상자 장비 */
+function grantRaidChest(s, c, tier) {
+  const rng = createRng(`${s.profile.seed}|raidchest|${s.raid.clears}`);
+  const items = [raidItem(rng, s, tier, c.now)];
+  if (rng.chance(0.05 + 0.02 * tier)) items.push(raidItem(rng, s, tier, c.now));
+  if (rng.chance(0.2)) {
+    const rarity = rollRarity(rng, s.pity, GOLD_CHEST_WEIGHTS);
+    items.push(generateItem(rng, { level: s.hero.level, rarity, source: 'raid', now: c.now }));
+  }
+  const gold = Math.round(150 * tier * rng.range(0.8, 1.2));
+  const colors = [rng.pick(GEM_ORDER), rng.pick(GEM_ORDER)];
+  const gems = randomGems(rng, (3 + 2 * tier) * 2, colors);
+  const xp = 30 * tier;
+  for (const it of items) addItem(s, c, it);
+  addGems(s, gems);
+  grant(s, c, { xp, gold, source: 'raid', title: `레이드 ${tier}단계` });
+  return { items, gold, gems, xp };
 }
 
 /* ── 조회·검증 ─────────────────────────────── */
