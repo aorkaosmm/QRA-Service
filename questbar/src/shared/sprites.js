@@ -333,7 +333,7 @@ export const UI_ICONS = {
   },
   check: {
     rows: ['..........', '.......oo.', '......ogo.', '.oo..ogo..', 'ogo.ogo...', '.ogogo....', '..ogo.....', '...o......', '..........', '..........'],
-    palette: { o: INK, g: '#6fdc8c' },
+    palette: { o: INK, g: '#ffffff' },
   },
   lock: {
     rows: ['..oooo....', '.o....o...', '.o....o...', 'oooooooo..', 'oyyyyyyo..', 'oyyooyyo..', 'oyyooyyo..', 'oyyyyyyo..', 'oooooooo..', '..........'],

@@ -24,7 +24,7 @@ export const shopView = {
       <div class="shop-item">
         <div class="ico">${uiIcon('star', 3)}</div>
         <div class="info"><div class="nm">${esc(r.title)}</div><div class="ds">내가 정한 보상 · 골드로 사용</div></div>
-        <button class="icon-btn" data-act="reward-del" data-id="${r.id}" title="삭제">${uiIcon('trash', 1)}</button>
+        <button class="icon-btn" data-act="reward-del" data-id="${r.id}" title="삭제">${uiIcon('trash', 2)}</button>
         <button class="btn gold small" data-act="reward-buy" data-id="${r.id}" ${gold < r.cost ? 'disabled' : ''}>${uiIcon('coin', 1)} ${r.cost}</button>
       </div>`).join('');
 

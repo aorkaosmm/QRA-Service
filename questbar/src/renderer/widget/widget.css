@@ -329,7 +329,8 @@ textarea { resize: vertical; min-height: 54px; }
   position: relative;
 }
 .quest:hover { border-color: var(--line); border-left-color: var(--c, var(--line)); }
-.quest.done { opacity: 0.55; }
+.quest.done { background: color-mix(in srgb, var(--ok) 8%, var(--panel)); }
+.quest.done .q-body { opacity: 0.5; }
 .quest.done .q-title { text-decoration: line-through; }
 .quest .q-body { flex: 1; min-width: 0; cursor: pointer; }
 .quest .q-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -355,7 +356,7 @@ textarea { resize: vertical; min-height: 54px; }
 }
 .chk:hover { background: color-mix(in srgb, var(--ok) 25%, var(--panel-2)); }
 .chk img { visibility: hidden; }
-.quest.done .chk { background: color-mix(in srgb, var(--ok) 45%, var(--panel-2)); }
+.quest.done .chk { background: var(--ok); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.25); }
 .quest.done .chk img { visibility: visible; }
 .chk:disabled { opacity: 0.4; cursor: not-allowed; }
 
@@ -519,8 +520,8 @@ textarea { resize: vertical; min-height: 54px; }
 .modal h3 { margin: 0 0 10px; font-size: 13px; display: flex; align-items: center; gap: 6px; }
 .field { margin-bottom: 9px; }
 .field > label { display: block; margin-bottom: 3px; color: var(--muted); font-size: 11px; }
-.field-row { display: flex; gap: 6px; }
-.field-row > * { flex: 1; }
+.field-row { display: flex; flex-wrap: wrap; gap: 0 6px; }
+.field-row > * { flex: 1 1 96px; min-width: 0; }
 .modal-actions { display: flex; gap: 6px; margin-top: 12px; }
 .modal-actions .spacer { flex: 1; }
 .reward-preview { padding: 6px 8px; border-radius: 5px; background: var(--panel); color: var(--muted); font-family: var(--font-small); font-size: 10px; }

@@ -11,13 +11,13 @@ export function taskRow(ctx, t, day) {
   const cat = CATEGORIES[t.category] || CATEGORIES.todo;
   const future = t.type === 'event' && day > ctx.today;
   const late = t.type === 'todo' && !done && t.date < ctx.today ? diffDays(t.date, ctx.today) : 0;
-  const when = t.time ? (t.endTime ? `${t.time}~${t.endTime}` : t.time) : t.type === 'todo' ? '할 일' : '종일';
+  const when = t.time ? (t.endTime ? `${t.time}~${t.endTime}` : t.time) : t.type === 'todo' ? '' : '종일';
   const repeat = { weekly: '매주', monthly: '매월', yearly: '매년' }[t.repeat];
   return `<div class="quest ${done ? 'done' : ''}" style="--c:${cat.color}" data-key="task:${t.id}:${day}">
     <button class="chk" data-act="toggle-task" data-id="${t.id}" data-day="${day}" ${future ? 'disabled title="아직 오지 않은 일정이에요"' : 'title="완료"'}>${uiIcon('check', 2)}</button>
     <div class="q-body" data-act="edit-task" data-id="${t.id}" title="눌러서 수정">
       <div class="q-title">${esc(t.title)}</div>
-      <div class="q-meta">${catIcon(t.category, 1)}<span>${cat.label}</span><span>${when}</span>${repeat ? `<span>↻ ${repeat}</span>` : ''}${late ? `<span class="late">${late}일 지남</span>` : ''}<span class="stars">${stars((DIFFICULTIES[t.difficulty] || DIFFICULTIES.normal).stars)}</span></div>
+      <div class="q-meta">${catIcon(t.category, 1)}<span>${cat.label}</span>${when ? `<span>${when}</span>` : ''}${repeat ? `<span>↻ ${repeat}</span>` : ''}${late ? `<span class="late">${late}일 지남</span>` : ''}<span class="stars">${stars((DIFFICULTIES[t.difficulty] || DIFFICULTIES.normal).stars)}</span></div>
     </div>
   </div>`;
 }
