@@ -81,7 +81,12 @@ export const shopView = {
       const title = document.getElementById('reward-title');
       const cost = document.getElementById('reward-cost');
       const res = await ctx.act('reward/add', { title: title.value, cost: cost.value });
-      if (res.ok) toast('나만의 보상을 추가했어요.');
+      if (res.ok) {
+        // 다시 그린 뒤의 새 입력칸을 비운다
+        const fresh = document.getElementById('reward-title');
+        if (fresh) fresh.value = '';
+        toast('나만의 보상을 추가했어요.');
+      }
     },
   },
 };

@@ -90,7 +90,9 @@ function applySettingsDiff(a, b) {
 
 function applyLoginItem(enabled) {
   if (IS_SMOKE || !app.isPackaged) return; // 개발 실행 중에는 등록하지 않음
-  app.setLoginItemSettings({ openAtLogin: enabled });
+  // 포터블 exe는 임시 폴더에서 실행되므로 원래 exe 경로를 등록
+  const exe = process.env.PORTABLE_EXECUTABLE_FILE || process.execPath;
+  app.setLoginItemSettings({ openAtLogin: enabled, path: exe });
 }
 
 /* ───────────── 위젯 창 ───────────── */
