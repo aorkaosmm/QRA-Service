@@ -222,6 +222,9 @@ details.sol[open] > summary{margin-bottom:8px}
 
 /* ---------- misc ---------- */
 .grid2{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px}
+.fgrid{grid-template-columns:repeat(auto-fit, minmax(min(100%, 380px), 1fr))}
+.fgrid .eq{margin:8px 0}
+@media (max-width:480px){.fgrid .eq{font-size:.9em}}
 .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:12px 14px; min-width:0}
 .card h4{margin-top:0}
 .kbd{font-family:var(--f-mono); font-size:.8em; border:1px solid var(--line-strong); border-bottom-width:2px; border-radius:4px; padding:0 5px}
@@ -231,14 +234,14 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 </style>
 <a class="skip" href="#ch0">본문으로 건너뛰기</a>
 <header class="masthead">
-  <div class="tagline"><span class="tag">SIS</span><span>IEC 61508:2010 (2판)</span><span>IEC 61511:2016 (2판) + AMD1:2017</span><span>사전학습 · 고급</span></div>
+  <div class="tagline"><span class="tag">SIS</span><span>IEC 61508-1~7:2010</span><span>IEC 61511-1:2016+AMD1:2017 · -2 · -3:2016</span><span>마스터 · 필독서</span></div>
   <h1>기능안전 엔지니어 심화 매뉴얼</h1>
-  <p class="lede">SIL 결정(LOPA), SIL 검증(exSILentia), SRS 실무 경험자를 위한 Functional Safety Engineer(SIS) 과정 사전학습 교재입니다. 계산 도구가 대신 처리하던 부분을 표준 조항과 신뢰성 수학으로 다시 유도하고, 계산 도구와 모의시험으로 이해도를 점검합니다.</p>
+  <p class="lede">SIL 결정(LOPA), SIL 검증(exSILentia), SRS 실무 경험자를 위한 IEC 61508·61511 마스터 교재입니다. Functional Safety Engineer(SIS) 과정 대비를 넘어, 표준 원문(61508-1~7, 61511-1~3)과 대조한 조항 해설, 계산 도구가 대신 처리하던 신뢰성 수학의 유도, 조항별 점검 질문, 계산 도구와 모의시험을 한 권에 담았습니다.</p>
   <ul class="chips">
-    <li><b>18</b>개 장 (수명주기 순서)</li>
-    <li>계산·시각화 도구 <b>6</b>종</li>
-    <li>모의시험 객관식 <b>40</b>문항 + 서술·계산 <b>8</b>문제</li>
-    <li>공개 기술교재 링크 모음</li>
+    <li><b>21</b>개 장 (수명주기 순서 + 표준 마스터 노트)</li>
+    <li>IEC 61508·61511 원문 대조</li>
+    <li>계산·시각화 도구 <b>7</b>종</li>
+    <li>모의시험 객관식 <b>100</b>문항 + 서술·계산 <b>12</b>문제</li>
   </ul>
 </header>
 <div class="layout">
@@ -260,10 +263,13 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
       <li><a href="#ch11"><span class="n">11</span><span>응용 프로그램과 IEC 61508-3</span></a></li>
       <li><a href="#ch12"><span class="n">12</span><span>설치·검증·운전·변경·폐기</span></a></li>
       <li><a href="#ch13"><span class="n">13</span><span>종합 사례: HIPPS 검증</span></a></li>
-      <li><a href="#ch14"><span class="n">14</span><span>모의시험</span></a></li>
-      <li><a href="#ch15"><span class="n">15</span><span>공식집</span></a></li>
-      <li><a href="#ch16"><span class="n">16</span><span>용어집</span></a></li>
-      <li><a href="#ch17"><span class="n">17</span><span>기술교재 라이브러리</span></a></li>
+      <li><a href="#ch14"><span class="n">14</span><span>IEC 61511-1 조항별 마스터 노트</span></a></li>
+      <li><a href="#ch15"><span class="n">15</span><span>IEC 61508 핵심 조항 노트</span></a></li>
+      <li><a href="#ch16"><span class="n">16</span><span>부속서·지침 활용 지도</span></a></li>
+      <li><a href="#ch17"><span class="n">17</span><span>모의시험</span></a></li>
+      <li><a href="#ch18"><span class="n">18</span><span>공식집</span></a></li>
+      <li><a href="#ch19"><span class="n">19</span><span>용어집</span></a></li>
+      <li><a href="#ch20"><span class="n">20</span><span>기술교재 라이브러리</span></a></li>
     </ol>
     <p class="toc-foot">상자 색: <b style="color:var(--amber-ink)">실무 판단</b> · <b style="color:var(--slate-ink)">근거</b> · <b style="color:var(--red-ink)">함정</b> · <b style="color:var(--blue-ink)">시험 포인트</b> · <b style="color:var(--accent-ink)">심화</b></p>
   </details>
@@ -276,7 +282,7 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <h3><span class="sec">0.1</span>이 교재의 목표</h3>
 <div class="prose">
 <p>Functional Safety Engineer(SIS) 과정은 IEC 61508과 IEC 61511 전체 수명주기를 4일 안에 훑고 시험까지 치릅니다. 이미 LOPA로 SIL을 정하고, exSILentia로 PFD를 검증하고, SRS를 써 본 엔지니어에게 이 과정의 어려운 부분은 대개 두 곳입니다. 하나는 <strong>실무에서 직접 다루지 않던 조항</strong>(기능안전 관리, FSA 독립성, 체계적 능력, 응용 프로그램 수명주기, 운전·변경 요건)이고, 다른 하나는 <strong>도구가 숨겨 둔 수학</strong>(t<sub>CE</sub>·t<sub>GE</sub>의 의미, 1oo2의 1/3 계수, 불완전 증명시험, PFH, 요구율 경계)입니다. 이 교재는 두 부분을 집중적으로 다룹니다.</p>
-<p>장 순서는 IEC 61511 SIS 안전 수명주기 순서를 따릅니다. 1–2장은 틀과 관리, 3–5장은 분석·할당·명세, 6–9장은 하드웨어 무결성의 이론, 10–12장은 설계·소프트웨어·운전, 13장은 종합 사례입니다. 14–17장은 모의시험, 공식집, 용어집, 기술교재 목록입니다.</p>
+<p>장 순서는 IEC 61511 SIS 안전 수명주기 순서를 따릅니다. 1–2장은 틀과 관리, 3–5장은 분석·할당·명세, 6–9장은 하드웨어 무결성의 이론, 10–12장은 설계·소프트웨어·운전, 13장은 종합 사례입니다. 14–16장은 표준을 직접 다루는 마스터 노트로, 14장은 IEC 61511-1 전 조항의 점검 질문, 15장은 IEC 61508-1~4 핵심 조항, 16장은 부속서·지침(61508-5·6·7, 61511-2·3) 활용 지도입니다. 17–20장은 모의시험, 공식집, 용어집, 기술교재 목록입니다.</p>
 </div>
 
 <h3><span class="sec">0.2</span>표기 규칙</h3>
@@ -284,7 +290,7 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <ul>
 <li>출처는 대괄호 태그로 적습니다. 표준 조항은 <span class="src">[61511-1 §11.4]</span>처럼 적습니다. 본 교재가 직접 유도하거나 계산한 내용은 <span class="src">[유도]</span>로 표시합니다.</li>
 <li>숫자는 출처가 있는 값만 씁니다. 학습을 위해 임의로 정한 값은 반드시 <strong>예시값</strong>이라고 밝힙니다.</li>
-<li>표준 원문은 유료 문서입니다. 이 교재의 조항 설명은 원문을 옮긴 것이 아니라 요지를 풀어 쓴 것입니다. 조항 번호는 공개 미리보기(목차)와 공개 해설 자료로 확인한 것만 적었고, 확인하지 못한 세부 번호는 적지 않았습니다.</li>
+<li>조항 설명은 IEC 61508-1~7(2010)과 IEC 61511-1(2016+AMD1:2017 통합판, Ed. 2.1)·61511-2·61511-3(2016) 원문과 대조해 검증했습니다. 표준은 라이선스 문서이므로 본문을 옮기지 않고 요지를 풀어 썼으며, 조항 번호를 붙였습니다. 정의는 핵심만 짧게 인용합니다. 61511-1 조항 번호는 통합판(Ed. 2.1) 기준입니다.</li>
 </ul>
 </div>
 <div class="box judg"><span class="lbl">실무 판단:</span><p>현장 판단·설계 관행·해석을 담습니다. 표준이 직접 요구하는 내용과 구분해서 읽으십시오.</p></div>
@@ -298,7 +304,7 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <thead><tr><th>태그</th><th>자료</th></tr></thead>
 <tbody>
 <tr><td class="mono">[61508-n]</td><td>IEC 61508-n:2010 (2판). n=1 일반 요건, 2 하드웨어, 3 소프트웨어, 4 정의, 5 SIL 결정 방법 예, 6 2·3부 적용 지침(계산식), 7 기법·조치 개요</td></tr>
-<tr><td class="mono">[61511-n]</td><td>IEC 61511-n:2016 (2판). 1부는 AMD1:2017 포함 통합판(Ed. 2.1)과 조항 구조가 같습니다</td></tr>
+<tr><td class="mono">[61511-n]</td><td>IEC 61511-n:2016 (2판). 1부는 AMD1:2017을 반영한 통합판(Ed. 2.1)으로 대조했습니다. <span class="mono">[61511-1 §11.4.9]</span>처럼 조항을 직접 적은 곳은 원문 확인 사항입니다</td></tr>
 <tr><td class="mono">[61511-PV]</td><td>IEC 61511-1:2016 공개 미리보기(서문·소개·적용범위·목차·그림/표 목록)</td></tr>
 <tr><td class="mono">[61508-6PV]</td><td>IEC 61508-6:2010 공개 미리보기(부속서·그림·표 목록)</td></tr>
 <tr><td class="mono">[TR61511-4]</td><td>IEC TR 61511-4:2020, 61511-1 1판→2판 변경 근거 해설(공개 미리보기 목차)</td></tr>
@@ -340,7 +346,8 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <tr><td>Day 1 — M1 Introduction to Functional Safety, M2 IEC 61508 / IEC 61511, M3 HAZOP–SIF–SIL</td><td>1, 2, 3, 4장</td></tr>
 <tr><td>Day 2 — M4 Safety Engineering, M5 Functional Safety Management, M6 Failures and Hardware Fault Tolerance</td><td>5, 10, 11장 / 2, 12장 / 6, 8장</td></tr>
 <tr><td>Day 3 — M7 Common Cause and other failure types, M8 Safety Calculations</td><td>9장 / 6, 7, 13장</td></tr>
-<tr><td>Day 4 — 시험</td><td>14장(모의시험), 15장(공식집)</td></tr>
+<tr><td>Day 4 — 시험</td><td>17장(모의시험), 18장(공식집)</td></tr>
+<tr><td>표준 원문 대조·조항 암기</td><td>14장(61511-1 점검 질문), 15장(61508 핵심 조항), 16장(부속서 지도)</td></tr>
 <tr><td>그 밖의 기관 공통 주제: SRS 템플릿, RBD·FTA·Markov, QRA, 검증·감사·평가, 운전·변경, 보안</td><td>5, 6, 7, 12, 3장</td></tr>
 </tbody></table></div>
 <p class="small">모듈 목록 출처: <span class="src">[YKG]</span>. 주제 목록 교차 확인: <span class="src">[SE8801] [ABB-T245] [SIE]</span>.</p>
@@ -351,7 +358,8 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <li><strong>먼저 약점 영역</strong>: 2장(FSM, 검증·확인·FSA·감사 구분, FSA 단계와 독립성), 8장(Type A/B, Route 1H/2H, 체계적 능력, prior use와 proven in use), 11장(FPL/LVL/FVL, 61508-3), 12장(운전 중 요건, bypass, MOC). 이 부분은 LOPA·검증 실무만으로는 잘 다져지지 않고, 객관식에서 비중이 큽니다.</li>
 <li><strong>다음은 도구가 숨긴 수학</strong>: 6장의 PFD(t) 유도와 1oo2의 1/3 계수, 7장의 t<sub>CE</sub>·t<sub>GE</sub>와 IEC 61508-6 식, PTC·T<sub>2</sub>, PFH. 계산 문제는 이 식들을 손으로 풀게 합니다.</li>
 <li><strong>강점 영역은 점검만</strong>: 4장(LOPA·Risk graph), 5장(SRS). 다만 4.4의 "SIF 요구율은 SIF보다 먼저 작동하는 IPL만 줄인다", 3.4의 "요구율과 위험사건 빈도의 관계"는 경험자도 자주 놓칩니다.</li>
-<li><strong>마무리</strong>: 13장 사례를 계산기로 직접 재현하고, 14장 모의시험을 시간 제한을 두고 풉니다. 시험 전날에는 15장 공식집만 봅니다.</li>
+<li><strong>표준 원문과 연결</strong>: 14장의 점검 질문을 원문 조항과 나란히 놓고 읽습니다. 조항 번호를 묻는 객관식에 대비하는 가장 빠른 방법입니다.</li>
+<li><strong>마무리</strong>: 13장 사례를 계산기로 직접 재현하고, 17장 모의시험을 시간 제한을 두고 풉니다. 시험 전날에는 18장 공식집만 봅니다.</li>
 </ol>
 </div>
 <div class="box judg"><span class="lbl">실무 판단:</span><p>exSILentia 결과를 손으로 재현할 수 있는지 확인해 보십시오. 2oo3 송신기 한 서브시스템이라도 t<sub>CE</sub>, t<sub>GE</sub>, CCF 항을 따로 계산해서 도구 출력과 맞춰 보면, 시험의 계산 문제는 거의 다 풀립니다. 맞지 않는다면 대개 PTC·mission time·SSI 같은 도구 고유 입력 때문입니다(7.9절).</p></div>
@@ -470,15 +478,15 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <tbody>
 <tr><td>SIS / SIF / SIL</td><td>SIS는 하나 이상의 SIF를 구현하는 계장 시스템(센서–로직–최종요소)입니다. SIF는 특정 위험에 대해 안전 상태를 달성·유지하는 기능입니다. SIL은 SIF에 할당되는 무결성 등급입니다. "SIL 3 SIS"는 엄밀하지 않은 표현입니다.</td></tr>
 <tr><td>PFD(t) / PFD<sub>avg</sub> / RRF</td><td>PFD(t)는 시각 t에서 요구가 오면 실패할 확률로, 증명시험 사이에 톱니 모양으로 변합니다. PFD<sub>avg</sub>는 그 시간 평균이고, RRF = 1/PFD<sub>avg</sub>입니다.</td></tr>
-<tr><td>저빈도 / 고빈도 / 연속 모드</td><td>61508-4: 요구 빈도 연 1회 이하가 저빈도(low demand), 연 1회 초과가 고빈도(high demand), 정상 운전의 일부로 EUC를 안전 상태로 유지하는 것이 연속(continuous) 모드입니다. 61511 2판은 저빈도·고빈도를 묶어 "demand mode SIF", 연속을 "continuous mode SIF"로 부릅니다 <span class="src">[BRATT]</span>. 저빈도는 PFD<sub>avg</sub>(61511-1 표 4), 고빈도·연속은 PFH(표 5)로 판정합니다.</td></tr>
-<tr><td>위험 고장 / 안전 고장</td><td>위험 고장은 SIF가 요구 시 동작하지 못하게 하거나 동작 확률을 낮추는 고장이고, 안전 고장은 그렇지 않은 고장(대개 오동작 트립 쪽)입니다. 어느 쪽인지는 SRS가 정한 <strong>안전 상태</strong>에 따라 달라집니다. 같은 "출력 하한 고착"도 저수위 트립에서는 안전 쪽, 고수위 트립에서는 위험 쪽입니다.</td></tr>
+<tr><td>저빈도 / 고빈도 / 연속 모드</td><td>61508-4: 요구 빈도 연 1회 이하가 저빈도(low demand), 연 1회 초과가 고빈도(high demand), 정상 운전의 일부로 EUC를 안전 상태로 유지하는 것이 연속(continuous) 모드입니다. 61511 2판은 저빈도·고빈도를 묶어 "demand mode SIF", 연속을 "continuous mode SIF"로 부릅니다 <span class="src">[BRATT]</span>. 61511-1 §9.2.3은 요구 모드 SIF의 SIL을 표 4(PFD<sub>avg</sub>) <strong>또는</strong> 표 5(PFH)로 정하게 하고, 3.2.39.1 주석 2는 고빈도 모드에는 보통 연속 모드 기준(PFH)이 적절하다고 봅니다. 연속 모드는 표 5만 씁니다(§9.2.4). 61508-1 §7.6.2.9는 저빈도는 표 2(PFD<sub>avg</sub>), 고빈도·연속은 표 3(PFH)으로 나눕니다.</td></tr>
+<tr><td>위험 고장 / 안전 고장</td><td>위험 고장은 주어진 안전 동작을 방해하거나 무력화하는 고장으로, 결함 허용이 있으면 SIF를 열화(PFD·PFH 증가)시키고 없으면 무력화합니다 <span class="src">[61511-1 3.2.11]</span>. 안전 고장은 안전 동작에 유리한 고장으로, 결함 허용이 없으면 오동작 트립이 됩니다 <span class="src">[61511-1 3.2.62]</span>. 한 SIF에 안전한 트립이 다른 SIF에는 위험할 수도 있습니다. 어느 쪽인지는 SRS가 정한 <strong>안전 상태</strong>에 따라 달라집니다. 같은 "출력 하한 고착"도 저수위 트립에서는 안전 쪽, 고수위 트립에서는 위험 쪽입니다.</td></tr>
 <tr><td>무작위 하드웨어 고장 / 체계적 고장</td><td>무작위 고장은 하드웨어의 물리적 열화로 예측 가능한 비율로 발생하며 확률로 정량화합니다. 체계적 고장은 명세·설계·제조·설치·운전의 오류에 결정론적으로 연관되며, 설계나 절차를 바꿔야만 제거됩니다. 소프트웨어 고장은 모두 체계적 고장입니다.</td></tr>
-<tr><td>공통원인고장(CCF) / 공통모드고장</td><td>CCF는 하나의 원인으로 여러 장치가 고장 나는 것이고, 공통모드고장은 그중 여러 장치가 같은 방식으로 고장 나는 경우입니다. 61511 2판에서 두 정의를 분명히 구분했습니다 <span class="src">[BRATT]</span>.</td></tr>
+<tr><td>공통원인고장(CCF) / 공통모드고장</td><td>CCF는 단일 사건으로 생긴 서로 다른 장치들의 동시 고장이며, 그 고장들은 서로의 결과가 아닙니다(동시에 생기지 않을 수도 있어 먼저 발견할 기회가 있음). 공통모드고장은 같은 고장 모드(동일한 결함)를 보이는 동시 고장으로, 원인이 서로 다를 수도 있습니다. CCF가 공통모드고장으로 이어질 수 있고, 둘 다 종속 고장(dependent failure)에 속합니다 <span class="src">[61511-1 3.2.6.1, 3.2.6.2, 3.2.12]</span>.</td></tr>
 <tr><td>HFT / 중복</td><td>HFT N은 N개의 결함까지는 기능을 유지하고 N+1개에서 상실된다는 뜻입니다. 1oo2·2oo3은 HFT 1, 2oo2는 HFT 0(중복이지만 결함 허용은 없음), 1oo3은 HFT 2입니다.</td></tr>
 <tr><td>증명시험 / 진단시험 / 점검</td><td>증명시험(proof test)은 주기적으로 미검출 위험 고장을 드러내는 시험입니다. 진단시험은 자동·온라인으로 결함을 검출하는 기능입니다. 점검(inspection)은 육안 등으로 상태를 확인하는 활동이며 61511 2판은 §16.3.2에서 별도로 다룹니다 <span class="src">[61511-PV]</span>.</td></tr>
-<tr><td>Prior use / Proven in use</td><td>Prior use는 61511의 장치 선정 근거(§11.5.3, 사용자가 운전 경험 증거를 모음)이고, proven in use는 61508의 체계적 능력 입증 경로(Route 2S)입니다. 8.5절에서 비교합니다.</td></tr>
-<tr><td>MTTR / MRT</td><td>MTTR(mean time to restoration)은 고장 발생부터 복귀까지의 시간으로 검출 시간을 포함합니다. MRT(mean repair time)는 수리를 시작해서 끝낼 때까지의 시간입니다. 61508-6 계산식에서 위험·검출 고장에는 MTTR, 증명시험으로 발견된 고장에는 MRT를 씁니다.</td></tr>
-<tr><td>공정안전시간 / SIS 응답시간</td><td>공정안전시간(PST)은 공정이나 BPCS의 고장이 일어난 뒤 SIF가 동작하지 않으면 위험사건이 일어나기까지의 시간이며 61511 2판에서 정의가 추가되었습니다 <span class="src">[BRATT]</span>. SIS 응답시간은 이 시간 안에 공정을 안전 상태로 만들어야 합니다(5.3절).</td></tr>
+<tr><td>Prior use / Proven in use</td><td>Prior use는 사용자가 유사한 운전 환경의 이전 운전 경험을 근거로 장치가 SIS에 적합하다고 문서로 평가한 것입니다(61511-1 3.2.51, §11.5.3). Proven in use는 61508의 체계적 능력 입증 경로(Route 2S, 61508-2 §7.4.10)로, 주석의 표현으로는 제조사의 설계 기준에 근거하고, prior use는 특정 운전 환경에서의 설치 성능을 다룹니다. 8.5절에서 비교합니다.</td></tr>
+<tr><td>MTTR / MRT</td><td>MTTR은 (a) 고장 검출 시간 + (b) 수리 착수 전 시간 + (c) 실제 수리 시간 + (d) 운전 복귀 전 시간을 합한 기대값이고, MRT는 (b)+(c)+(d)입니다 <span class="src">[61511-1 3.2.37]</span>. 61511은 MPRT(최대 허용 수리시간)도 정의하며, 이를 정하면 계산에서 MRT 대신 쓸 수 있습니다. 61508-6 식에서 위험·검출 고장에는 MTTR, 증명시험으로 발견된 고장에는 MRT를 씁니다.</td></tr>
+<tr><td>공정안전시간 / SIS 응답시간</td><td>공정안전시간(PST)은 공정이나 BPCS의 고장이 일어난 뒤 SIF가 동작하지 않으면 위험사건이 일어나기까지의 시간이며 61511 2판에서 정의가 추가되었습니다. 정의의 주석은 이것이 <strong>공정만의 속성</strong>이며, SIF는 공정 지연(예: 용기 냉각)까지 감안해 충분히 일찍 동작을 끝내야 한다고 덧붙입니다 <span class="src">[61511-1 3.2.52.1]</span>. SIS 응답시간은 이 시간 안에 공정을 안전 상태로 만들어야 합니다(5.3절).</td></tr>
 </tbody></table></div>
 <div class="box trap"><span class="lbl">함정:</span><p>"2oo2는 중복이므로 신뢰도가 높다"는 반만 맞습니다. 2oo2는 오동작 트립을 줄이지만 PFD는 1oo1의 약 두 배입니다(위험 고장 하나로 기능을 잃으므로 HFT 0). 안전 측 중복은 1oo2·2oo3입니다.</p></div>
 <div class="box exam"><span class="lbl">시험 포인트:</span><ul>
@@ -557,8 +565,8 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <tr><td class="mono">5.2.2</td><td>조직과 자원</td><td>각 활동의 책임자(사람·부서·조직)를 지정하고 알립니다. 수행자는 역량을 갖춰야 합니다. 2판은 역량 지식 영역 목록을 "shall"로 바꾸고, 역량 관리 절차와 주기적 역량 평가를 요구합니다 <span class="src">[BRATT]</span>.</td></tr>
 <tr><td class="mono">5.2.3</td><td>위험 평가와 위험 관리</td><td>위험원을 식별하고 위험을 평가하여 필요한 위험저감을 정하는 체계를 갖춥니다.</td></tr>
 <tr><td class="mono">5.2.4</td><td>안전 계획</td><td>SIS 안전 수명주기 계획을 세우고, 수명주기 활동·책임·일정·검증·FSA 계획을 정합니다.</td></tr>
-<tr><td class="mono">5.2.5</td><td>실행과 감시</td><td>H&amp;RA·FSA·감사·검증·확인에서 나온 권고를 신속히 추적·해결하는 절차, 공급자 관리, SIS 성능(고장·요구) 감시를 둡니다.</td></tr>
-<tr><td class="mono">5.2.6</td><td>평가·감사·개정</td><td>FSA(§5.2.6.1)와 기능안전 감사(§5.2.6.2)를 계획하고 수행합니다.</td></tr>
+<tr><td class="mono">5.2.5</td><td>실행과 감시</td><td>권고의 신속한 추적·해결 절차(H&amp;RA, 보증 활동, 검증, 확인, FSA, 감사, 사고 후 조사; 5.2.5.1). 공급자는 품질관리체계를 갖추고, 제품의 기능안전을 주장하면 61508-1 6장에 맞는 FSMS를 갖춰야 함(5.2.5.2). SIS 성능 평가 절차: 체계적 고장 식별·예방, 신뢰성 매개변수와 설계 가정 비교, 고장률이 가정보다 크면 시정 조치, 실제 요구율과 위험성평가 가정 비교(5.2.5.3). 표준 이전에 만든 기존 SIS는 사용자가 안전하게 설계·유지·점검·시험·운전되고 있는지 판단(5.2.5.4).</td></tr>
+<tr><td class="mono">5.2.6</td><td>평가·감사·개정</td><td>FSA(§5.2.6.1). 감사(§5.2.6.2)는 해당 SIS 작업을 하지 않는 독립된 사람이 수행하고 빈도·독립성·기록을 절차로 정함. 동일 사양 교체(replacement in kind) 외의 모든 SIS 변경과, BPCS 재설계·인력 배치 변경처럼 SIS 요구에 영향을 주는 변경을 다루는 MOC 절차(5.2.6.2.4–5).</td></tr>
 <tr><td class="mono">5.2.7</td><td>SIS 형상 관리</td><td>하드웨어·응용 프로그램·문서의 형상을 식별하고 변경을 통제합니다.</td></tr>
 </tbody></table></div>
 <h4>역량(competence)에서 고려할 항목</h4>
@@ -572,11 +580,11 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <tbody>
 <tr><td><strong>검증</strong><br>(verification, §7)</td><td>이 단계의 출력이 이 단계의 입력·요건을 만족하는가?</td><td>각 단계의 목표와 요건</td><td>모든 단계마다</td><td>적절한 역량자. 독립성은 계획에서 정함</td></tr>
 <tr><td><strong>확인</strong><br>(validation, §15)</td><td>설치된 SIS가 SRS를 만족하는가?</td><td>SRS</td><td>설치·시운전 후, 운전 개시 전</td><td>확인 계획에 따른 수행 조직</td></tr>
-<tr><td><strong>FSA</strong><br>(§5.2.6.1)</td><td>SIS와 보호계층이 달성한 기능안전이 충분한가?</td><td>기능안전 달성에 대한 판단(증거 기반)</td><td>단계 1–5</td><td>프로젝트 설계팀에 속하지 않은 선임 역량자를 1명 이상 포함한 팀</td></tr>
-<tr><td><strong>감사</strong><br>(audit, §5.2.6.2)</td><td>정해진 절차가 실제로 지켜지고 효과적인가?</td><td>FSM 절차·계획</td><td>계획에 따라 주기적</td><td>독립적 감사자</td></tr>
+<tr><td><strong>FSA</strong><br>(§5.2.6.1)</td><td>SIS와 보호계층이 달성한 기능안전이 충분한가?</td><td>기능안전 달성에 대한 판단(증거 기반)</td><td>단계 1–5</td><td>단계 1–3은 프로젝트 설계팀, 단계 4–5는 SIS 운전·유지보수에 관여하지 않은 선임 역량자를 1명 이상 포함한 팀 <span class="src">[§5.2.6.1.2]</span></td></tr>
+<tr><td><strong>감사</strong><br>(audit, §5.2.6.2)</td><td>정해진 절차가 실제로 지켜지고 효과적인가?</td><td>FSM 절차·계획</td><td>계획에 따라 주기적</td><td>감사 대상 SIS 작업을 하지 않는 독립된 사람 <span class="src">[§5.2.6.2.3]</span></td></tr>
 </tbody></table></div>
-<div class="prose"><p>2판은 §7에 시험(testing)을 다루는 조항(§7.2.2)을 새로 두어 하드웨어와 응용 프로그램 시험을 검증의 틀 안에서 함께 요구합니다 <span class="src">[BRATT]</span>.</p></div>
-<div class="box trap"><span class="lbl">함정:</span><p>"FAT는 확인(validation)이다"는 틀립니다. FAT는 설계 단계의 <strong>검증</strong> 활동입니다(61511-1 §13, 2판에서 FAT 조항은 권고 "recommendations"로 되어 있습니다 <span class="src">[61511-PV]</span>). 확인은 설치된 SIS 전체를 SRS에 대조하는 §15 활동입니다.</p></div>
+<div class="prose"><p>검증 계획(§7.2.1)은 활동, 기법, 시기, 수행자와 독립성, 검증 대상과 기준 정보, 데이터의 정확성, 부적합 처리, 도구, 요구사항 추적성, 문서의 가독성·감사 가능성, 설계의 시험 가능성까지 다뤄야 합니다. 검증에 시험이 포함되면 통합 전략, 시험 범위·사례·데이터, 환경, 합격 기준, 시정 절차, 장소, 외부 의존성, 인원, 변경 관리를 계획에 넣어야 합니다(§7.2.2). 안전 기능과 통합된 비안전 기능은 비간섭을 검증해야 하고(§7.2.3), 시험 중 변경은 영향 분석으로 재검증 범위를 정해야 합니다(§7.2.5).</p></div>
+<div class="box trap"><span class="lbl">함정:</span><p>"FAT를 했으니 확인(validation)은 끝났다"는 틀립니다. FAT(§13)는 설치 전에 SIS 장치를 SRS에 대조해 시험하는 활동이고, 필요 여부는 안전 계획에서 정합니다(§13.2.1). 표준은 FAT를 통합 시험이라고도 부르며 확인의 일부가 될 수 있다고 하고(§13.1 주석 2), 확인 단계에서 로직 솔버 FAT 결과를 인정(credit)할 수 있다고 합니다(§15.2.4 주석). 그래도 설치 후 센서–로직–최종요소 전체 루프를 SRS에 대조하는 §15 확인은 따로 해야 합니다.</p></div>
 
 <h3><span class="sec">2.5</span>FSA의 단계와 독립성</h3>
 <div class="tbl"><table>
@@ -584,24 +592,45 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <tbody>
 <tr><td>1</td><td>H&amp;RA를 수행하고 필요한 보호계층을 식별하고 SRS를 작성한 후</td><td>위험 분석의 적정성, SIL 할당 근거, SRS 완결성</td></tr>
 <tr><td>2</td><td>SIS 설계 후</td><td>설계가 SRS를 만족하는가(PFD·HFT·SC, 응용 프로그램 설계)</td></tr>
-<tr><td>3</td><td>설치·사전 시운전·최종 확인을 마치고 운전·유지보수 절차를 갖춘 후, <strong>위험이 존재하기 전</strong></td><td>확인 결과, 절차, 교육, 미결 사항. 최소한 수행해야 하는 단계입니다</td></tr>
-<tr><td>4</td><td>운전·유지보수 경험을 쌓은 후(주기적)</td><td>실제 요구율·고장률이 가정과 맞는가, 절차 준수</td></tr>
+<tr><td>3</td><td>설치·사전 시운전·최종 확인을 마치고 운전·유지보수 절차를 갖춘 후, <strong>위험이 존재하기 전</strong></td><td>§5.2.6.1.5의 확인 목록(아래 상자)을 반드시 충족해야 하는 단계</td></tr>
+<tr><td>4</td><td>운전·유지보수 경험을 쌓은 후(주기적, §5.2.6.1.10)</td><td>운전·유지보수가 설계 가정대로 이뤄지는가, 관리·검증 요건 충족. 팀에는 SIS 운전·유지보수에 관여하지 않은 선임 역량자 포함</td></tr>
 <tr><td>5</td><td>변경 후, 폐기 전</td><td>영향 분석과 변경 수행의 적정성</td></tr>
 </tbody></table></div>
-<div class="prose"><p>1판은 "최소 한 번, 늦어도 단계 3"을 요구했습니다. 2판은 여기에 두 가지를 더했습니다. 변경에 대한 FSA는 영향 분석을 고려해야 하고(§5.2.6.1.9), 운전·유지보수 중에 FSA를 주기적으로 수행해야 합니다(§5.2.6.1.10) <span class="src">[BRATT]</span>.</p></div>
+<div class="prose"><p>다섯 단계 자체는 §5.2.6.1.4의 주석(참고)으로 제시되며, 단계와 시점은 안전 계획에서 정합니다. 반면 다음은 요건입니다. 위험이 존재하기 전 FSA(§5.2.6.1.5), 변경에 대한 FSA는 영향 분석을 고려하고 변경 작업이 61511을 따랐는지 확인(§5.2.6.1.9), 운전·유지보수 중 주기적 FSA(§5.2.6.1.10). 1판은 "최소 한 번, 늦어도 단계 3"이었고, 뒤의 두 요건이 2판에서 추가되었습니다 <span class="src">[BRATT]</span>. 설계·개발·생산 도구(시뮬레이션, 측정·시험 장비, 형상 관리 도구 등)도 SIS에 나쁜 영향이 없음을 평가하거나 출력을 검증해야 합니다(§5.2.6.1.6).</p></div>
+<div class="box basis"><span class="lbl">근거: 위험 존재 전 FSA가 확인할 것 [61511-1 §5.2.6.1.5]</span><ul>
+<li>H&amp;RA를 수행했고, SIS에 해당하는 H&amp;RA 권고가 이행·해결되었다.</li>
+<li>프로젝트 설계 변경 절차가 있고 제대로 이행되었다. 이전 FSA의 권고가 해결되었다.</li>
+<li>SIS가 SRS대로 설계·제작·설치되었고, 차이는 식별·해결되었다.</li>
+<li>SIS 관련 안전·운전·유지보수·비상 절차가 있다.</li>
+<li>확인 계획이 적절하고 확인 활동이 완료되었다.</li>
+<li>직원 교육이 끝났고, 운전·유지보수 인원에게 SIS 정보가 제공되었다.</li>
+<li>이후 FSA를 수행할 계획이 있다.</li>
+</ul></div>
 <h4>IEC 61508-1의 독립성 등급</h4>
-<div class="prose"><p>61508-1은 FSA 수행자의 최소 독립성을 표로 정합니다. E/E/PE·소프트웨어 수명주기의 FSA(표 5)의 요지는 다음과 같습니다. 61511은 이 표를 쓰지 않고 "프로젝트 설계팀에 속하지 않은 선임 역량자 1명 이상"이라는 요건을 둡니다.</p></div>
-<div class="tbl compact"><table>
-<thead><tr><th>최소 독립성</th><th class="c">SIL 1</th><th class="c">SIL 2</th><th class="c">SIL 3</th><th class="c">SIL 4</th></tr></thead>
+<div class="prose"><p>61508-1 §8.2.15–8.2.18은 FSA 수행자의 최소 독립성을 두 표로 정합니다. 표 4는 전체 수명주기 1–8, 12–16단계에 대해 <strong>결과의 심각도</strong>로, 표 5는 9–10단계(E/E/PE·소프트웨어 수명주기)에 대해 <strong>SIL(또는 요소의 SC)</strong>로 정합니다 <span class="src">[61508-1 §8.2.15–8.2.18]</span>.</p></div>
+<div class="grid2">
+<div class="tbl compact" style="margin:0"><table>
+<caption>표 4 · 결과 기준(1–8, 12–16단계)</caption>
+<thead><tr><th>최소 독립성</th><th class="c">A</th><th class="c">B</th><th class="c">C</th><th class="c">D</th></tr></thead>
 <tbody>
-<tr><td>독립된 사람(independent person)</td><td class="c">HR</td><td class="c">HR*</td><td class="c">NR</td><td class="c">NR</td></tr>
-<tr><td>독립된 부서(independent department)</td><td class="c">—</td><td class="c">HR*</td><td class="c">HR**</td><td class="c">NR</td></tr>
-<tr><td>독립된 조직(independent organization)</td><td class="c">—</td><td class="c">—</td><td class="c">HR**</td><td class="c">HR</td></tr>
+<tr><td>독립된 사람</td><td class="c">X</td><td class="c">X1</td><td class="c">Y</td><td class="c">Y</td></tr>
+<tr><td>독립된 부서</td><td class="c">—</td><td class="c">X2</td><td class="c">X1</td><td class="c">Y</td></tr>
+<tr><td>독립된 조직</td><td class="c">—</td><td class="c">—</td><td class="c">X2</td><td class="c">X</td></tr>
 </tbody></table></div>
-<p class="small">HR = 강력 권고, NR = 불충분(권고하지 않음). * 사람 또는 부서, ** 부서 또는 조직 중 어느 쪽인지는 유사 설계 경험 부족, 복잡성, 설계·기술의 새로움, 표준화 부족 정도에 따라 정합니다. 요지이므로 세부는 61508-1 원문을 확인하십시오 <span class="src">[61508-1]</span>.</p>
+<div class="tbl compact" style="margin:0"><table>
+<caption>표 5 · SIL/SC 기준(9–10단계)</caption>
+<thead><tr><th>최소 독립성</th><th class="c">1</th><th class="c">2</th><th class="c">3</th><th class="c">4</th></tr></thead>
+<tbody>
+<tr><td>독립된 사람</td><td class="c">X</td><td class="c">X1</td><td class="c">Y</td><td class="c">Y</td></tr>
+<tr><td>독립된 부서</td><td class="c">—</td><td class="c">X2</td><td class="c">X1</td><td class="c">Y</td></tr>
+<tr><td>독립된 조직</td><td class="c">—</td><td class="c">—</td><td class="c">X2</td><td class="c">X</td></tr>
+</tbody></table></div>
+</div>
+<div class="prose"><p><strong>X</strong>는 최소 요구(더 낮추면 근거를 적어야 함), <strong>Y</strong>는 불충분, <strong>X1/X2</strong>는 둘 중 하나를 고르는 칸입니다. 유사 설계 경험 부족, 복잡성, 설계 또는 기술의 새로움이 클수록 X2(더 높은 독립성)가 적합합니다(§8.2.16). 결과 등급은 A 경상(일시적 기능 상실), B 1명 이상의 중대한 영구 상해 또는 1명 사망, C 여러 명 사망, D 매우 많은 사망이며, 모든 위험저감 수단이 실패했을 때의 결과로 판단합니다(§8.2.17). 예를 들어 SIL 3 시스템의 FSA는 최소한 독립된 부서, 새로운 기술이면 독립된 조직입니다. 61511은 이 표 대신 §5.2.6.1.2의 팀 구성 요건을 둡니다. FSA의 결론은 수용, 조건부 수용, 거부 중 하나의 권고로 문서화합니다(§8.2.11). 평가자가 구체적 해결책을 조언하면 독립성이 훼손될 수 있다는 주의도 있습니다(§8.2.16 주석 3).</p></div>
 <div class="box exam"><span class="lbl">시험 포인트:</span><ul>
 <li>FSA 단계 3은 위험이 존재하기 전(공정 물질 투입 전)에 반드시 수행합니다.</li>
-<li>FSA 팀에는 프로젝트 설계팀이 아닌 선임 역량자가 최소 1명 있어야 합니다.</li>
+<li>FSA 팀에는 프로젝트 설계팀(단계 1–3) 또는 SIS 운전·유지보수(단계 4–5)에 관여하지 않은 선임 역량자가 최소 1명 있어야 합니다.</li>
+<li>61508-1 표 5: SIL 1 독립된 사람, SIL 2 사람 또는 부서, SIL 3 부서 또는 조직, SIL 4 조직.</li>
 <li>2판 신설: 변경 FSA는 영향 분석을 고려, 운전 중 주기적 FSA.</li>
 <li>감사는 "절차 준수 여부", FSA는 "기능안전 달성 여부"를 판단합니다.</li>
 </ul></div>
@@ -619,8 +648,8 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 
 <h3><span class="sec">3.1</span>공정 H&amp;RA의 요구사항(§8)</h3>
 <div class="prose">
-<p>61511은 특정 기법(HAZOP, What-if 등)을 지정하지 않습니다. 요구하는 것은 결과물입니다. H&amp;RA는 위험사건과 그 원인이 되는 사건의 연쇄, 결과와 발생 가능성, 시운전·정상 운전·정지·정비·비정상 운전 등 모든 운전 모드, 필요한 위험저감과 그것을 달성할 안전기능을 밝혀야 합니다.</p>
-<p>2판은 §8.2.4에 <strong>보안 위험성 평가</strong>를 새로 요구합니다. SIS와 관련 장치에 대해, 취약점을 악용해 보안 사건을 일으킬 수 있는 위협을 식별하고, 설계·구현·시운전·운전·유지보수 각 단계에서 이를 고려해야 합니다. 세부 지침으로 ISA TR84.00.09, ISO/IEC 27001, IEC 62443이 언급됩니다 <span class="src">[BRATT]</span>.</p>
+<p>61511은 특정 기법(HAZOP, What-if 등)을 지정하지 않습니다. 요구하는 것은 결과물입니다. H&amp;RA는 각 위험사건과 기여 요인, 발생 가능성과 결과, 정상·시운전·정지·정비·공정 이상·비상정지 등 운전 모드, 필요한 추가 위험저감, 위험을 줄이거나 없애는 조치, 그리고 어떤 안전기능을 SIF로 구현하는지를 밝혀야 합니다. 특히 보호계층에 걸리는 요구율, 원인 장치의 평균 위험 고장 빈도, 운전 제약과 사람 개입에 대해 준 credit 같은 <strong>가정을 상세히 기록</strong>해야 합니다 <span class="src">[61511-1 §8.2.1]</span>. 결과는 위 항목들의 관계를 추적할 수 있게 기록하고(§8.2.3), BPCS를 원인으로 쓸 때 그 평균 위험 고장 빈도는 10<sup>−5</sup>/h 미만으로 가정할 수 없습니다(§8.2.2).</p>
+<p>2판은 §8.2.4에 <strong>보안 위험성 평가</strong>를 새로 요구합니다. SIS와 관련 장치에 대해, 대상 장치(SIS, BPCS, SIS에 연결된 장치), 취약점을 악용해 보안 사건을 일으킬 수 있는 위협(의도적 공격과 사람의 실수 모두), 결과와 가능성, 설계·구현·시운전·운전·유지보수 단계별 고려, 추가 위험저감 요구, 대응 조치를 결과로 남겨야 합니다. 지침으로 ISA TR84.00.09, ISO/IEC 27001, IEC 62443-2-1이 제시되고, 경계 조건 정보를 가진 운영사가 의무 주체일 수 있다고 주석에 적혀 있습니다 <span class="src">[61511-1 §8.2.4]</span>. 설계는 식별된 보안 위험에 대한 복원력을 갖춰야 합니다(§11.2.12).</p>
 </div>
 
 <h3><span class="sec">3.2</span>위험, 허용위험, ALARP</h3>
@@ -669,6 +698,7 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 </div>
 
 <div class="box judg"><span class="lbl">실무 판단:</span><p>요구율이 연 0.1회 이하이면 D·PFD<sub>avg</sub> 근사는 정확해(식 3.3)와 몇 % 이내로 맞습니다. 요구율이 연 1회에 가까워지면 근사는 위험사건 빈도를 과대평가합니다(T<sub>1</sub> = 1년, λ<sub>DU</sub> = 2×10<sup>−6</sup>/h 예시값에서 약 37% 과대). 보수적이므로 LOPA 결과가 틀어지지는 않지만, 요구율이 연 1회를 넘는 SIF를 PFD<sub>avg</sub>로 평가하고 SIL을 매기는 것은 61511 표 4·5의 구분에 맞지 않습니다. 이런 SIF는 PFH 목표로 다시 평가해야 합니다(4.4절).</p></div>
+<div class="box basis"><span class="lbl">근거:</span><p>IEC 61508-5 A.5.2는 모든 요구를 합한 요구율이 연 1회를 넘으면 SIS의 위험 고장률이 결정적 요소가 되고, 잔여 위험사건 빈도는 SIS의 위험 고장률을 넘을 수 없다고 설명합니다(다른 위험저감 수단이 있으면 더 낮아질 수 있음). 식 (3.5)의 극한과 같은 내용입니다. 61508-5 E.3도 연 1회보다 높은 요구율까지 포함하도록 보정한 위험 그래프는 필요 이상으로 높은 SIL을 줄 수 있으므로 다른 기법을 권합니다.</p></div>
 <div class="box exam"><span class="lbl">시험 포인트:</span><ul>
 <li>저빈도: 위험사건 빈도 ≈ 요구율 × PFD<sub>avg</sub>. 고빈도·연속: 위험사건 빈도 ≈ PFH.</li>
 <li>2판 경계는 연 1회. 1판의 "증명시험 빈도의 2배" 조건은 삭제되었습니다.</li>
@@ -689,21 +719,32 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <tr><td class="c"><b>1</b></td><td class="num">≥ 10⁻² ~ &lt; 10⁻¹</td><td class="num">&gt; 10 ~ ≤ 100</td><td class="num">≥ 10⁻⁶ ~ &lt; 10⁻⁵</td></tr>
 </tbody></table></div>
 <div class="box trap"><span class="lbl">함정:</span><p>경계값을 주의하십시오. PFD<sub>avg</sub> = 0.1(RRF = 10)은 SIL 1이 아닙니다. SIL 1은 RRF가 10을 <strong>초과</strong>할 때부터입니다. PFD<sub>avg</sub> = 1.0×10<sup>−3</sup>은 SIL 2 범위의 하한이 아니라 SIL 2 범위(≥10<sup>−3</sup>)에 속합니다. 즉 RRF 정확히 1000은 SIL 2입니다.</p></div>
-<div class="prose"><p>2판에서 §9에 생긴 주요 변화는 두 가지입니다. BPCS 보호계층에 대한 제한이 구체화되었고, <strong>계장 방호 수단(instrumented safeguards) 전체로 RRF 10 000 초과를 주장할 때의 요건</strong>이 새로 생겼습니다 <span class="src">[TR61511-4]</span>. 후자는 BPCS 보호계층과 SIF를 합쳐 네 자릿수 이상의 위험저감을 계장에 맡기는 경우, 공통원인·공통모드·종속 고장(§9.4)을 더 엄격히 따지도록 하는 장치입니다.</p></div>
+<div class="prose">
+<p>할당 결과는 위험저감에 필요한 안전기능을 특정 보호계층에 배정하고, SIF마다 위험저감 또는 평균 위험 고장 빈도를 배정하는 것입니다(§9.2.1). SIL은 SIF가 제공해야 할 PFD 또는 PFH로부터 도출합니다(§9.2.2). 요구 모드 SIF는 표 4 또는 표 5, 연속 모드 SIF는 표 5로 SIL을 정합니다(§9.2.3–9.2.4).</p>
+<p><strong>RRF 10 000 초과 또는 PFH 10<sup>−8</sup>/h 미만</strong>이 필요한 경우의 규정(§9.2.5–9.2.7)은 2판의 핵심 변경입니다. 단일 SIS, 여러 SIS, 또는 SIS와 BPCS 보호계층을 합친 경우 모두에 적용됩니다 <span class="src">[61511-1 §9.2.5]</span>.</p>
+<ol>
+<li><strong>재검토(§9.2.5)</strong>: 공정·용기·배관 변경으로 위험원을 없애거나 줄일 수 있는가, 계장이 아닌 안전관련 시스템을 넣을 수 있는가, 위험물 보유량을 줄여 결과를 줄일 수 있는가, 원인 빈도를 줄일 수 있는가를 검토합니다. 단일 SIF로 RRF 10 000을 넘기는 설계는 수명주기 내내 그 성능을 달성·유지하기 어렵기 때문에 피해야 한다는 주석이 붙어 있습니다.</li>
+<li><strong>여러 계층 분배(§9.2.6)</strong>: 그래도 필요하면 위험저감이 더 낮은 여러 보호계층(SIS 또는 BPCS)으로 나누는 것을 고려합니다. 이때 계층들이 독립이거나, 독립성 부족이 충분히 작음을 보여야 합니다. 요구 원인과 SIS의 공통원인(제어용과 SIS용 센서가 같은 형식), 계층 간 공통원인(서로 다른 측정·로직이지만 같은 형식의 차단밸브, 또는 밸브 하나를 두 SIS가 공유), 공통 운전·유지보수·시험 절차와 <strong>동시(synchronous) 증명시험</strong>에 의한 종속성을 따져야 합니다.</li>
+<li><strong>정량 평가(§9.2.7)</strong>: 실제로 구현한다면 정량적 방법으로 추가 위험 평가를 하여, 요구를 일으키는 계층·다른 SIS·안전 경보 등과의 종속성과 공통원인고장을 반영해 무결성 요구 달성을 확인해야 합니다.</li>
+</ol>
+<p>한 위험사건의 위험저감을 한 SIS 안의 여러 SIF에 나누면, 그 SIS가 전체 위험저감 요구를 만족해야 합니다(§9.2.8). 할당 결과는 동작, 설정점, 반응 시간, 동작 지연, 결함 처리, 밸브 닫힘 요구 같은 공정의 기능 요구와 위험저감 요구로 기록하며, 이것이 SRS의 입력이 됩니다(§9.2.9). 61508-1도 SIL 4 안전기능에 같은 성격의 재검토와 정량 평가를 요구하고(§7.6.2.11), 단일 안전기능의 목표를 PFD<sub>avg</sub> 10<sup>−5</sup>, PFH 10<sup>−9</sup>/h보다 낮게 배정하지 못하게 합니다(§7.6.2.12).</p>
+</div>
 
 <h3><span class="sec">4.2</span>BPCS를 보호계층으로 쓸 때(§9.3)</h3>
-<div class="prose"><p>§9.3의 요건을 Kenexis 해설의 낭독과 해석으로 정리하면 다음과 같습니다 <span class="src">[KNX]</span>.</p></div>
+<div class="prose"><p>§9.3의 요건은 다음과 같습니다 <span class="src">[61511-1 §9.3]</span>. 그림 9는 보호계층을 제어·감시(BPCS, 공정 경보, 운전원 감시), 예방(기계적 보호, 운전원 조치를 동반한 공정 경보, SIS), 완화(기계적 완화, SIS, 운전원 감시), 공장 비상대응(대피), 지역사회 비상대응(비상 방송)으로 나눠 보여 줍니다.</p></div>
 <div class="tbl"><table>
 <thead><tr><th>조항</th><th>요지</th></tr></thead>
 <tbody>
 <tr><td class="mono">9.3.1</td><td>BPCS는 보호계층으로 주장할 수 있습니다(그림 9의 보호계층 구성).</td></tr>
 <tr><td class="mono">9.3.2</td><td>BPCS 보호계층 하나에 주장하는 위험저감은 10 이하입니다(PFD ≥ 0.1). BPCS는 동시에 보호계층에 요구를 일으키는 원인(initiating source)이 될 수 있습니다.</td></tr>
-<tr><td class="mono">9.3.4</td><td>BPCS가 시나리오의 원인일 때는 BPCS 보호계층을 최대 1개, 원인이 BPCS 고장과 무관할 때는 최대 2개까지 주장합니다.</td></tr>
-<tr><td class="mono">9.3.5</td><td>각 BPCS 보호계층은 원인과도, 서로 간에도, 주장하는 위험저감이 훼손되지 않을 만큼 독립·분리되어야 합니다. CPU, 입출력 모듈, 릴레이, 필드 장치, 네트워크, 데이터베이스, 엔지니어링 도구, HMI, bypass 도구 등이 공통 요소가 될 수 있습니다. Hot backup 컨트롤러는 주 컨트롤러와 공통원인고장을 겪으므로 독립으로 보지 않습니다.</td></tr>
+<tr><td class="mono">9.3.3</td><td>BPCS 보호계층에 10을 넘는 위험저감을 주장하려면 BPCS를 61511 요건대로 설계·관리해야 합니다.</td></tr>
+<tr><td class="mono">9.3.4</td><td>BPCS를 61511에 맞출 의도가 없다면, 같은 사건 연쇄에 대해 BPCS가 요구의 원인일 때는 BPCS 보호계층을 최대 1개, 원인이 아닐 때는 최대 2개까지 주장합니다.</td></tr>
+<tr><td class="mono">9.3.5</td><td>9.3.4가 적용되면 각 BPCS 보호계층은 원인과도, 서로 간에도, 주장하는 위험저감이 훼손되지 않을 만큼 독립·분리되어야 합니다. CPU, 입출력 모듈, 릴레이, 필드 장치, 응용 프로그램, 네트워크, 프로그램 데이터베이스, 엔지니어링 도구, HMI, bypass 도구 등을 따집니다. Hot backup 컨트롤러는 백플레인, 펌웨어, 진단, 전환 메커니즘, 미검출 위험 고장을 주 컨트롤러와 공유하므로 독립으로 보지 않습니다.</td></tr>
+<tr><td class="mono">9.4</td><td>보호계층들 사이, 보호계층과 BPCS 사이의 공통원인·공통모드·종속 고장 가능성이 전체 무결성 요구에 비해 충분히 낮은지 평가합니다(정성 또는 정량, 9.2.7이 적용되면 정량). 독립성, 다양성, 물리적 분리, 공통원인을 고려하고, 릴리프 밸브 막힘과 SIS 센서 막힘 같은 공정 기인 공통원인, HMI·SIS/BPCS 네트워크·bypass 수단을 통한 공통원인도 따집니다.</td></tr>
 </tbody></table></div>
 <div class="box deep"><span class="lbl">심화: 왜 BPCS는 RRF 10이 한계인가</span>
 <p>BPCS는 61511의 FSM·검증·변경 관리 아래 설계·운영되지 않는 것이 보통입니다. 운전원이 설정값과 모드를 바꾸고, 엔지니어가 온라인으로 로직을 수정하며, 증명시험 계획도 없습니다. 이런 체계적 요인이 무작위 고장률보다 성능을 지배하므로, 하드웨어 고장률로 계산한 PFD가 아무리 낮아도 0.1보다 낫게 주장하지 못하게 한 것입니다. Kenexis 해설은 CPU만 공유하는 두 BPCS 계층을 결함수로 분석하면 RRF 100까지는 가능하지만 1000에는 이르지 못한다고 설명합니다 <span class="src">[KNX]</span>. 공유 CPU와 공유 엔지니어링 오류가 상한을 만듭니다.</p>
-<p>또한 61511은 61511을 따르지 않는 BPCS의 고장을 원인으로 삼을 때 그 위험 고장률을 10<sup>−5</sup>/h보다 낮게 가정하지 않도록 합니다(연간 약 0.09회, LOPA에서 흔히 0.1/yr로 반올림) <span class="src">[61511-1 §8.2]</span>.</p>
+<p>또한 61511은 BPCS를 원인으로 삼을 때 그 평균 위험 고장 빈도를 10<sup>−5</sup>/h 미만으로 가정하지 못하게 합니다(연간 약 0.09회, LOPA에서 흔히 0.1/yr로 반올림) <span class="src">[61511-1 §8.2.2]</span>.</p>
 </div>
 
 <h3><span class="sec">4.3</span>위험 그래프(Risk graph)</h3>
@@ -712,10 +753,21 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <p>위험 그래프는 사실상 <strong>미리 보정해 둔 LOPA</strong>입니다. 각 매개변수 단계가 대략 한 자릿수(10배)의 위험 차이를 갖도록 설계되어 있으므로, 그래프의 한 칸은 다음 식의 결과를 SIL 대역으로 반올림한 것입니다.</p>
 </div>
 <div class="eq">\[ \mathrm{RRF}_{req} \approx \frac{W_{\max}\cdot F\cdot P\cdot V(C)}{F_t(C)} \tag{4.1} \]</div>
-<div class="prose"><p>여기서 W<sub>max</sub>는 해당 W 등급의 상한 요구율, F와 P는 노출·회피 확률, V(C)는 결과 등급의 사망 확률 등입니다. 예를 들어 단일 사망 등급의 허용 빈도를 10<sup>−5</sup>/yr, W를 0.1/yr(등급 상한), 노출 0.1, 회피 불가(1.0)로 두면 RRF ≈ 0.1×0.1×1/10<sup>−5</sup> = 1000으로 SIL 2의 상한입니다(모두 예시값). 이렇게 보정 근거를 써 두어야 그래프를 감사에서 방어할 수 있습니다.</p></div>
+<div class="prose"><p>여기서 W<sub>max</sub>는 해당 W 등급의 상한 요구율, F와 P는 노출·회피 실패 확률, V(C)는 결과 등급의 사망 확률 등입니다. 예를 들어 단일 사망 등급의 허용 빈도를 10<sup>−5</sup>/yr, W를 0.1/yr(등급 상한), 노출 0.1, 회피 불가(1.0)로 두면 RRF ≈ 0.1×0.1×1/10<sup>−5</sup> = 1000으로 SIL 2의 상한입니다(모두 예시값).</p>
+<p>61508-5는 네 매개변수를 결과(C), 위험 구역 노출 빈도·시간(F), 위험사건을 <strong>회피하지 못할</strong> 가능성(P), SIS 없이 다른 위험저감 수단만 있을 때 원치 않는 사건의 확률(W)로 정의합니다. 보정(calibration)은 매개변수에 수치 범위를 배정해 모든 조합이 회사 위험 기준을 만족하도록 맞추는 반복 작업으로, 비슷한 위험에 대해 조직이 한 번 수행하고 <strong>고위 경영진 수준에서 합의</strong>하며, 값의 도출 근거를 남겨야 합니다. W의 수요 범위를 조정하는 보정 계수 D를 둘 수 있습니다 <span class="src">[61508-5 E.2–E.3]</span>.</p></div>
+<div class="tbl"><table>
+<caption>61511-3 부속서 D의 보정 예(화학 공정 전형 기준, 사용 전 확인 필요) [61511-3 표 D.2]</caption>
+<thead><tr><th>매개변수</th><th>분류(요지)</th><th>주의</th></tr></thead>
+<tbody>
+<tr><td>C 결과</td><td>사망자 수 = 재실 인원 × 취약성 V. CA 경상, CB 0.01–0.1, CC 0.1 초과–1.0, CD 1.0 초과. V: 소량 가연성·독성 누출 0.01, 대량 누출 0.1, 대량 누출에 높은 화재 확률 또는 고독성 0.5, 파열·폭발 1</td><td>취약성 V(확대 속도·사망 확률)와 P(사건 예방)를 같은 요인으로 이중 credit하지 않음</td></tr>
+<tr><td>F 재실</td><td>FA 드묾~잦음(재실 0.1 미만), FB 잦음~상시</td><td>가장 많이 노출되는 사람 기준, 교대별 최대값. 요구가 시운전·이상 조사처럼 재실이 많을 때 생기면 FA 금지</td></tr>
+<tr><td>P 회피</td><td>PA는 다음 모두 충족 시만: SIS 실패를 운전원에게 알리는 수단, 위험을 피하거나 대피할 독립 수단, 경보 후 사건까지 1시간 초과 또는 확실히 충분한 시간. 아니면 PB</td><td>PA는 SIS가 실패했음을 안 뒤 운전원 조치로 막을 수 있을 때만</td></tr>
+<tr><td>W 요구율</td><td>SIF가 없을 때 연간 발생 횟수: W1 0.1D 미만, W2 0.1D–D, W3 D–10D. 10D 초과는 다른 방법 또는 재보정</td><td>D는 잔여 위험이 허용되도록 정하는 보정 계수. 61511을 따르지 않는 제어계의 credit은 SIL 1 범위 아래로 제한</td></tr>
+</tbody></table></div>
+<p class="small">출력 "---"은 안전 요구 없음, "a"는 특별한 안전 요구 없음, "b"는 단일 SIF로 불충분입니다. 표준은 일반 구성도(그림 D.1)를 사이트 위험 기준에 맞춰 재보정하지 않고 쓰지 말며, 위험 기준이 없는 사이트는 이 방법을 쓰지 말라고 합니다 <span class="src">[61511-3 D.6]</span>.</p>
 <div class="box trap"><span class="lbl">함정:</span><ul>
 <li><strong>이중 계산</strong>: W(요구율)에 이미 운전원 경보 대응을 반영했는데 P(회피 가능성)에서도 같은 경보를 근거로 낮은 등급을 고르는 경우.</li>
-<li><strong>보정하지 않은 그래프</strong>: 표준의 예시 그래프를 회사 허용위험 기준과 대조하지 않고 쓰는 경우. 61511-3의 그래프는 예시입니다.</li>
+<li><strong>보정하지 않은 그래프</strong>: 표준의 예시 그래프를 회사 허용위험 기준과 대조하지 않고 쓰는 경우. 61511-3의 그래프는 예시이며, 위험 그래프는 요구 원인과 SIS 장비 사이의 종속 고장을 다루기 어려워 SIS 효과를 과대평가할 수 있습니다 <span class="src">[61508-5 E.3]</span>.</li>
 <li><strong>노출(F) 과소 평가</strong>: 연속 공정에서 사람의 체류 시간이 짧다고 F를 낮췄지만, 요구가 사람의 체류 중에 집중되는 경우(예: 시운전 작업 중 이상).</li>
 </ul></div>
 
@@ -726,6 +778,7 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <h4><span class="sec">4.4.2</span>IPL의 요건</h4>
 <div class="prose">
 <p>CCPS의 핵심 기준은 네 가지입니다. <strong>독립성</strong>(원인과 다른 IPL로부터 독립), <strong>유효성·특정성</strong>(감지–판단–동작을 시간 안에 수행해 그 결과를 실제로 막을 수 있음), <strong>신뢰성·무결성</strong>(주장한 PFD에 근거가 있음), <strong>감사 가능성</strong>(시험·점검으로 성능을 확인할 수 있음)입니다. CCPS 후속 지침서는 접근 보안과 변경 관리까지 핵심 속성으로 넓혀 설명합니다 <span class="src">[CCPS]</span>.</p>
+<p>61511-3 부속서 F는 IPL 기준을 더 구체적으로 적습니다. 위험을 최소 10배 줄이고, 가용도가 0.9 이상이며, 특정성(하나의 위험사건을 막거나 완화하도록 설계), 독립성, 신뢰성(무작위·체계적 고장 모두 고려), 감사 가능성(증명시험·유지보수로 정기 확인)을 갖춰야 합니다. 부속서의 대표 PFD<sub>avg</sub> 예는 제어 루프 0.1, 경보에 대한 운전원 대응 0.1, 훈련되고 스트레스 없는 사람의 수행 0.1–0.01, 스트레스 하의 사람 0.5–1.0이며, 표준은 이 값들을 일반값으로 쓰지 말라고 명시합니다. LOPA 팀은 운전 경험자, 공정 엔지니어, 생산 관리자, 계장·전기 정비 인원, 위험 분석 전문가로 구성하고 그중 한 명은 LOPA 훈련을 받아야 한다고 권합니다 <span class="src">[61511-3 F.1, F.6, F.8]</span>.</p>
 </div>
 <h4><span class="sec">4.4.3</span>조건(EC)과 조건부 수정계수(CM)</h4>
 <div class="prose">
@@ -790,16 +843,17 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <thead><tr><th>상황</th><th>다루는 법</th></tr></thead>
 <tbody>
 <tr><td>필요 RRF ≤ 10</td><td>61511이 적용되는 SIF가 아닙니다(SIL 1 미만). BPCS 기능이나 기타 계장 방호로 관리하되, 그 성능과 관리 근거는 남겨야 합니다.</td></tr>
-<tr><td>SIL 4가 필요</td><td>61511은 SIL 4에 추가 요건을 두며, 공정 분야에서는 드뭅니다. 공정 설계 변경, 비계장 보호계층 추가, 결과 완화로 요구를 낮추는 것이 먼저입니다.</td></tr>
-<tr><td>계장 방호 합계 RRF &gt; 10 000</td><td>2판 신설 요건 대상. BPCS 계층과 SIF 사이, SIF들 사이의 공통원인·공통모드·종속 고장을 평가해야 합니다 <span class="src">[TR61511-4]</span>.</td></tr>
+<tr><td>RRF &gt; 10 000 또는 PFH &lt; 10<sup>−8</sup>/h (단일·복수 SIS 또는 SIS+BPCS)</td><td>§9.2.5 재검토 → §9.2.6 여러 독립 계층 분배와 종속성 평가 → 구현 시 §9.2.7 정량 평가. 61511의 응용 프로그램 요건은 SIL 3까지만 다루므로(§12.2.1, §12.2.3) SIL 4 응용 프로그래밍은 61508을 따라야 합니다.</td></tr>
 <tr><td>환경·자산 결과</td><td>결과 종류별로 따로 SIL을 정하고 가장 엄격한 값을 택합니다. 자산 보호 SIF도 61511을 적용할 수 있습니다.</td></tr>
 </tbody></table></div>
 <div class="box exam"><span class="lbl">시험 포인트:</span><ul>
 <li>BPCS 보호계층 RRF ≤ 10, BPCS가 원인이면 BPCS 보호계층 최대 1개, 아니면 최대 2개.</li>
 <li>Hot backup 컨트롤러는 독립이 아닙니다.</li>
-<li>비준수 BPCS를 원인으로 쓸 때 위험 고장률은 10<sup>−5</sup>/h보다 낮게 잡지 않습니다.</li>
+<li>BPCS를 원인으로 쓸 때 평균 위험 고장 빈도는 10<sup>−5</sup>/h 미만으로 가정하지 않습니다(§8.2.2).</li>
+<li>BPCS 보호계층에 RRF 10 초과를 주장하면 그 BPCS는 61511대로 설계·관리해야 합니다(§9.3.3).</li>
+<li>RRF 10 000 초과(PFH 10<sup>−8</sup> 미만)는 재검토 → 계층 분배·종속성 평가 → 정량 평가(§9.2.5–9.2.7).</li>
 <li>위험 그래프 매개변수: C, F, P, W. 결과 "a"와 "b"의 의미.</li>
-<li>LOPA IPL 기준: 독립성, 유효성, 신뢰성(무결성), 감사 가능성.</li>
+<li>LOPA IPL 기준: 독립성, 유효성(특정성), 신뢰성(무결성), 감사 가능성. 61511-3 F.8은 최소 10배 위험저감과 가용도 0.9 이상을 더합니다.</li>
 </ul></div>
 </section>
 
@@ -813,29 +867,51 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <p>SRS는 한 문서일 필요가 없습니다. 실무에서는 SIS 공통 요구(일반 SRS), SIF별 데이터시트, C&amp;E 매트릭스, 로직 서술서, 응용 프로그램 SRS로 나누는 경우가 많습니다. 중요한 것은 29개 항목이 어딘가에 빠짐없이, 서로 모순 없이 들어 있는 것입니다.</p>
 </div>
 
-<h3><span class="sec">5.2</span>SRS 항목의 묶음별 해설</h3>
-<div class="prose"><p>항목 번호(a, b, c…)는 판에 따라 다르므로 외우지 말고 묶음으로 이해하십시오. 아래는 61511-1 §10.3의 항목들을 성격별로 다시 묶은 것입니다(요지).</p></div>
-<div class="tbl"><table>
-<thead><tr><th>묶음</th><th>포함되는 요구사항(요지)</th><th>자주 빠지는 것</th></tr></thead>
+<h3><span class="sec">5.2</span>SRS 29개 항목(원문 순서)</h3>
+<div class="prose"><p>61511-1 §10.3.2는 SIS 설계에 충분한 요구사항을 담고, 요구사항을 만든 의도와 접근도 설명하도록 하며, 해당되는 경우 다음 29개 항목을 포함하도록 합니다. 아래는 원문 순서대로 요지를 옮긴 것이고, 오른쪽 열은 실무 확인 포인트입니다 <span class="src">[61511-1 §10.3.2]</span>.</p></div>
+<div class="tbl compact"><table>
+<thead><tr><th class="c">#</th><th>요구 항목(요지)</th><th>실무 확인 포인트</th></tr></thead>
 <tbody>
-<tr><td><strong>무엇을</strong></td><td>필요한 모든 SIF의 설명, SIF별 안전 상태 정의, 공정 측정값·트립 설정점·출력 동작, 입력–출력의 기능 관계(로직, 연산, 허가 조건), 각 SIF 관련 현장 장치 목록</td><td>안전 상태의 범위(밸브만 닫으면 되는지, 펌프 정지·감압까지인지)</td></tr>
-<tr><td><strong>얼마나 잘</strong></td><td>SIF별 SIL과 운전 모드, 공통원인고장을 식별·고려하는 요구, 요구의 원인과 요구율</td><td>요구율 근거(4.4.5의 D<sub>SIF</sub>)</td></tr>
-<tr><td><strong>얼마나 빨리</strong></td><td>공정안전시간 안에 안전 상태로 가기 위한 SIF별 응답시간</td><td>공정안전시간 산정 근거</td></tr>
-<tr><td><strong>동시에 생기면 위험한 상태</strong></td><td>각각은 안전하지만 동시에 일어나면 별도 위험이 되는 상태(예: 비상 저장 과부하, 다수 계통의 동시 플레어 방출), 피해야 할 출력 조합</td><td>전체 ESD 시 플레어 부하</td></tr>
-<tr><td><strong>사람과의 접점</strong></td><td>수동 정지, 각 SIF의 리셋, bypass·override·inhibit 요구와 해제 방법, 운전원·BPCS 등 다른 시스템과의 인터페이스</td><td>bypass 중 보상 조치와 최대 허용 시간</td></tr>
-<tr><td><strong>결함 시 거동</strong></td><td>SIS 고장 모드별 원하는 대응(경보, 자동 정지), SIS에서 결함이 검출됐을 때 안전 상태를 달성·유지하는 조치(사람 요인 고려), 실현 가능한 MTTR(이동 시간, 위치, 예비품, 서비스 계약, 환경 제약 반영)</td><td>진단 경보에 대한 운전원 조치와 시간 제한</td></tr>
-<tr><td><strong>시험과 유지보수</strong></td><td>증명시험 주기, 증명시험 이행 요구, 시운전·재기동 절차 관련 요구</td><td>PFD 계산의 PTC를 실제로 달성할 시험 방법</td></tr>
-<tr><td><strong>운전 모드와 환경</strong></td><td>공장 운전 모드별 SIF 동작, 정상·비정상 모드(시운전, 정비, 교정), 운송·보관·설치·운전 중 극한 환경 조건, 주요 사고 중에도 살아남아야 하는 SIF의 요구(예: 화재 중 밸브 동작 유지 시간)</td><td>화재 시 ESD 밸브·케이블의 내화 시간</td></tr>
-<tr><td><strong>신뢰성 외 요구</strong></td><td>트립 동작이 통전(energize)인지 무통전(de-energize)인지, 최대 허용 오동작 트립률</td><td>오동작 트립 목표값(10.7절)</td></tr>
-<tr><td><strong>응용 프로그램</strong></td><td>응용 프로그램 안전 요구사항(§10.3.3–10.3.6)</td><td>스캔 시간과 공정안전시간의 연결</td></tr>
+<tr><td class="c">1</td><td>모든 SIF의 설명(C&amp;E 다이어그램, 로직 서술서 등)</td><td>기능별로 원인–결과가 빠짐없이 대응되는가</td></tr>
+<tr><td class="c">2</td><td>SIF별 현장 입출력 장치 목록(태그 리스트) <span class="pill">2판 신설</span></td><td>PFD 계산·FAT·확인 대상 장치와 일치하는가</td></tr>
+<tr><td class="c">3</td><td>공통원인고장을 식별·고려하는 요구</td><td>탭 분리, 전원 분리, 다양성 요구를 적었는가</td></tr>
+<tr><td class="c">4</td><td>SIF별 공정 안전 상태의 정의(안정 상태에 도달하고 위험사건을 피하거나 충분히 완화)</td><td>밸브만 닫으면 되는지, 감압·펌프 정지까지인지</td></tr>
+<tr><td class="c">5</td><td>각각은 안전하지만 동시에 일어나면 별도 위험이 되는 상태(비상 저장 과부하, 다수 계통의 동시 플레어 방출 등)</td><td>전체 ESD 시 플레어 부하</td></tr>
+<tr><td class="c">6</td><td>가정한 요구 원인과 SIF별 요구율</td><td>LOPA의 D<sub>SIF</sub>(식 4.3)와 일치하는가</td></tr>
+<tr><td class="c">7</td><td>증명시험 주기 요구</td><td>PFD 계산의 T<sub>1</sub>과 정비 계획</td></tr>
+<tr><td class="c">8</td><td>증명시험 이행 요구 <span class="pill">2판 신설</span></td><td>계산의 PTC를 실제로 달성할 시험 방법</td></tr>
+<tr><td class="c">9</td><td>공정안전시간 안에 안전 상태로 가기 위한 SIF별 응답시간(공정안전시간은 61511-2 참조)</td><td>식 (5.1)의 응답시간 예산</td></tr>
+<tr><td class="c">10</td><td>SIF별 요구 SIL과 운전 모드(요구/연속)</td><td>SIL 외에 수치 목표(RRF, PFH)도 적었는가</td></tr>
+<tr><td class="c">11</td><td>SIS 공정 측정값의 범위·정확도와 트립 설정점</td><td>측정 불확도와 설정점 여유</td></tr>
+<tr><td class="c">12</td><td>SIF 출력 동작과 성공 기준(예: 밸브 누설률)</td><td>기밀 차단이 필요한가(누설 시험)</td></tr>
+<tr><td class="c">13</td><td>입력–출력의 기능 관계(로직, 연산, 허가 조건)</td><td>투표·감등 로직 포함</td></tr>
+<tr><td class="c">14</td><td>SIF별 수동 정지 요구</td><td>로직 솔버와 독립된 수동 수단(§11.2.8)</td></tr>
+<tr><td class="c">15</td><td>SIF별 통전·무통전 트립 요구</td><td>통전 트립이면 회로·전원 감시(§11.6.2)</td></tr>
+<tr><td class="c">16</td><td>트립 후 SIF 리셋 요구(최종요소의 수동·반자동·자동 리셋)</td><td>원칙은 수동 리셋(§11.2.7, §12.2.5)</td></tr>
+<tr><td class="c">17</td><td>SIF별 최대 허용 오동작 트립률</td><td>10.8절의 STR 계산과 비교</td></tr>
+<tr><td class="c">18</td><td>SIF별 고장 모드와 원하는 SIS 대응(경보, 자동 정지)</td><td>진단 경보에 대한 운전원 조치</td></tr>
+<tr><td class="c">19</td><td>SIS 시운전·재기동 절차 관련 요구</td><td>시운전 override와 자동 해제</td></tr>
+<tr><td class="c">20</td><td>SIS와 다른 시스템(BPCS, 운전원 포함) 사이의 모든 인터페이스</td><td>BPCS→SIS 쓰기 통제(§11.7.2.6)</td></tr>
+<tr><td class="c">21</td><td>공장 운전 모드와 모드별 SIF 동작 요구</td><td>모드 전환 시의 inhibit</td></tr>
+<tr><td class="c">22</td><td>응용 프로그램 안전 요구(§10.3.3)</td><td>별도 문서여도 됨</td></tr>
+<tr><td class="c">23</td><td>bypass 요구와, bypass 중 행정적 통제·해제 방법을 적은 서면 절차</td><td>최대 bypass 시간, 보상 조치</td></tr>
+<tr><td class="c">24</td><td>SIS 결함 검출 시 공정 안전 상태를 달성·유지하는 조치(사람 요인 고려)</td><td>§11.3의 보상 조치와 연결</td></tr>
+<tr><td class="c">25</td><td>실현 가능한 <strong>평균 수리시간(MRT)</strong>: 이동 시간, 위치, 예비품, 서비스 계약, 환경 제약 반영</td><td>MTTR이 아니라 MRT임에 주의</td></tr>
+<tr><td class="c">26</td><td>피해야 할 SIS 출력 상태의 위험한 조합</td><td>두 가스 밸브 동시 닫힘 같은 압력 변동</td></tr>
+<tr><td class="c">27</td><td>운송·보관·설치·운전 중 극한 환경 조건(온도, 습도, 오염, 접지, EMI/RFI, 충격·진동, 정전기, 방폭 구역, 침수, 낙뢰 등)</td><td>장치 사양·인증 조건과 비교</td></tr>
+<tr><td class="c">28</td><td>공장 전체(시운전 등)와 개별 절차(정비, 센서 교정·수리)의 정상·비정상 운전 모드. 이를 위해 추가 SIF가 필요할 수 있음</td><td>정비 중 위험을 다루는 SIF</td></tr>
+<tr><td class="c">29</td><td>주요 사고 중에도 살아남아야 하는 SIF의 요구(예: 화재 중 밸브 동작 유지 시간)</td><td>ESD 밸브·케이블 내화</td></tr>
 </tbody></table></div>
+<div class="prose"><p>SIS 요구사항은 명확하고, 정밀하고, 검증 가능하고, 유지보수 가능하고, 실현 가능해야 하며, 수명주기 어느 단계의 사용자도 이해할 수 있게 써야 합니다(§10.2).</p></div>
+<h4>응용 프로그램 SRS(§10.3.3–10.3.6)</h4>
+<div class="prose"><p>응용 프로그램 안전 요구는 SRS와 선택한 SIS 구조에서 도출하며, SRS에 넣거나 별도 문서로 둘 수 있습니다. 입력은 각 SIF의 요구(센서 투표 포함), SIS 구조와 안전 매뉴얼의 제약, 안전 계획의 요구입니다(§10.3.3). 프로그래머블 장치마다 정하고(§10.3.4), 설계·구현과 FSA가 가능할 만큼 상세해야 합니다. 고려 사항은 지원하는 SIF와 SIL, 실시간 성능(CPU 용량, 네트워크 대역폭, 결함 시 성능, 트립 신호 수신 시간), 시퀀스와 지연, 인터페이스와 운전성, 운전 모드, 불량 공정 변수 처리(범위 이탈, 과도한 변화율, 고정값, 단선·단락 검출), 외부 장치의 증명시험·자동 진단 기능, 응용 프로그램 자체 감시(watchdog, 데이터 범위 검증), 운전 중 주기 시험, 통신 인터페이스(사용 제한, 데이터·명령의 유효성), 프로그램이 만드는 공정 위험 상태의 식별·회피, SIF별 공정 변수 유효성 기준입니다(§10.3.5). 의도를 설명하고, 이해하기 쉽고, 검증·시험·변경이 가능하며, H&amp;RA까지 추적 가능해야 합니다(§10.3.6).</p></div>
 
 <h3><span class="sec">5.3</span>공정안전시간과 응답시간 예산</h3>
 <div class="prose">
 <p>공정안전시간(PST)은 원인 고장이 발생한 순간부터 SIF가 동작하지 않을 때 위험사건이 일어나는 순간까지의 시간입니다. SIF는 감지 → 판단 → 동작 → 공정 응답까지를 이 시간 안에 끝내야 합니다.</p>
 </div>
 <div class="eq">\[ t_{\text{trip point}} + t_{\text{sensor}} + t_{\text{logic}} + t_{\text{output}} + t_{\text{final element}} + t_{\text{process}} \;\lt\; \mathrm{PST} \tag{5.1} \]</div>
-<div class="prose"><p>t<sub>trip point</sub>는 원인 발생부터 공정 변수가 트립 설정점에 도달하기까지의 시간이고, t<sub>process</sub>는 최종요소가 동작한 뒤 공정이 실제로 안전 방향으로 돌아서기까지의 지연입니다. 2판 §12.2.7은 응용 프로그램의 모든 부분이 매 스캔마다 실행되도록 설계하고(안전 매뉴얼이 다른 방식을 허용하는 경우 제외), 스캔 요구를 정할 때 공정안전시간을 고려하도록 요구합니다 <span class="src">[BRATT]</span>.</p></div>
+<div class="prose"><p>t<sub>trip point</sub>는 원인 발생부터 공정 변수가 트립 설정점에 도달하기까지의 시간이고, t<sub>process</sub>는 최종요소가 동작한 뒤 공정이 실제로 안전 방향으로 돌아서기까지의 지연입니다. 61511-2는 연속 모드 SIS가 유일한 보호계층이면 진단 주기와 안전 상태 도달 시간의 합이 공정안전시간보다 짧아야 한다고 안내합니다 <span class="src">[61511-2 A.11.9]</span>. 2판 §12.2.7은 응용 프로그램의 모든 부분이 매 스캔마다 실행되도록 설계하고(안전 매뉴얼이 다른 방식을 허용하는 경우 제외), 스캔 요구를 정할 때 공정안전시간을 고려하도록 요구합니다 <span class="src">[BRATT]</span>.</p></div>
 <div class="box judg"><span class="lbl">실무 판단:</span><p>업계에서는 SIS 응답시간을 공정안전시간의 절반 이하로 잡는 관행이 흔합니다. 표준의 수치 요건이 아니라 설정점 여유, 공정 동특성의 불확실성, 밸브 행정 시간의 경년 증가를 흡수하려는 설계 여유입니다. 트립 설정점을 운전 한계에 너무 가깝게 두면 오동작 트립이 늘고, 너무 멀리 두면 t<sub>trip point</sub>가 줄어 응답시간 예산이 부족해집니다. 설정점은 측정 불확도와 공정 변화율을 함께 보고 정합니다.</p></div>
 
 <h3><span class="sec">5.4</span>SRS와 검증 계산의 일관성</h3>
@@ -845,7 +921,7 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <tbody>
 <tr><td>T<sub>1</sub>(증명시험 주기)</td><td>증명시험 주기 요구, 정비 계획(CMMS)에 반영된 실제 주기</td></tr>
 <tr><td>PTC, T<sub>2</sub></td><td>증명시험 이행 요구(어떤 단계로 어떤 고장 모드를 드러내는가), 정비·교체 주기</td></tr>
-<tr><td>MTTR</td><td>실현 가능한 MTTR(예비품, 접근성, 정비 인력), 결함 검출 시 보상 조치와 허용 시간</td></tr>
+<tr><td>MTTR, MRT</td><td>실현 가능한 평균 수리시간(SRS 항목 25: 예비품, 접근성, 이동 시간, 서비스 계약), 결함 검출 시 보상 조치(§11.3)와 최대 bypass 시간(§11.8.4)</td></tr>
 <tr><td>β</td><td>CCF 방지 요구(분리 탭, 전원 분리, 다양성), 시차 시험 여부</td></tr>
 <tr><td>구조(MooN), 열화 모드 로직</td><td>투표 로직, 1채널 고장 시 2oo3→1oo2 전환 여부</td></tr>
 <tr><td>시험 중 bypass</td><td>bypass 요구와 시험 중 보상 조치</td></tr>
@@ -855,7 +931,8 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <div class="box exam"><span class="lbl">시험 포인트:</span><ul>
 <li>2판 SRS 항목은 29개. 신설 예: 현장 장치(태그) 목록, 증명시험 이행 요구.</li>
 <li>응용 프로그램 SRS는 §10.3.3–10.3.6에 있습니다.</li>
-<li>SRS에는 최대 허용 오동작 트립률, 통전/무통전 트립, 리셋, 수동 정지, bypass, MTTR이 들어갑니다.</li>
+<li>SRS에는 최대 허용 오동작 트립률, 통전/무통전 트립, 리셋, 수동 정지, bypass 서면 절차, 실현 가능한 평균 수리시간(MRT)이 들어갑니다.</li>
+<li>출력 동작의 성공 기준(예: 밸브 누설률)도 SRS 항목입니다.</li>
 </ul></div>
 </section>
 <!-- ===================== CH 6 ===================== -->
@@ -866,7 +943,7 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <div class="prose"><p>장치의 고장까지 시간 T를 확률변수로 봅니다. 신뢰도 R(t)는 t까지 고장 나지 않을 확률, 불신뢰도 F(t) = 1 − R(t), 확률밀도 f(t) = dF/dt, 고장률(위험률) h(t) = f(t)/R(t)입니다. 고장률이 상수 λ이면 지수분포가 됩니다.</p></div>
 <div class="eq">\[ R(t) = \exp\!\left(-\int_0^t h(u)\,du\right) \;\xrightarrow{\;h=\lambda\;}\; e^{-\lambda t}, \qquad \mathrm{MTTF} = \int_0^\infty R(t)\,dt = \frac{1}{\lambda} \tag{6.1} \]</div>
 <div class="prose">
-<p>IEC 61508-6의 계산식은 모두 이 상수 고장률 가정 위에 서 있습니다. 상수 고장률은 욕조 곡선의 "유효 수명" 구간에서만 타당합니다. 그래서 인증서와 안전 매뉴얼은 <strong>유효 수명(useful lifetime)</strong>을 명시하고, 그 이후에는 교체나 재평가를 요구합니다.</p>
+<p>IEC 61508-6의 계산식은 모두 이 상수 고장률 가정 위에 서 있습니다. 상수 고장률은 욕조 곡선의 "유효 수명" 구간에서만 타당합니다. 그래서 인증서와 안전 매뉴얼은 <strong>유효 수명(useful lifetime)</strong>을 명시하고, 그 이후에는 교체나 재평가를 요구합니다. 61508-2는 유효 수명을 넘으면 대부분의 확률 계산 결과가 무의미해진다고 하며, 경험상 유효 수명은 대개 8–12년이지만 사양 한계 가까이 운전하면 훨씬 짧아질 수 있다고 적고 있습니다(전해 콘덴서 등) <span class="src">[61508-2 §7.4.9.5 주석 3]</span>.</p>
 <p>1 FIT은 10<sup>9</sup>시간당 1회 고장(10<sup>−9</sup>/h)입니다. λ = 100 FIT이면 MTTF = 10<sup>7</sup> h ≈ 1 141년입니다. MTTF가 1 141년이라는 말은 장치 하나가 1 141년을 버틴다는 뜻이 아니라, 많은 장치를 운전할 때 연간 약 0.09%가 고장 난다는 뜻입니다.</p>
 </div>
 <div class="box judg"><span class="lbl">실무 판단:</span><p>밸브의 고착(sticking)이나 패킹 마찰 증가처럼 시간이 지날수록 고장 확률이 커지는 마모형 고장은 상수 고장률 모델로 잘 표현되지 않습니다. 이 영향은 계산식 안에서는 T<sub>2</sub>(신품 상태 복원 주기)와 PTC로, 계산식 밖에서는 정비 주기와 교체 기준으로 관리합니다.</p></div>
@@ -951,11 +1028,21 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 
 <h3><span class="sec">6.6</span>고장률 데이터와 불확실성</h3>
 <div class="prose">
-<p>61511 2판 §11.9는 무작위 고장 정량화에 쓰는 신뢰성 데이터가 <strong>신뢰할 만하고(credible), 추적 가능하고(traceable), 문서화되고(documented), 정당화되어야(justified)</strong> 하며, 유사한 운전 환경에서 쓰인 유사 장치의 현장 피드백에 근거해야 하고, 데이터의 불확실성을 평가해야 한다고 요구합니다 <span class="src">[BRATT]</span>. 데이터 출처로는 제조사 FMEDA(인증서·안전 매뉴얼), OREDA, SINTEF PDS Data Handbook, exida SERH, 사용자 자체 prior use 데이터가 쓰입니다.</p>
+<p>61511-1 §11.9.3은 무작위 고장 정량화에 쓰는 신뢰성 데이터가 <strong>신뢰할 만하고(credible), 추적 가능하고(traceable), 문서화되고(documented), 정당화되어야(justified)</strong> 하며, 유사한 운전 환경에서 쓰인 유사 장치의 현장 피드백에 근거해야 한다고 요구합니다. 주석은 사용자가 IEC 60300-3-2나 ISO 14224에 따라 데이터를 수집하도록 권하고, 반품 기반 공급자 데이터는 운전 환경을 완전히 아는 모집단으로 한정해야 한다고 덧붙입니다. §11.9.4는 데이터의 불확실성을 평가해 계산에 반영하도록 요구합니다. 데이터 출처로는 제조사 FMEDA(인증서·안전 매뉴얼), OREDA, SINTEF PDS Data Handbook, exida SERH, 사용자 자체 prior use 데이터가 쓰입니다.</p>
 <p>현장 데이터에서 고장률을 추정할 때는 점추정만 쓰지 않습니다. 누적 운전시간 τ 동안 고장 n건을 관측했다면, 포아송 모델에서 점추정과 단측 상한은 다음과 같습니다.</p>
 </div>
 <div class="eq">\[ \hat\lambda = \frac{n}{\tau}, \qquad \lambda_{U,\,CL} = \frac{\chi^2_{CL}(2n+2)}{2\tau}, \qquad n=0:\; \lambda_{U} = \frac{-\ln(1-CL)}{\tau} \tag{6.9} \]</div>
-<div class="prose"><p>여기서 χ²<sub>CL</sub>(ν)는 자유도 ν인 카이제곱 분포의 CL 분위수입니다. IEC 61508과 61511에는 고장률을 정할 때 70% 단측 신뢰한계를 언급하는 대목들이 있고 <span class="src">[KNX]</span>, 61508-2 Route 2H는 데이터 불확실성을 반영해 목표 실패척도 달성에 90%를 넘는 신뢰를 요구합니다(8.4절).</p></div>
+<div class="prose"><p>여기서 χ²<sub>CL</sub>(ν)는 자유도 ν인 카이제곱 분포의 CL 분위수입니다. 70%와 90%라는 숫자는 표준 곳곳에 나옵니다.</p></div>
+<div class="tbl"><table>
+<thead><tr><th>조항</th><th>요구(요지)</th></tr></thead>
+<tbody>
+<tr><td class="mono">61511-1 §11.4.9</td><td>61511 경로(§11.4.5–11.4.9)로 HFT를 정할 때, 실패척도 계산에 쓰는 신뢰성 데이터는 <strong>70% 이상의 통계적 신뢰 상한</strong>으로 정해야 함</td></tr>
+<tr><td class="mono">61511-1 §11.9.4 주석 2</td><td>입력 매개변수마다 평균 대신 70% 상한을 써서 보수적인 점추정을 하거나, 입력 분포로 Monte Carlo를 돌려 실패척도 분포에서 보수적인 값(예: 90% 신뢰)을 쓰는 방법</td></tr>
+<tr><td class="mono">61508-2 §7.4.9.5 주석 1</td><td>사용하는 고장률 데이터는 최소 70% 신뢰 수준을 갖는 것이 바람직함</td></tr>
+<tr><td class="mono">61508-2 부속서 C</td><td>FMEA를 뒷받침하는 현장 데이터는 최소 70%의 단측 신뢰 한계</td></tr>
+<tr><td class="mono">61508-2 §7.4.4.3.3</td><td>Route 2H: 매개변수의 평균과 불확실성(예: 90% 신뢰구간)을 추정하고, 목표 실패척도 달성에 대한 신뢰가 <strong>90%를 넘을 때까지</strong> 시스템을 개선</td></tr>
+</tbody></table></div>
+<div class="box deep"><span class="lbl">심화: 신뢰 수준이 SIL을 바꾸는 예</span><p>61511-2는 입력 신뢰성 매개변수의 분포로 Monte Carlo 계산을 반복해 PFD<sub>avg</sub>의 분포(히스토그램)를 얻는 예를 보여 줍니다. 그 예에서 PFD<sub>avg</sub>가 SIL 4 범위에 들 확률은 12%, SIL 3 이상은 78%, SIL 2 이상은 96%였고, 90% 신뢰 수준을 택하면 SIL 2, 70% 신뢰 수준을 택하면 SIL 3이 됩니다. 분포의 평균값은 대략 중앙값에 가까워 보수성이 입증되지 않는다는 점도 지적합니다 <span class="src">[61511-2 A.11.9]</span>. 같은 설계라도 데이터 불확실성을 어떻게 다루느냐에 따라 SIL 한 단계가 달라질 수 있습니다.</p></div>
 <div class="box deep"><span class="lbl">심화: 왜 2n+2인가</span><p>포아송 과정에서 "τ 동안 n건 이하가 관측될 확률"은 감마 분포와 연결됩니다. P(N ≤ n; λτ) = 1 − CL을 만족하는 λ가 상한이며, 이는 자유도 2(n+1)인 카이제곱 분포의 CL 분위수를 2τ로 나눈 값과 같습니다. 고장이 하나도 없어도(n = 0) 상한은 0이 아니라 −ln(1−CL)/τ입니다. 70%에서는 1.204/τ, 90%에서는 2.303/τ입니다 <span class="src">[유도]</span>.</p></div>
 
 <div class="tool" id="toolChi">
@@ -988,7 +1075,24 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <p>IEC 61508-6 부속서 B는 신뢰성 블록도(RBD) 기반의 단순식, 결함수, 상태 전이(Markov, Petri net) 방법을 예로 듭니다 <span class="src">[61508-6PV] [61508A]</span>. 단순식 방법의 절차는 SIF를 센서·로직·최종요소 서브시스템으로 나누고, 각 서브시스템의 투표 구조에 맞는 식으로 PFD<sub>avg</sub>를 구한 뒤 더하는 것입니다 <span class="src">[61508A]</span>.</p>
 </div>
 <div class="eq">\[ \mathrm{PFD}_{SYS} = \mathrm{PFD}_{S} + \mathrm{PFD}_{L} + \mathrm{PFD}_{FE} \tag{7.1} \]</div>
-<div class="prose"><p>단순식의 주요 가정(요지)은 다음과 같습니다. 고장률은 상수이고, 한 투표 그룹의 채널은 같은 고장률과 진단 커버리지를 가지며, 센서 서브시스템은 신호가 처음 결합(투표)되는 지점 앞까지를 포함합니다. 증명시험은 완전하며(불완전 시험은 B.3.2.5에서 따로 다룸), MTTR·MRT는 시험 주기보다 훨씬 짧고, 결과 PFD<sub>avg</sub>는 0.1보다 작습니다. 서브시스템 합산 식 (7.1)은 각 항이 작다는 희소 사건 근사입니다.</p></div>
+<div class="prose"><p>부속서 B의 단순식은 다음 가정 위에 있습니다 <span class="src">[61508-6 B.3.1]</span>. 계산 결과를 해석할 때 이 목록을 기억해야 합니다.</p></div>
+<div class="tbl compact"><table>
+<thead><tr><th>가정</th><th>깨지면 생기는 일</th></tr></thead>
+<tbody>
+<tr><td>결과 PFD<sub>avg</sub> &lt; 10<sup>−1</sup>(또는 PFH &lt; 10<sup>−5</sup>/h)</td><td>근사식 λt가 1−e<sup>−λt</sup>에서 크게 벗어남</td></tr>
+<tr><td>부품 고장률은 시스템 수명 동안 상수</td><td>마모형 고장(밸브 고착 등)을 과소평가</td></tr>
+<tr><td>센서 서브시스템은 신호가 처음 투표·결합되는 부품 앞까지, 로직은 그 부품부터 최종 신호까지, 최종요소는 최종 작동 부품까지</td><td>경계를 잘못 나누면 이중 계산이나 누락</td></tr>
+<tr><td>입력 고장률은 채널 하나 기준이고, 투표 그룹의 채널은 같은 고장률·DC를 가짐</td><td>이종 채널은 별도 모델 필요</td></tr>
+<tr><td>채널 전체 고장률 = 위험 + 안전, 표에서는 둘이 같다고 봄</td><td>SFF에는 영향, 계산된 PFD에는 영향 없음</td></tr>
+<tr><td>완전한 증명시험과 수리(불완전 시험은 B.3.2.5)</td><td>PTC &lt; 100%를 무시하면 과소평가(7.6절)</td></tr>
+<tr><td>증명시험 주기 ≥ MRT의 10배, 서브시스템마다 하나의 T<sub>1</sub>과 MRT</td><td>짧은 시험 주기·긴 수리에서는 오차</td></tr>
+<tr><td><strong>요구 간격 ≥ 증명시험 주기의 10배</strong></td><td>요구율이 높으면 저빈도 식이 맞지 않음(3.4절)</td></tr>
+<tr><td>저빈도 모드 전체와 1oo2·1oo2D·1oo3·2oo3: DC만큼의 고장이 MTTR 안에 검출·수리됨(예: MTTR 8 h = 진단 주기 1 h 미만 + MRT). 이 구조들은 <strong>온라인 수리</strong>를 가정</td><td>수리가 늦으면 λ<sub>DD</sub>·MTTR 항 과소평가(§11.3, 10.2절)</td></tr>
+<tr><td>고빈도 1oo1·2oo2: 위험 결함을 검출하면 항상 안전 상태로 감(요구 간격이 진단 주기의 10배 이상이거나, 진단 주기 + 안전 상태 도달 시간 &lt; 공정안전시간)</td><td>PFH = λ<sub>DU</sub>가 성립하지 않음</td></tr>
+<tr><td>무통전 트립 시스템에서 전원 상실은 트립을 일으키므로 PFD에 영향 없음. 통전 트립이거나 전원이 위험하게 고장 날 수 있으면 전원을 포함</td><td>통전 트립에서 전원·배선을 빠뜨림</td></tr>
+</tbody></table></div>
+<div class="prose"><p>서브시스템 안에 투표 그룹이 여럿이면 그룹별 PFD를 더합니다. 시험 주기가 다른 직렬 요소들을 하나의 등가 정지시간으로 묶을 때는 각 요소의 고장률 비율로 가중 평균합니다 <span class="src">[61508-6 B.3.2.1]</span>.</p></div>
+<div class="box basis"><span class="lbl">근거: 61511이 요구하는 계산 고려 요소 [61511-1 §11.9.2]</span><p>SIS 구조, 진단으로 검출되는 위험 고장률, 진단으로는 못 찾지만 증명시험으로 찾는 고장률, <strong>진단과 증명시험 모두로 못 찾는 고장률</strong>, 증명시험 자체로 생기는 고장, 공통원인고장, 진단 커버리지와 진단 주기와 진단 설비의 고장, 증명시험 커버리지와 절차와 시험 설비의 신뢰성, 검출 고장의 수리 시간과 수리 중 SIS 상태, 통신 과정의 위험 고장, 운전원 대응으로 생기는 위험 고장, SIS에 필요한 유틸리티의 신뢰성. 모델은 원인–결과 분석, RBD, 결함수, Markov, Petri net 중 상황에 맞게 고르고, 해석적으로 또는 Monte Carlo로 계산할 수 있습니다. 목표를 못 맞추면 주요 기여 요소를 찾아 개선하고 다시 계산합니다(§11.9.5). 61508-2 §7.4.5.2도 비슷한 목록에 사람의 무작위 오류를 더합니다.</p></div>
 
 <h3><span class="sec">7.2</span>등가 평균 정지시간 t<sub>CE</sub>, t<sub>GE</sub>의 의미</h3>
 <div class="prose">
@@ -1011,9 +1115,9 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <div class="eq">\[ \mathrm{PFD}_{1oo2} = 2\big[(1-\beta_D)\lambda_{DD}+(1-\beta)\lambda_{DU}\big]^2 t_{CE}\,t_{GE} + \beta_D\lambda_{DD}MTTR + \beta\lambda_{DU}\left(\frac{T_1}{2}+MRT\right) \tag{7.7} \]</div>
 <div class="eq">\[ \mathrm{PFD}_{2oo2} = 2\lambda_D\,t_{CE} \tag{7.8} \]</div>
 <div class="eq">\[ \mathrm{PFD}_{2oo3} = 6\big[(1-\beta_D)\lambda_{DD}+(1-\beta)\lambda_{DU}\big]^2 t_{CE}\,t_{GE} + \beta_D\lambda_{DD}MTTR + \beta\lambda_{DU}\left(\frac{T_1}{2}+MRT\right) \tag{7.9} \]</div>
-<div class="eq">\[ \mathrm{PFD}_{1oo3} = 6\big[(1-\beta_D)\lambda_{DD}+(1-\beta)\lambda_{DU}\big]^3 t_{CE}\,t_{GE}\,t_{G2E} + \beta_D\lambda_{DD}MTTR + \beta\lambda_{DU}\left(\frac{T_1}{2}+MRT\right) \tag{7.10} \]</div>
-<div class="eq">\[ \begin{aligned} \mathrm{PFD}_{1oo2D} &= 2(1-\beta)\lambda_{DU}\big[(1-\beta)\lambda_{DU}+(1-\beta_D)\lambda_{DD}+\lambda_{SD}\big]\,t'_{CE}\,t'_{GE} + \beta_D\lambda_{DD}MTTR + \beta\lambda_{DU}\left(\frac{T_1}{2}+MRT\right) \\ t'_{CE} &= \frac{\lambda_{DU}\left(\frac{T_1}{2}+MRT\right) + (\lambda_{DD}+\lambda_{SD})MTTR}{\lambda_{DU}+\lambda_{DD}+\lambda_{SD}}, \qquad t'_{GE} = \frac{T_1}{3}+MRT \end{aligned} \tag{7.11} \]</div>
-<div class="prose"><p>1oo2D는 두 채널 사이의 진단으로 검출된 고장 채널을 끊어 내는 구조(주로 로직 솔버)입니다. 독립 고장 항에 DU만 남는 이유는 검출된 고장(DD, SD)이 생긴 채널은 진단으로 분리되어 남은 채널이 1oo1로 동작하기 때문입니다. 1oo3의 t<sub>GE</sub>·t<sub>G2E</sub> 이름은 자료에 따라 서로 바뀌어 쓰이기도 하지만 곱 T<sub>1</sub>/2 · T<sub>1</sub>/3 · T<sub>1</sub>/4의 구조는 같습니다.</p></div>
+<div class="eq">\[ \begin{aligned} \mathrm{PFD}_{1oo3} &= 6\big[(1-\beta_D)\lambda_{DD}+(1-\beta)\lambda_{DU}\big]^3 t_{CE}\,t_{GE}\,t_{G2E} \\ &\quad + \beta_D\lambda_{DD}MTTR + \beta\lambda_{DU}\left(\frac{T_1}{2}+MRT\right) \end{aligned} \tag{7.10} \]</div>
+<div class="eq">\[ \begin{aligned} \mathrm{PFD}_{1oo2D} &= 2(1-\beta)\lambda_{DU}\big[(1-\beta)\lambda_{DU}+(1-\beta_D)\lambda_{DD}+\lambda_{SD}\big]\,t'_{CE}\,t'_{GE} \\ &\quad + 2(1-K)\lambda_{DD}\,t'_{CE} + \beta\lambda_{DU}\left(\frac{T_1}{2}+MRT\right) \\ t'_{CE} &= \frac{\lambda_{DU}\left(\frac{T_1}{2}+MRT\right) + (\lambda_{DD}+\lambda_{SD})MTTR}{\lambda_{DU}+\lambda_{DD}+\lambda_{SD}}, \qquad t'_{GE} = \frac{T_1}{3}+MRT \end{aligned} \tag{7.11} \]</div>
+<div class="prose"><p>1oo2D는 평상시 2oo2로 동작하다가, 한 채널의 진단이 결함을 검출하면 출력 투표가 다른 채널을 따르도록 바뀌고, 두 채널 모두 결함이거나 어느 채널 탓인지 알 수 없는 불일치가 생기면 안전 상태로 가는 구조입니다(주로 로직 솔버). 채널 간 비교·전환 장치가 100% 효율적이지 않으므로, 결함 채널이 검출되고도 2oo2로 남는 경우를 K(비교·전환 효율, FMEA로 결정)로 반영합니다. 그래서 1oo2D 식에는 β<sub>D</sub>λ<sub>DD</sub>MTTR 항이 없고 대신 <strong>2(1−K)λ<sub>DD</sub>t′<sub>CE</sub></strong> 항이 있습니다. 표 B.2–B.5는 K = 0.98을 가정하고, 채널의 검출 안전 고장률은 λ<sub>SD</sub> = λ<sub>S</sub>·DC입니다 <span class="src">[61508-6 B.3.2.2.4]</span>. 1oo2·2oo2·2oo3·1oo3 식은 진단이 결함을 보고만 하고 출력이나 투표를 바꾸지 않는다고 가정합니다.</p></div>
 <div class="box exam"><span class="lbl">시험 포인트: 손계산 순서</span><ol>
 <li>λ<sub>D</sub> = λ<sub>DU</sub> + λ<sub>DD</sub>, 비율 λ<sub>DU</sub>/λ<sub>D</sub>, λ<sub>DD</sub>/λ<sub>D</sub>를 먼저 구합니다.</li>
 <li>t<sub>CE</sub>(T<sub>1</sub>/2), t<sub>GE</sub>(T<sub>1</sub>/3)를 구합니다. 단위를 시간으로 통일합니다(1년 = 8 760 h).</li>
@@ -1026,7 +1130,7 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <div class="eq">\[ \mathrm{PFH}_{1oo2} = 2\big[(1-\beta_D)\lambda_{DD}+(1-\beta)\lambda_{DU}\big](1-\beta)\lambda_{DU}\,t_{CE} + \beta\lambda_{DU} \tag{7.13} \]</div>
 <div class="eq">\[ \mathrm{PFH}_{2oo3} = 6\big[(1-\beta_D)\lambda_{DD}+(1-\beta)\lambda_{DU}\big](1-\beta)\lambda_{DU}\,t_{CE} + \beta\lambda_{DU} \tag{7.14} \]</div>
 <div class="eq">\[ \mathrm{PFH}_{1oo3} = 6\big[(1-\beta_D)\lambda_{DD}+(1-\beta)\lambda_{DU}\big]^2(1-\beta)\lambda_{DU}\,t_{CE}\,t_{GE} + \beta\lambda_{DU} \tag{7.15} \]</div>
-<div class="eq">\[ \mathrm{PFH}_{1oo2D} = 2(1-\beta)\lambda_{DU}\big[(1-\beta)\lambda_{DU}+(1-\beta_D)\lambda_{DD}+\lambda_{SD}\big]\,t'_{CE} + \beta\lambda_{DU} \tag{7.16} \]</div>
+<div class="eq">\[ \mathrm{PFH}_{1oo2D} = 2(1-\beta)\lambda_{DU}\big[(1-\beta)\lambda_{DU}+(1-\beta_D)\lambda_{DD}+\lambda_{SD}\big]\,t'_{CE} + 2(1-K)\lambda_{DD} + \beta\lambda_{DU} \tag{7.16} \]</div>
 <div class="prose"><p>PFH 식은 "시스템이 위험 고장 상태로 들어가는 빈도"입니다. 마지막 고장이 DU인 경우만 세는 이유는, 고빈도 모드에서는 검출된 고장이 다음 요구 전에 안전 동작이나 조치로 이어진다고 보기 때문입니다. 그러려면 진단이 요구 간격보다 충분히 빨라야 합니다. PFH 식에는 T<sub>1</sub>/2가 t<sub>CE</sub> 안에만 들어 있으므로, 증명시험 주기의 영향이 PFD보다 훨씬 작습니다. 고빈도 모드에서는 요구가 잦아 숨은 고장이 곧 위험사건으로 드러나기 때문입니다(식 3.5).</p></div>
 
 <h3><span class="sec">7.5</span>공통원인고장 항과 MooN 보정</h3>
@@ -1041,11 +1145,12 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <div class="prose"><p>직관은 이렇습니다. 2oo3은 세 채널 중 <strong>둘</strong>만 함께 고장 나도 기능을 잃으므로 1oo2보다 CCF에 취약합니다(배율 &gt; 1). 1oo3은 셋이 <strong>모두</strong> 함께 고장 나야 하므로 덜 취약합니다(배율 &lt; 1).</p></div>
 
 <h3><span class="sec">7.6</span>불완전 증명시험: PTC와 T<sub>2</sub></h3>
-<div class="prose"><p>실제 증명시험은 모든 DU 고장을 드러내지 못합니다. 시험이 드러내는 비율이 PTC이고, 드러나지 않은 고장은 장치가 신품 상태로 복원되는 주기 T<sub>2</sub>(전면 정비·교체, 대개 mission time)까지 남습니다. IEC 61508-6 B.3.2.5의 접근을 61508 Association 자료가 정리한 형태로 쓰면 다음과 같습니다 <span class="src">[61508A]</span>.</p></div>
+<div class="prose"><p>실제 증명시험은 모든 DU 고장을 드러내지 못합니다. IEC 61508-6 B.3.2.5는 진단과 증명시험 모두로 못 찾는 고장은 위험사건을 일으키는 요구나 장비 정비(overhaul) 때 드러날 수 있고, 그렇지 않으면 장비 수명 내내 남는다고 봅니다. 시험이 찾는 비율이 PTC이고, 나머지 (1−PTC)는 간격 T<sub>2</sub>가 등가 정지시간을 지배합니다. 표준의 1oo2 예에서는 T<sub>2</sub>를 <strong>시스템에 대한 요구 간격</strong>으로 정의합니다. 실무 도구와 61508 Association 자료는 T<sub>2</sub>를 장치가 신품 상태로 돌아오는 정비·교체 주기(mission time)로 씁니다 <span class="src">[61508-6 B.3.2.5] [61508A] [EXIDA]</span>. 어느 쪽이든 "시험으로 못 찾는 고장이 실제로 드러나는 간격"이라는 의미는 같습니다.</p></div>
 <div class="eq">\[ t_{CE} = \frac{\lambda_{DU}}{\lambda_D}\left[PTC\left(\frac{T_1}{2}+MRT\right)+(1-PTC)\left(\frac{T_2}{2}+MRT\right)\right] + \frac{\lambda_{DD}}{\lambda_D}MTTR \tag{7.17} \]</div>
 <div class="eq">\[ t_{GE} = \frac{\lambda_{DU}}{\lambda_D}\left[PTC\left(\frac{T_1}{3}+MRT\right)+(1-PTC)\left(\frac{T_2}{3}+MRT\right)\right] + \frac{\lambda_{DD}}{\lambda_D}MTTR \tag{7.18} \]</div>
 <div class="eq">\[ \text{CCF 항} = \beta\lambda_{DU}\left[PTC\left(\frac{T_1}{2}+MRT\right)+(1-PTC)\left(\frac{T_2}{2}+MRT\right)\right] + \beta_D\lambda_{DD}MTTR \tag{7.19} \]</div>
-<div class="prose"><p>1oo1에서 MRT를 무시하면 PR electronics 포스터의 식과 같아집니다 <span class="src">[PRE]</span>.</p></div>
+<div class="prose"><p>표준의 표 B.9는 λ<sub>D</sub> = 0.5×10<sup>−5</sup>/h, β = 10%, β<sub>D</sub> = 5%, T<sub>1</sub> = 1년, T<sub>2</sub> = 10년인 1oo2에서 PTC 100%와 90%를 비교합니다. DC 0%에서 2.7×10<sup>−3</sup> 대 6.0×10<sup>−3</sup>, DC 60%에서 9.7×10<sup>−4</sup> 대 2.0×10<sup>−3</sup>, DC 90%에서 2.3×10<sup>−4</sup> 대 4.4×10<sup>−4</sup>, DC 99%에서 2.4×10<sup>−5</sup> 대 4.4×10<sup>−5</sup>입니다. PTC가 10%p 떨어지면 PFD가 약 두 배가 됩니다 <span class="src">[61508-6 표 B.9]</span>. 도구 4의 "표 B.9" 버튼으로 재현할 수 있습니다.</p>
+<p>1oo1에서 MRT를 무시하면 PR electronics 포스터의 식과 같아집니다 <span class="src">[PRE]</span>.</p></div>
 <div class="eq">\[ \mathrm{PFD}_{1oo1} \approx \lambda_{DD}MTTR + PTC\cdot\lambda_{DU}\frac{T_1}{2} + (1-PTC)\,\lambda_{DU}\frac{T_2}{2} \tag{7.20} \]</div>
 <div class="box deep"><span class="lbl">심화: mission time이 갑자기 중요해지는 이유</span>
 <p>PTC = 100%이면 T<sub>2</sub>는 식에서 사라집니다. PTC가 90%만 되어도 미검출 10%가 T<sub>2</sub>/2 동안 쌓이므로, T<sub>2</sub>가 T<sub>1</sub>의 10배이면 그 10%가 나머지 90%와 비슷한 크기의 기여를 합니다. 예시값 λ<sub>DU</sub> = 100 FIT, T<sub>1</sub> = 1년, T<sub>2</sub> = 10년, PTC = 90%이면 PFD = 3.94×10<sup>−4</sup> + 4.38×10<sup>−4</sup> = 8.3×10<sup>−4</sup>로, 완전 시험(4.38×10<sup>−4</sup>)의 약 1.9배입니다.</p>
@@ -1124,10 +1229,11 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <div class="field"><label for="pfB">β</label><input id="pfB" type="text" inputmode="decimal" value="0.10"></div>
 <div class="field"><label for="pfBd">β<sub>D</sub></label><input id="pfBd" type="text" inputmode="decimal" value="0.10"></div>
 <div class="field"><label for="pfPtc">PTC (0–1)</label><input id="pfPtc" type="text" inputmode="decimal" value="1"></div>
-<div class="field"><label for="pfT2">T<sub>2</sub> [h]</label><input id="pfT2" type="text" inputmode="decimal" value="87600"><span class="hint">PTC&lt;1일 때 사용</span></div>
+<div class="field"><label for="pfT2">T<sub>2</sub> [h]</label><input id="pfT2" type="text" inputmode="decimal" value="87600"><span class="hint">PTC&lt;1일 때: 시험으로 못 찾는 고장이 드러나는 간격</span></div>
+<div class="field"><label for="pfK">K (1oo2D 전환 효율)</label><input id="pfK" type="text" inputmode="decimal" value="0.98"><span class="hint">61508-6 표 가정 0.98</span></div>
 </div>
 <label class="check"><input type="checkbox" id="pfD5"> 표 D.5 β 배율 적용(1oo3 ×0.5, 2oo3 ×1.5)</label>
-<div class="btnrow"><button type="button" class="ghost" id="pfEx1">7.8 경우 A: 송신기</button><button type="button" class="ghost" id="pfEx2">7.8 경우 A: 밸브</button><button type="button" class="ghost" id="pfEx3">7.8 경우 C: 밸브</button></div>
+<div class="btnrow"><button type="button" class="ghost" id="pfEx1">7.8 경우 A: 송신기</button><button type="button" class="ghost" id="pfEx2">7.8 경우 A: 밸브</button><button type="button" class="ghost" id="pfEx3">7.8 경우 C: 밸브</button><button type="button" class="ghost" id="pfEx4">61508-6 표 B.9 (PTC 90%)</button></div>
 <div class="results" id="pfOut"></div>
 <div class="chart-wrap" id="pfWrap">
 <div class="legend" id="pfLegend"></div>
@@ -1141,7 +1247,9 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <li>t<sub>CE</sub>는 T<sub>1</sub>/2, t<sub>GE</sub>는 T<sub>1</sub>/3. CCF 항은 1oo1과 같은 꼴.</li>
 <li>중복 구조에서는 대개 βλ<sub>DU</sub>T<sub>1</sub>/2가 지배합니다. β를 줄이는 것이 채널을 더 늘리는 것보다 효과적인 경우가 많습니다.</li>
 <li>PFH<sub>1oo1</sub> = λ<sub>DU</sub>, PFH<sub>2oo2</sub> = 2λ<sub>DU</sub>.</li>
-<li>PTC &lt; 100%이면 T<sub>2</sub>(mission time)가 결과를 좌우합니다.</li>
+<li>PTC &lt; 100%이면 T<sub>2</sub>(mission time)가 결과를 좌우합니다(표 B.9: PTC 90%에서 PFD 약 2배).</li>
+<li>1oo2D 식의 2(1−K)λ<sub>DD</sub>t′<sub>CE</sub> 항: K는 채널 간 비교·전환 효율(표 가정 0.98).</li>
+<li>단순식 가정: 요구 간격 ≥ 증명시험 주기 × 10, 증명시험 주기 ≥ MRT × 10, 중복 구조는 온라인 수리.</li>
 </ul></div>
 </section>
 <!-- ===================== CH 8 ===================== -->
@@ -1185,7 +1293,17 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 </div>
 <p class="small">IEC 61508-2 표 2·3의 값 <span class="src">[61508-2] [PRE]</span>.</p>
 <div class="prose">
-<p>요소를 결합할 때의 규칙(요지)은 다음과 같습니다. 직렬로 연결된 요소들의 최대 SIL은 그중 가장 낮은 요소가 정합니다. 병렬(투표)로 결합된 요소들은 각 채널이 달성한 SIL 중 가장 높은 값에 결합의 HFT N을 더한 SIL까지 주장할 수 있습니다 <span class="src">[61508-2 §7.4.4.2]</span>. SFF는 투표 그룹 전체가 아니라 <strong>채널(요소) 단위</strong>로 구합니다.</p>
+<p>Route 1H의 절차는 다음과 같습니다 <span class="src">[61508-2 §7.4.4.2.1–7.4.4.2.4]</span>.</p>
+<ol>
+<li>안전관련계를 구성하는 서브시스템을 정의합니다.</li>
+<li>서브시스템 안의 요소마다 SFF를 따로 구합니다(각 요소를 HFT 0으로 보고). 중복 구성에서는 채널 비교 같은 추가 진단을 SFF에 반영할 수 있습니다.</li>
+<li>요소마다 SFF와 HFT 0으로 표 2(Type A) 또는 표 3(Type B)의 HFT 0 열에서 최대 SIL을 읽습니다.</li>
+<li><strong>직렬</strong>로 결합된 요소들은 그중 가장 낮은 SIL이 채널의 SIL입니다(§7.4.4.2.3).</li>
+<li>HFT N인 <strong>병렬</strong> 채널들은 채널별 SIL 중 가장 높은 값을 고른 뒤 N을 더합니다(§7.4.4.2.4).</li>
+<li>시스템 전체의 최대 SIL은 가장 낮은 서브시스템이 정합니다.</li>
+</ol>
+<p>대안으로, 서브시스템이 같은 유형의 요소 여럿으로 되어 있고 모든 요소의 SFF가 같은 구간에 있으면 서브시스템 HFT로 표를 바로 읽어도 됩니다(§7.4.4.2.2). 표준의 예: SFF 90–99%인 Type B 두 개를 HFT 1로 묶으면 SIL 3, SFF 60–90%인 Type A로 SIL 3을 하려면 HFT 1이 필요합니다. 또한 SFF가 둘 다 60% 미만인 Type B 두 개를 HFT 1로 결합하면 SIL 1입니다(표 3 주석 5). 표준 그림 6의 예처럼 채널 (1,2)가 SIL 2, 채널 (3,4)가 SIL 1이고 HFT 1이면 서브시스템은 SIL 2 + 1 = SIL 3이며, 다른 서브시스템이 SIL 2이면 시스템은 SIL 2입니다.</p>
+<p>HFT를 셀 때 진단 같은 다른 대책은 고려하지 않고, 한 결함이 연쇄로 일으킨 결함들은 하나로 봅니다(§7.4.4.1.1). 진단을 SFF에 반영하는 데도 조건이 있습니다. HFT 0 서브시스템의 요소가 고빈도·연속 모드 기능을 수행하면, 진단 주기와 안전 상태 도달 시간의 합이 공정안전시간보다 짧거나, 고빈도 모드에서 진단 시험률이 요구율의 <strong>100배 이상</strong>이어야 합니다(§7.4.4.1.4). 그 밖의 경우(HFT &gt; 0의 고빈도·연속, 또는 저빈도)에는 진단 주기와 수리 시간의 합이 계산에 쓴 MTTR보다 짧아야 합니다(§7.4.4.1.5). 같은 조건이 PFD·PFH 정량화에도 적용됩니다(§7.4.5.3–7.4.5.4).</p>
 <p>예: SFF 85%인 Type B 송신기는 HFT 0에서 SIL 1입니다. 두 대를 1oo2로 결합하면(HFT 1) 표에서 SIL 2, 결합 규칙으로도 SIL 1 + 1 = SIL 2입니다.</p>
 </div>
 
@@ -1201,16 +1319,34 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <tr><td class="c">4</td><td>모든 모드</td><td class="c">2</td></tr>
 </tbody></table></div>
 <div class="prose">
-<p>61511 §11.4.3은 HFT가 IEC 61508의 Route 1H, 또는 Route 2H / 61511 §11.4.5–11.4.9를 따르도록 요구합니다 <span class="src">[PRE]</span>. 61511 경로는 prior use 데이터와 §11.9의 신뢰성 데이터 요건(credible, traceable, documented, justified, 현장 피드백, 불확실성 평가)을 전제로 합니다 <span class="src">[PRE] [BRATT]</span>.</p>
-<p>IEC 61508-2의 Route 2H에는 표 외에도 조건이 붙습니다(요지). 고장률 데이터는 유사 용도·환경의 현장 피드백에 근거하고 국제 표준(IEC 60300-3-2, ISO 14224 등)에 따라 수집되어야 하며, 각 신뢰성 매개변수의 평균과 불확실성(예: 90% 신뢰구간)을 추정해야 합니다. 목표 실패척도는 데이터 불확실성을 반영해 90%를 넘는 신뢰로 달성되어야 하고, Route 2H에 쓰는 Type B 요소는 진단 커버리지가 60% 이상이어야 합니다. Type A 요소에 한해, 표의 HFT를 따르면 오히려 고장이 늘어 전체 안전이 떨어진다는 것을 입증하면 HFT를 줄일 수 있으며, 이때 고장 배제(fault exclusion)를 주장하는 직렬 요소들의 위험 고장 빈도 합이 목표 실패척도의 1%를 넘지 않아야 합니다 <span class="src">[61508-2 §7.4.4.3]</span>. 세부 문구는 원문으로 확인하십시오.</p>
+<p>61511-1 §11.4는 다음과 같이 짜여 있습니다 <span class="src">[61511-1 §11.4]</span>.</p>
+<ul>
+<li><strong>§11.4.1–11.4.2</strong>: SIS는 SIF마다 최소 HFT를 가져야 하고(결함 발생 뒤 운전 중 일시적으로 낮아지는 것은 허용), 독립 서브시스템으로 나눌 수 있으면 서브시스템 단위로 배정할 수 있습니다.</li>
+<li><strong>§11.4.3</strong>: HFT는 ① 61511 §11.4.5–11.4.9, ② 61508-2 §7.4.4.2(Route 1H), ③ 61508-2 §7.4.4.3(Route 2H) 중 하나를 따릅니다. 61511 경로는 Route 2H에서 파생되었습니다.</li>
+<li><strong>§11.4.4</strong>: 발생 가능성이 무결성 요구에 비해 매우 낮은 결함은 근거를 문서화하고 배제할 수 있습니다. 61511-1 3.2.20.1 주석은 고장 배제를 주장하는 직렬 장치들의 위험 고장률 합이 대체로 목표 실패척도의 1%를 넘지 않아야 한다고 설명합니다.</li>
+<li><strong>§11.4.5</strong>: 표 6의 최소 HFT. 표 6은 최소값이며, 실패척도(§11.9)를 맞추려면 중복이 더 필요할 수 있습니다.</li>
+<li><strong>§11.4.6</strong>: FVL·LVL 프로그래머블 장치를 쓰지 <strong>않는</strong> SIS·서브시스템에 한해, 표 6의 HFT가 오히려 고장을 늘려 전체 공정 안전을 떨어뜨린다면 HFT를 줄일 수 있습니다(근거 문서화). 대안 예: 분석적 중복(다른 센서 값으로 계산해 대체), 더 신뢰성 높은 품목·기술, 다양성으로 공통원인 감소, 설계 여유 확대, 환경 조건 제한, 현장 데이터 축적으로 불확실성 감소.</li>
+<li><strong>§11.4.7</strong>: 그 결과 HFT가 0이 되면, 관련 위험 고장 모드를 §11.4.4에 따라 배제할 수 있다는 증거(체계적 고장 가능성 포함)를 제시해야 합니다.</li>
+<li><strong>§11.4.8</strong>: FVL·LVL 프로그래머블 장치는 진단 커버리지가 60% 이상이어야 합니다.</li>
+<li><strong>§11.4.9</strong>: 실패척도 계산에 쓰는 신뢰성 데이터는 70% 이상의 통계적 신뢰 상한으로 정해야 합니다.</li>
+</ul>
+<p>61508-2의 Route 2H에도 조건이 붙습니다 <span class="src">[61508-2 §7.4.4.3]</span>. 고장률 데이터는 유사 용도·환경의 현장 피드백에 근거하고 국제 표준(IEC 60300-3-2, ISO 14224)에 따라 수집되어야 하며, 현장 피드백의 양·전문가 판단·필요 시 특정 시험으로 각 매개변수의 평균과 불확실성(예: 90% 신뢰구간 [λ<sub>5%</sub>, λ<sub>95%</sub>], 카이제곱·베이즈 방법)을 추정해야 합니다. 목표 실패척도는 데이터 불확실성을 반영해 <strong>90%를 넘는 신뢰</strong>로 달성될 때까지 개선해야 하고(§7.4.4.3.3), Route 2H의 Type B 요소는 DC가 60% 이상이어야 합니다(§7.4.4.3.4). <strong>Type A 요소에 한해</strong>, HFT를 따르면 고장이 늘어 EUC 전체 안전이 떨어진다는 것을 보이면 HFT를 줄일 수 있고, HFT를 0으로 줄이려면 고장 배제를 주장하는 직렬 요소들의 위험 고장 빈도 합이 목표 실패척도의 1%를 넘지 않아야 합니다(§7.4.4.3.2).</p>
 </div>
 <div class="box basis"><span class="lbl">근거: 푸시버튼 예</span><p>SFF 50%인 비상정지 푸시버튼(Type A)으로 SIL 2를 구현한다고 하겠습니다. Route 1H Type A 표로는 HFT 1(접점 두 개)이 필요합니다. 61511 2판의 표(§11.4.5)로는 저빈도 SIL 2에 HFT 0이면 됩니다. 접점이 하나인 푸시버튼은 기계적으로 더 신뢰할 수 있고, 증명시험이 단순하며, 덜 복잡합니다. 중복을 더하는 것이 항상 안전을 더하지는 않는다는 경험이 새 요건에 반영된 것입니다 <span class="src">[BRATT]</span>.</p></div>
-<div class="box trap"><span class="lbl">함정:</span><p>"61511 2판에서는 SIL 3에도 HFT 1이면 되니 SFF는 몰라도 된다"는 반쪽 이해입니다. 61511 경로를 쓰려면 prior use와 §11.9 데이터 요건을 충족해야 합니다. 이를 입증할 수 없으면 Route 1H로 돌아가 SFF와 Type을 따져야 하고, Type B·SFF 60–90%이면 SIL 3에 HFT 2가 필요합니다.</p></div>
+<div class="box trap"><span class="lbl">함정:</span><p>"61511 2판에서는 SIL 3에도 HFT 1이면 되니 SFF는 몰라도 된다"는 반쪽 이해입니다. 61511 경로에는 FVL·LVL 프로그래머블 장치의 DC ≥ 60%(§11.4.8)와 신뢰성 데이터의 70% 상한(§11.4.9)이 붙고, 데이터는 §11.9.3의 요건을 갖춰야 합니다. 이를 입증할 수 없으면 Route 1H로 돌아가 SFF와 Type을 따져야 하며, Type B·SFF 60–90%이면 SIL 3에 HFT 2가 필요합니다. 또 HFT 감축(§11.4.6)은 FVL·LVL 프로그래머블 장치가 없는 서브시스템에만 허용됩니다.</p></div>
 
 <h3><span class="sec">8.5</span>체계적 능력(SC)과 장치 선정</h3>
 <div class="prose">
-<p>체계적 능력(SC 1–4)은 요소의 체계적 고장에 대한 방어 수준입니다. SIF의 SC는 서브시스템들의 SC 중 가장 낮은 값으로 제한됩니다 <span class="src">[PRE]</span>. 61508은 세 가지 입증 경로를 둡니다. Route 1S는 61508-2·3의 기법과 조치를 따른 적합 개발, Route 2S는 proven in use, Route 3S는 기존 소프트웨어 요소에 대한 61508-3의 적합성 평가입니다. 독립성이 충분한 두 요소를 결합하면 한 단계 높은 SC를 주장할 수 있는 규칙도 있습니다(요지) <span class="src">[61508-2 §7.4.3]</span>.</p>
-<p>61511 §11.5는 장치 선정 요건입니다. 장치는 IEC 61508-2·3에 따르거나, §11.5.3–11.5.6에 따라 선정해야 합니다 <span class="src">[PRE] [61511-PV]</span>. §11.5.3은 prior use 기반 선정, §11.5.4는 FPL 프로그래머블 장치(예: 필드 장치), §11.5.5는 prior use 기반 LVL 프로그래머블 장치, §11.5.6은 FVL 프로그래머블 장치를 다룹니다.</p>
+<p>체계적 능력(SC 1–4)은 요소의 체계적 고장에 대한 방어 수준입니다. SIF의 SC는 서브시스템들의 SC 중 가장 낮은 값으로 제한됩니다 <span class="src">[PRE]</span>. 61508은 세 가지 입증 경로를 둡니다. Route 1S는 61508-2·3의 기법과 조치를 따른 적합 개발, Route 2S는 proven in use, Route 3S는 기존 소프트웨어 요소에 대한 61508-3의 적합성 평가입니다. 두 요소의 결합에 대한 규칙도 있습니다. SC N(N = 1, 2, 3) 요소의 체계적 결함이 단독으로는 안전기능을 실패시키지 못하고 다른 SC N 요소의 두 번째 결함과 겹칠 때만 실패시킨다면, 두 요소 사이에 충분한 독립성이 있을 때 결합을 SC N+1로 볼 수 있습니다. 다만 최대 SC N+1까지이고, 한 요소는 이 방식으로 한 번만 쓸 수 있어 단계적으로 SC N+2를 만들 수는 없습니다. 독립성은 공통원인 분석으로 입증하며, 기능 다양성, 다른 기술, 공통 부품·서비스(전원 등) 배제, 공통 운전·유지보수·시험 절차 배제가 수단입니다 <span class="src">[61508-2 §7.4.3.2–7.4.3.4]</span>.</p>
+<p>61511 §11.5는 장치 선정 요건입니다. 장치는 IEC 61508-2·3에 따르거나 §11.5.3–11.5.6에 따라 선정하고(§11.5.2.1), 제조사 문서·SRS 제약·§11.9의 신뢰성 가정에 비춰 운전 환경에 적합해야 합니다. 같은 밸브라도 자주 움직이는 것과 오래 멈춰 있는 것은 고장률과 고장 모드 분포가 다를 수 있다는 주석이 있습니다(§11.5.2.2).</p>
+<div class="tbl"><table>
+<caption>프로그래밍 방식별 장치 선정 경로 [61511-1 §11.5.4–11.5.6]</caption>
+<thead><tr><th>장치</th><th>prior use로 선정 가능한 범위</th><th>추가 요건(요지)</th></tr></thead>
+<tbody>
+<tr><td>FPL 프로그래머블(예: 스마트 송신기)</td><td>SIL 1·2·3</td><td>안전에 영향을 주는 모든 설정 옵션과 기본값 확인, 미사용 기능이 SIF를 해치지 않음을 확인, 입출력 신호 특성·사용 모드·기능·설정·유사 환경 실적 검토. SIL 3은 기능 수행 능력과 낮은 고장 확률, 적절한 하드웨어·소프트웨어 표준 적용, 대표 구성에서의 사용·시험을 보이는 평가 추가</td></tr>
+<tr><td>LVL 프로그래머블 PE 장치(예: PLC)</td><td><strong>SIL 1·2만</strong></td><td>운전 환경 차이 평가, SIL·복잡성에 맞는 운전 경험. SIL 1·2에는 "safety configured PE logic solver"(범용 산업용 PLC를 안전용으로 구성)를 조건부로 허용: 위험 고장 모드 이해, 이를 다루는 구성 기법, 임베디드 소프트웨어의 안전 용도 사용 이력, 무단 변경 방지. SIL 2 PE 로직 솔버는 정식 평가 필요: 프로그램 시퀀스 감시, 코드 보호 또는 온라인 감시, 실패 단언 또는 다양한 프로그래밍, 변수 범위·타당성 검사, 모듈식 구조, 코딩 표준, 대표 구성 시험, 검증된 모듈, 동적 분석·시험, AI·동적 재구성 미사용, 결함 주입(negative) 시험</td></tr>
+<tr><td>FVL 프로그래머블</td><td>prior use 불가</td><td>PE 장치가 61508-2·3을 따라야 함</td></tr>
+</tbody></table></div>
 </div>
 <div class="tbl"><table>
 <caption>Prior use(61511)와 proven in use(61508) 비교</caption>
@@ -1218,7 +1354,7 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <tbody>
 <tr><td>주체</td><td>사용자(운영사·통합자)가 운전 경험 증거를 모아 판단</td><td>주로 제조사가 요소의 SC를 주장</td></tr>
 <tr><td>목적</td><td>해당 용도에 장치를 써도 된다는 근거(체계적 결함이 충분히 줄었다는 증거)</td><td>개발 과정 대신 사용 실적으로 SC를 입증</td></tr>
-<tr><td>증거(요지)</td><td>제조사의 품질·관리·형상 관리, 장치의 명확한 식별·사양, 같거나 유사한 운전 환경에서의 성능, 운전 경험의 양, 하드웨어·소프트웨어 버전 관리, 고장 기록 절차, 고장 모드의 정기 검토 <span class="src">[PRE]</span></td><td>명확한 사양과 제한된 기능, 충분한 운전 시간과 고장 기록, 동일 사용 조건, 변경 관리</td></tr>
+<tr><td>증거(요지)</td><td>제조사의 품질·관리·형상 관리 체계, 장치의 충분한 식별·사양, 유사 운전 환경에서의 성능(필드 장치는 비안전 용도 실적도 인정), 운전 경험의 양. 사용자의 승인 장치 목록은 정기 갱신·감시, 충분한 경험 후 추가, 불량 이력 시 삭제, 운전 환경 기록 조건을 갖추면 근거가 됨. 장치는 리비전 번호로 식별하고 MOC로 관리하며, 변경 시 근거의 유효성을 다시 정당화 <span class="src">[61511-1 §11.5.3]</span></td><td>명확히 제한된 기능, 특정 구성의 운전 경험 분석 + 적합성 분석·시험, 이전 사용 조건(운전 프로파일)의 동등성과 차이에 대한 영향 분석, 이전 사용에서 위험 고장률을 넘지 않았다는 통계적 증거, 효과적인 고장 보고 체계, 미사용 기능의 무해성 <span class="src">[61508-2 §7.4.10]</span></td></tr>
 <tr><td>결과</td><td>장치 선정 근거, 61511 HFT 경로(§11.4.5–11.4.9)의 전제</td><td>SC 등급</td></tr>
 </tbody></table></div>
 <div class="box judg"><span class="lbl">실무 판단:</span><p>Prior use의 핵심은 "얼마나 오래 썼는가"가 아니라 "고장을 기록하고 분석해 왔는가"입니다. 고장 보고 체계 없이 "20년간 문제없이 썼다"는 진술은 증거가 되지 못합니다. 같은 모델이라도 펌웨어 리비전이 바뀌면 prior use 근거를 다시 검토해야 합니다.</p></div>
@@ -1253,6 +1389,10 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <li>61511 표 6: SIL 3은 HFT 1, SIL 4는 HFT 2, SIL 2는 저빈도 0·고빈도 1.</li>
 <li>SIF의 SC = 서브시스템 SC의 최솟값.</li>
 <li>Prior use는 61511, proven in use는 61508.</li>
+<li>61511 §11.4.8: FVL·LVL 프로그래머블 장치 DC ≥ 60%. §11.4.9: 신뢰성 데이터 70% 상한.</li>
+<li>LVL PE 장치의 prior use 선정은 SIL 1·2까지, FVL은 61508 필수.</li>
+<li>SC N + SC N 결합 → 최대 SC N+1, 한 번만(61508-2 §7.4.3.3).</li>
+<li>SFF 진단 credit: HFT 0 고빈도에서 진단 시험률/요구율 ≥ 100 또는 진단+조치 &lt; 공정안전시간.</li>
 </ul></div>
 </section>
 
@@ -1272,20 +1412,57 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 
 <h3><span class="sec">9.3</span>IEC 61508-6 부속서 D의 β 산정</h3>
 <div class="prose">
-<p>부속서 D는 설계·운영의 CCF 방어 수준을 점수화해 β를 고르는 방법입니다 <span class="src">[61508-6PV] [61508A]</span>. 절차의 뼈대는 다음과 같습니다.</p>
+<p>부속서 D는 β 인자 모델로 공통원인 위험 고장률을 λ<sub>DU</sub>β + λ<sub>DD</sub>β<sub>D</sub>로 나눕니다. β는 진단이 없을 때의 β이자 진단으로 결코 찾을 수 없는 고장의 β이고, β<sub>D</sub>는 진단 범위 안의 고장에 대한 β로, 진단 반복률이 높을수록 β보다 작아집니다. β는 센서, 로직, 최종요소마다 <strong>따로</strong> 구합니다 <span class="src">[61508-6 D.4–D.5]</span>.</p>
 <ol>
-<li>표 D.1의 질문(로직 서브시스템용, 센서·최종요소용 각각)에 답해 점수 X, Y를 합산합니다. 질문은 분리·격리, 다양성·중복, 복잡성·설계·성숙도·경험, 평가·분석·데이터 피드백, 절차·인간 인터페이스, 역량·훈련·안전 문화, 환경 관리, 환경 시험 같은 범주로 묶여 있습니다.</li>
-<li>X는 진단이 있으면 효과가 커지는 조치의 점수, Y는 진단과 무관한 조치의 점수입니다.</li>
+<li>표 D.1의 방어 수단 항목 중 해당하는 것의 점수를 더해 X, Y를 구합니다. 열은 로직 서브시스템(X<sub>LS</sub>, Y<sub>LS</sub>)과 센서·최종요소(X<sub>SF</sub>, Y<sub>SF</sub>)로 나뉩니다. X:Y 비율은 그 수단의 효과가 진단으로 얼마나 커지는지를 나타냅니다.</li>
+<li>항목은 8개 범주입니다: 분리·격리, 다양성·중복, 복잡성·설계·적용·성숙도·경험, 평가·분석·데이터 피드백, 절차·인간 인터페이스, 역량·훈련·안전 문화, 환경 관리, 환경 시험.</li>
 <li>진단 커버리지와 진단 주기로 Z를 정합니다(표 D.2 프로그래머블 전자, 표 D.3 센서·최종요소).</li>
 <li>S = X + Y로 β<sub>int</sub>를, S<sub>D</sub> = X(Z+1) + Y로 β<sub>D,int</sub>를 표 D.4에서 읽습니다.</li>
-<li>1oo2보다 중복도가 높으면 표 D.5 배율을 곱합니다.</li>
+<li>1oo2보다 중복도가 높으면 표 D.5의 배율을 곱합니다.</li>
 </ol>
-<p>표 D.4의 결과는 점수 구간에 따라 로직 서브시스템은 0.5%, 1%, 2%, 5%, 센서·최종요소는 1%, 2%, 5%, 10% 중 하나입니다. 즉 β<sub>int</sub>는 0.5%–10% 범위에서 정해집니다 <span class="src">[61508-6 표 D.4] [61508A]</span>.</p>
 </div>
-<div class="box judg"><span class="lbl">실무 판단:</span><p>61508 Association 자료는 제대로 평가하지 않고 가장 보수적인 β를 쓰는 경우가 흔하다고 지적합니다 <span class="src">[61508A]</span>. 반대로 근거 없이 1–2%를 쓰는 것도 흔합니다. 센서·최종요소에 β를 2% 이하로 주장하려면 부속서 D 점수표를 실제 설계(탭 분리, 케이블 경로 분리, 시차 시험, 다른 정비 인원)로 채워 증빙해야 합니다. SINTEF는 운전 경험에 기반한 장비별 β 값과 점검표를 보고서(A26922)로 공개했습니다 <span class="src">[PDS]</span>.</p></div>
-
+<div class="grid2">
+<div class="tbl compact" style="margin:0"><table>
+<caption>표 D.4 · 점수 → β<sub>int</sub> 또는 β<sub>D,int</sub></caption>
+<thead><tr><th>점수 S 또는 S<sub>D</sub></th><th class="c">로직</th><th class="c">센서·최종요소</th></tr></thead>
+<tbody>
+<tr><td>120 이상</td><td class="c">0.5%</td><td class="c">1%</td></tr>
+<tr><td>70 – 120</td><td class="c">1%</td><td class="c">2%</td></tr>
+<tr><td>45 – 70</td><td class="c">2%</td><td class="c">5%</td></tr>
+<tr><td>45 미만</td><td class="c">5%</td><td class="c">10%</td></tr>
+</tbody></table></div>
+<div class="tbl compact" style="margin:0"><table>
+<caption>표 D.3 · Z (센서·최종요소)</caption>
+<thead><tr><th>DC</th><th class="c">&lt;2 h</th><th class="c">2 h–2일</th><th class="c">2일–1주</th><th class="c">&gt;1주</th></tr></thead>
+<tbody>
+<tr><td>≥ 99%</td><td class="c">2.0</td><td class="c">1.5</td><td class="c">1.0</td><td class="c">0</td></tr>
+<tr><td>≥ 90%</td><td class="c">1.5</td><td class="c">1.0</td><td class="c">0.5</td><td class="c">0</td></tr>
+<tr><td>≥ 60%</td><td class="c">1.0</td><td class="c">0.5</td><td class="c">0</td><td class="c">0</td></tr>
+</tbody></table></div>
+</div>
+<p class="small">표 D.2(프로그래머블 전자)는 진단 주기 구간이 1분 미만, 1–5분, 5분 초과이며 DC ≥ 99%에서 2.0/1.0/0, ≥ 90%에서 1.5/0.5/0, ≥ 60%에서 1.0/0/0입니다 <span class="src">[61508-6 표 D.2–D.4]</span>.</p>
+<div class="prose">
+<p>주석에서 꼭 알아야 할 점이 세 가지 있습니다. 첫째, 각 범주의 점수(X+Y)는 전체 점수의 1/20 이상이 되도록 범주를 고르게 갖추는 것이 강력히 권고됩니다. 둘째, Z를 0보다 크게 쓰려면 비동시 공통원인고장이 모든 채널에 미치기 전에 EUC를 안전 상태로 둘 수 있어야 합니다(결함 검출 시 자동 정지, 또는 결함 위치를 특정하고 이후 결함에도 안전 상태로 갈 수 있는 진단, 또는 진단 주기 안에 원인을 조사해 공통원인 가능성이 있으면 즉시 정지하거나 그 안에 수리하는 공식 작업 체계). 셋째, 공정 산업에서는 결함 검출 시 표 D.2의 시간 안에 정지하기 어렵고, 정지하지 않는다면 프로그래머블 전자의 진단으로 β를 줄일 수 없습니다. 단순 2oo3도 한 채널 고장 뒤 정해진 시간 안에 정지하거나 수리하지 않으면 고장 난 두 채널이 정상 채널을 이기는 투표를 할 수 있다는 각주가 있습니다 <span class="src">[61508-6 D.5 주석 1–5]</span>.</p>
+</div>
+<div class="box deep"><span class="lbl">심화: 센서·최종요소의 β는 왜 2% 아래로 내려가지 않나</span><p>표 D.1의 센서·최종요소 열을 모두 더하면 X의 최댓값은 55, Y의 최댓값은 46.5로, 진단을 반영하지 않은 점수 S = X + Y의 최댓값은 101.5입니다. 표 D.4에서 센서·최종요소가 β<sub>int</sub> 1%를 받으려면 S가 120 이상이어야 하므로, 진단과 무관한 β(미검출 고장의 β)는 이론상 최선이 2%입니다. β<sub>D</sub>는 Z 덕분에 1%까지 내려갈 수 있지만, 표 D.4 주석 2는 센서의 β<sub>D,int</sub>를 1% 미만으로 정당화하기는 어렵다고 합니다 <span class="src">[유도] [61508-6 표 D.1, D.4]</span>. 실무 계산에서 송신기·밸브에 β = 1%를 쓰는 것은 부속서 D로 뒷받침되지 않습니다.</p></div>
+<div class="tool" id="toolBeta">
+<div class="tool-head"><h4>도구 7 · β 인자 산정(부속서 D, 센서·최종요소)</h4><span class="src">61508-6 표 D.1(X<sub>SF</sub>, Y<sub>SF</sub>)·D.3·D.4·D.5 · 항목명은 요지</span></div>
+<div class="tool-body">
+<div class="fields">
+<div class="field"><label for="bDc">진단 커버리지</label><select id="bDc"><option value="0">60% 미만</option><option value="1" selected>60% 이상</option><option value="2">90% 이상</option><option value="3">99% 이상</option></select></div>
+<div class="field"><label for="bInt">진단 주기</label><select id="bInt"><option value="0">2 h 미만</option><option value="1">2 h – 2일</option><option value="2">2일 – 1주</option><option value="3" selected>1주 초과</option></select></div>
+<div class="field"><label for="bArch">구조</label><select id="bArch"><option>1oo2</option><option>1oo3</option><option selected>2oo3</option><option>1oo4</option><option>2oo4</option><option>3oo4</option></select></div>
+</div>
+<label class="check"><input type="checkbox" id="bZok"> 주석 4의 조건 충족(검출 시 안전 상태 또는 진단 주기 내 조사·수리) — 미충족이면 Z = 0</label>
+<div id="betaItems"></div>
+<div class="results" id="betaOut"></div>
+<p class="note" id="betaMsg"></p>
+<p class="note">기본 선택은 학습용 예시(전형적인 공장 수준)이며, 이때 S = 56으로 β<sub>int</sub>는 5%입니다. 다양성 항목(감지 원리 9.0, 전기적 설계 6.5)이 β를 가장 크게 낮춥니다.</p>
+</div>
+</div>
 <h3><span class="sec">9.4</span>보호계층 사이의 독립성</h3>
 <div class="prose">
+<p>61511-1 §9.2.6의 주석은 계층 간 종속성의 전형을 보여 줍니다. 제어 상실의 원인이 된 센서와 SIS 센서가 같은 형식인 경우, 측정과 로직이 다른 두 SIS가 같은 형식의 차단밸브(또는 밸브 하나)를 쓰는 경우, 그리고 계층이 다양해도 <strong>증명시험을 동시에</strong> 하면 전체 위험저감이 줄어드는 경우입니다. 시험을 시차로 하더라도 높은 위험저감에서는 공통원인고장이 대개 지배 요소가 됩니다. 61508-5 A.5.4도 같은 예를 들며, 동시 증명시험이면 여러 시스템의 실제 PFD<sub>avg</sub>가 개별 PFD의 곱보다 훨씬 크다고 설명합니다.</p>
 <p>CCF는 한 SIF의 채널 사이에서만 생기지 않습니다. 원인과 IPL 사이, BPCS 보호계층과 SIF 사이, 같은 위험에 대한 여러 SIF 사이에서도 생깁니다. 61511 §9.4는 보호계층들 사이의 공통원인·공통모드·종속 고장을 방지하는 요건이고 <span class="src">[61511-PV]</span>, §9.3.5는 BPCS 보호계층의 독립·분리 요건입니다 <span class="src">[KNX]</span>.</p>
 <p>SIS는 BPCS와 분리하여 BPCS의 고장이 SIS의 기능을 훼손하지 않게 설계해야 합니다. BPCS와 SIS가 송신기·밸브·탭을 공유하면, 그 장치의 고장이 원인이면서 보호 실패가 되는 경로가 생깁니다. 공유하려면 그 결과를 분석하여 무결성이 훼손되지 않음을 보여야 합니다.</p>
 </div>
@@ -1304,7 +1481,8 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 </tbody></table></div>
 <div class="box exam"><span class="lbl">시험 포인트:</span><ul>
 <li>β 인자 모델에서 CCF 항은 1oo1처럼 동작: βλ<sub>DU</sub>(T<sub>1</sub>/2 + MRT).</li>
-<li>부속서 D: S = X + Y → β, S<sub>D</sub> = X(Z+1) + Y → β<sub>D</sub>. β 범위 로직 0.5–5%, 센서·최종요소 1–10%.</li>
+<li>부속서 D: S = X + Y → β, S<sub>D</sub> = X(Z+1) + Y → β<sub>D</sub>. 표 D.4 구간 120/70/45, 로직 0.5/1/2/5%, 센서·최종요소 1/2/5/10%.</li>
+<li>Z를 쓰려면 비동시 CCF가 퍼지기 전에 안전 상태로 갈 수 있어야 함(주석 4). 공정 산업에서 정지하지 않으면 PE 진단으로 β 감소 불가(주석 5).</li>
 <li>2oo3은 1oo2보다 CCF에 취약(표 D.5 ×1.5), 1oo3은 덜 취약(×0.5).</li>
 <li>다양성·분리·시차 시험이 β를 줄입니다.</li>
 </ul></div>
@@ -1318,9 +1496,26 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <p>§11은 일반 요건(11.2), 결함 검출 시 시스템 거동(11.3), HFT(11.4), 장치 선정(11.5), 필드 장치(11.6), 인터페이스(11.7: 운전원, 유지보수·엔지니어링, 통신), 유지보수·시험 설계(11.8), 무작위 고장 정량화(11.9)로 이루어집니다 <span class="src">[61511-PV]</span>. TR 61511-4는 2판에서 바뀐 설계 요건으로 HFT, 보안 위험 요건, 안전 매뉴얼, 결함 검출 시 시스템 거동, 필드 장치 통신 설계의 제한을 꼽습니다 <span class="src">[TR61511-4]</span>.</p>
 </div>
 
-<h3><span class="sec">10.2</span>결함이 검출되었을 때(§11.3)</h3>
-<div class="prose"><p>요지는 "검출된 위험 결함을 방치하지 말고, SRS에 정한 대로 대응하라"입니다. HFT가 있는 서브시스템에서 위험 결함이 검출되면 안전 상태로 가는 지정된 조치를 하거나, 고장 부분을 수리하는 동안 운전을 계속할 수 있습니다. 다만 PFD 계산에 가정한 MTTR 안에 수리를 마치지 못하면 안전 상태로 가는 조치를 해야 합니다. HFT가 0인 서브시스템에서는 안전 상태로 가는 것이 원칙이며, 운전을 계속하려면 수리 기간 동안 보상 조치가 있어야 합니다(요지). 이 대응은 SRS의 "결함 시 거동" 항목(5.2절)과 운전 절차에 함께 들어가야 합니다.</p></div>
-<div class="box basis"><span class="lbl">근거:</span><p>61508-6 식의 λ<sub>DD</sub>·MTTR 항은 "검출된 위험 고장이 MTTR 안에 복구된다"는 가정을 담고 있습니다. 실제 수리가 그보다 오래 걸리면 계산이 현실을 과소평가합니다. §11.3의 요건은 이 가정을 운전에서 지키게 만드는 장치입니다.</p></div>
+<h3><span class="sec">10.2</span>일반 설계 요건과 결함 검출 시 거동</h3>
+<div class="tbl"><table>
+<caption>§11.2 일반 요건 중 설계 판단을 좌우하는 것 [61511-1 §11.2]</caption>
+<thead><tr><th>조항</th><th>요구(요지)</th></tr></thead>
+<tbody>
+<tr><td class="mono">11.2.2</td><td>SIS가 SIF와 비SIF를 함께 구현하면, 정상·결함 상태에서 어떤 SIF에든 나쁜 영향을 줄 수 있는 하드웨어·임베디드 소프트웨어·응용 프로그램은 모두 SIS로 보고, 영향을 줄 수 있는 SIF 중 가장 높은 SIL을 따름</td></tr>
+<tr><td class="mono">11.2.3</td><td>SIL이 다른 SIF를 구현하면 공유 부분은 가장 높은 SIL을 따름(낮은 SIL이 높은 SIL을 해치지 않음을 보이면 공존 가능)</td></tr>
+<tr><td class="mono">11.2.4</td><td>BPCS를 61511로 인정받지 않는다면 SIS는 무결성이 훼손되지 않을 만큼 BPCS와 분리·독립(운전 정보 교환은 가능)</td></tr>
+<tr><td class="mono">11.2.7</td><td>SIS가 공정을 안전 상태로 만들면, SRS가 달리 정하지 않는 한 리셋 전까지 안전 상태 유지</td></tr>
+<tr><td class="mono">11.2.8</td><td>SRS가 달리 정하지 않는 한, 로직 솔버와 <strong>독립된</strong> 수동 수단(예: 비상정지 버튼)으로 최종요소를 작동할 수 있어야 함</td></tr>
+<tr><td class="mono">11.2.10</td><td>고장 시 SIF 요구와 SIF 위험 고장을 동시에 일으킬 수 있는 BPCS 장치는, 전체 위험이 수용 가능함을 분석으로 확인하지 않는 한 SIS에 쓰지 않음(센서·밸브가 대표적)</td></tr>
+<tr><td class="mono">11.2.11</td><td>유틸리티(전원, 공기, 유압) 상실 시 안전 상태로 가지 않는 장치는 유틸리티 상실과 회로 건전성을 검출·경보하고 §11.3에 따라 조치</td></tr>
+<tr><td class="mono">11.2.13</td><td>운전, 유지보수, 결함 검출, 제약을 다루는 SIS 안전 매뉴얼을 의도한 구성과 운전 환경에 맞게 갖춤</td></tr>
+<tr><td class="mono">11.2.14</td><td>SIF에 쓰는 통신은 요구 SIL에 맞는 안전 응용 기법으로 구성</td></tr>
+</tbody></table></div>
+<div class="prose">
+<p><strong>결함 검출 시 거동(§11.3)</strong>은 2판에서 바뀐 조항입니다. 진단, 증명시험, 기타 어떤 수단으로든 SIS의 위험 결함이 검출되면 안전 운전을 유지할 <strong>보상 조치</strong>를 취하고, 안전 운전을 유지할 수 없으면 공정을 안전 상태로 만드는 지정된 조치를 취해야 합니다. 보상 조치가 경보에 대한 운전원의 특정 조치(밸브 개폐 등)에 의존한다면 <strong>그 경보는 SIS의 일부</strong>로 보며, SIS의 위험 결함을 운전원에게 알리는 경보는 증명시험과 변경 관리 대상입니다(§11.3.1–11.3.2). 주석은 보상 조치가 무결성 요구, 허용위험, HFT, 예상 MRT, 다른 보호계층의 가용성에 따라 달라지며, 경우에 따라서는 계산에 가정한 MPRT 안에 수리하는 것으로 충분하지만 다른 경우에는 추가 수단이 필요하다고 설명합니다 <span class="src">[61511-1 §11.3]</span>.</p>
+<p>61508-2 §7.4.8은 HFT에 따라 나눠 적습니다. HFT &gt; 0이면 안전 상태로 가는 조치, 또는 고장 부분을 격리하고 운전을 계속하되 계산에 가정한 MRT 안에 수리하지 못하면 안전 상태로 가는 조치. HFT 0이고 저빈도 기능만 수행하면 안전 상태 조치, 또는 MRT 안의 수리와 그동안 <strong>결함 없는 시스템과 같은 수준 이상의 무결성</strong>을 주는 추가 조치. HFT 0이고 고빈도·연속 기능이면 안전 상태로 가는 조치만 허용됩니다 <span class="src">[61508-2 §7.4.8.1–7.4.8.3]</span>.</p>
+</div>
+<div class="box basis"><span class="lbl">근거:</span><p>61508-6 식의 λ<sub>DD</sub>·MTTR 항은 "검출된 위험 고장이 MTTR 안에 복구된다"는 가정을 담고 있습니다(B.3.1). 실제 수리가 그보다 오래 걸리면 계산이 현실을 과소평가합니다. §11.3의 보상 조치와 §11.8.4의 최대 bypass 시간은 이 가정을 운전에서 지키게 만드는 장치입니다.</p></div>
 
 <h3><span class="sec">10.3</span>센서 서브시스템</h3>
 <div class="prose">
@@ -1330,13 +1525,32 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <li><strong>2oo3의 감등 로직</strong>: 한 채널이 불량이면 남은 둘을 1oo2(안전 우선)로 볼지 2oo2(가용성 우선)로 볼지는 SRS에서 정할 설계 선택입니다. PFD와 오동작 트립률이 모두 달라지므로 계산 가정과 일치해야 합니다.</li>
 <li><strong>편차 경보</strong>: 채널 간 비교는 드리프트, 임펄스 라인 막힘처럼 송신기 자체 진단으로 못 잡는 고장을 잡습니다. CCF가 동시에 오지 않는 경우 첫 고장을 먼저 드러내는 효과도 있습니다.</li>
 <li><strong>공정 연결 분리</strong>: 탭을 공유하면 막힘 하나가 세 채널을 동시에 무력화합니다. β를 낮게 주장한다면 탭 분리는 사실상 전제 조건입니다.</li>
+<li><strong>설치 환경(§11.6.1)</strong>: 부식, 배관 내 동결, 부유 고형물, 중합, 코킹, 온도·압력 극한, 건식 임펄스 라인의 응축, 습식 라인의 응축 부족 등으로 부정확한 정보가 생기지 않도록 선정·설치해야 합니다.</li>
+<li><strong>쓰기 보호(§11.6.3)</strong>: 스마트 센서는 의도치 않은 변경을 막도록 쓰기 보호해야 하며, H&amp;RA 같은 안전 검토가 허용할 때만 읽기/쓰기를 쓸 수 있습니다.</li>
 </ul>
 </div>
+<div class="tbl compact"><table>
+<caption>센서·최종요소 진단 기법별 최대 인정 DC [61508-2 부속서 A 표 A.13–A.14] (Low 60%, Medium 90%, High 99%)</caption>
+<thead><tr><th>대상</th><th>진단 기법</th><th>최대 DC</th></tr></thead>
+<tbody>
+<tr><td rowspan="6">센서</td><td>온라인 감시에 의한 고장 검출</td><td>Low(저빈도) / Medium(고빈도·연속)</td></tr>
+<tr><td>아날로그 신호 감시(범위 이탈 등)</td><td>Low</td></tr>
+<tr><td>시험 패턴</td><td>High</td></tr>
+<tr><td>입력 비교·투표(1oo2, 2oo3 이상)</td><td>High (진단 주기 안에 데이터가 변할 때만)</td></tr>
+<tr><td>기준 센서</td><td>High</td></tr>
+<tr><td>정동작(positive-activated) 스위치</td><td>High</td></tr>
+<tr><td rowspan="5">최종요소</td><td>온라인 감시에 의한 고장 검출</td><td>Low(저빈도) / Medium(고빈도·연속)</td></tr>
+<tr><td>릴레이 접점 감시</td><td>High (개폐 빈도 고려)</td></tr>
+<tr><td>시험 패턴</td><td>High</td></tr>
+<tr><td>감시(monitoring)</td><td>High</td></tr>
+<tr><td>복수 액추에이터 교차 감시</td><td>High</td></tr>
+</tbody></table></div>
+<div class="box judg"><span class="lbl">실무 판단:</span><p>송신기 단독의 범위 이탈 경보는 표 A.13에서 Low(60%)까지만 인정됩니다. 채널 간 편차 비교를 넣으면 High까지 주장할 여지가 생기지만, "진단 주기 안에 데이터가 변해야 한다"는 조건이 있습니다. 정상 운전에서 값이 거의 고정된 공정 변수라면 비교 진단의 효과가 제한된다는 뜻입니다. 높은 DC를 주장하려면 각 표에서 High 기법을 적어도 하나씩 적용해야 한다는 부속서 A의 요구도 기억하십시오.</p></div>
 
 <h3><span class="sec">10.4</span>로직 솔버</h3>
 <div class="prose">
 <p>안전 PLC는 내부 구조(1oo1D, 1oo2D, 2oo3 TMR, 2oo4D 등)와 진단으로 높은 DC와 낮은 λ<sub>DU</sub>를 얻습니다. 7.8절 예제에서 로직 솔버의 기여가 10<sup>−6</sup> 수준으로 작았던 이유입니다. 인증된 안전 PLC를 쓸 때는 안전 매뉴얼의 제약(쓰기 보호, 진단 응답 시간, 허용 통신 방식, 응용 프로그램 작성 규칙)을 지켜야 인증 근거가 유지됩니다.</p>
-<p>통신은 §11.7.4의 요건 대상입니다. BPCS와의 통신 고장이 SIF를 훼손하지 않아야 하고, BPCS에서 SIS로의 쓰기는 엄격히 제한해야 합니다. 안전 필드버스는 전송 매체를 신뢰하지 않고 안전 계층에서 오류를 검출하는 "블랙 채널" 원리를 씁니다.</p>
+<p>통신 인터페이스의 고장은 SIS가 안전 상태를 달성·유지하는 능력에 나쁜 영향을 주면 안 되고, BPCS·주변 장치가 SIF를 방해해서도 안 됩니다. 전자기 간섭과 서지에 견디고, 접지 전위가 다른 장치 사이 통신에 적합해야 합니다(광케이블 등) <span class="src">[61511-1 §11.7.4]</span>. BPCS에서 SIS로 정보를 보내면 올바른 정보가 전달되었고 무결성이 훼손되지 않았음을 확인하는 수단(선택적 쓰기 통제 등)이 필요하고, BPCS의 잘못된 데이터가 안전을 해쳐서는 안 됩니다(§11.7.2.6–11.7.2.7). 61508-2는 통신의 실패척도(잔류 오류율)를 전송 오류, 반복, 삭제, 삽입, 순서 뒤바뀜, 손상, 지연, 위장(masquerade)을 고려해 추정하고 무작위 고장 계산에 넣도록 하며, 채널 전체를 61508·IEC 61784-3로 설계하는 "화이트 채널"과 채널 일부는 그렇지 않고 인터페이스 요소에서 안전 대책을 구현하는 "블랙 채널"을 구분합니다 <span class="src">[61508-2 §7.4.11]</span>.</p>
 </div>
 
 <h3><span class="sec">10.5</span>최종요소</h3>
@@ -1348,22 +1562,33 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <li><strong>기밀 차단</strong>이 필요한 SIF는 누설 기준을 안전 상태에 포함하고 누설 시험을 증명시험에 넣습니다.</li>
 <li><strong>SOV 구성</strong>: 1oo2 SOV는 안전(PFD)을, 2oo2 SOV는 가용성(오동작 트립)을 개선합니다. 2oo2 SOV를 쓰면 PFD가 나빠지므로 계산에 반영해야 합니다.</li>
 <li><strong>전동기 정지</strong>: 차단기·접촉기 트립 회로도 최종요소입니다. 통전 트립 차단기를 쓰면 트립 회로 감시와 전원 무결성이 SIF의 일부가 됩니다.</li>
+<li><strong>BPCS와 밸브 공유</strong>: 제어밸브를 SIS 최종요소로 겸용하면, 그 밸브의 위험 고장이 요구(제어 상실)와 SIF 실패를 동시에 일으킵니다. §11.2.10은 전체 위험이 수용 가능함을 분석으로 확인하지 않는 한 이런 공유를 금지합니다.</li>
+<li><strong>수동 정지 수단</strong>: 로직 솔버를 거치지 않고 최종요소를 작동시키는 수단이 SRS가 달리 정하지 않는 한 필요합니다(§11.2.8).</li>
 </ul>
 </div>
 
 <h3><span class="sec">10.6</span>통전 트립과 무통전 트립</h3>
-<div class="prose"><p>무통전 트립(de-energize to trip)은 전원 상실, 배선 단선이 안전 쪽 고장이 되므로 기본 원칙입니다. 오동작 트립의 결과가 커서 통전 트립(energize to trip)을 택하는 경우(일부 화재 진압 설비 등)에는 배선 감시(line monitoring), 전원 공급의 무결성(UPS·배터리)과 그 감시가 SIF의 일부가 되며, 해당 전원 장치의 고장률도 PFD 계산에 들어가야 합니다. 어느 쪽인지는 SRS 항목입니다.</p></div>
+<div class="prose"><p>무통전 트립(de-energize to trip)은 전원 상실, 배선 단선이 안전 쪽 고장이 되므로 기본 원칙입니다. 오동작 트립의 결과가 커서 통전 트립(energize to trip)을 택하는 경우(일부 화재 진압 설비 등)에는 배선 감시(line monitoring), 전원 공급의 무결성(UPS·배터리)과 그 감시가 SIF의 일부가 되며, 해당 전원 장치의 고장률도 PFD 계산에 들어가야 합니다. 어느 쪽인지는 SRS 항목입니다. 61511은 통전 트립 회로에 회로와 전원의 건전성을 보장하는 수단(예: 정상 동작에 영향을 주지 않는 작은 파일럿 전류로 단선을 감시하는 회로 끝 감시)을 요구하고(§11.6.2), 유틸리티 상실 시 안전 상태로 가지 않는 모든 장치에 유틸리티 상실과 회로 건전성의 검출·경보를 요구합니다. 유틸리티 상실은 여러 SIF와 여러 SIS에 동시에 영향을 준다는 점도 주석에 있습니다(§11.2.11).</p></div>
 
-<h3><span class="sec">10.7</span>Bypass·override·리셋</h3>
-<div class="prose">
-<p>2판은 운전 중 SIS가 bypass(수리·시험)로 무력화되거나 성능이 떨어진 동안 지속적인 안전을 보장하는 보상 조치를 적용하도록 하고(§16.2.3), 모든 bypass의 상태를 bypass 기록에 남기며 모든 bypass에 승인과 표시를 요구합니다(§16.2.7) <span class="src">[BRATT]</span>. 설계 단계에서는 이를 가능하게 하는 수단을 만들어야 합니다.</p>
-<ul>
-<li>정비용 override 스위치(MOS)는 키 또는 권한 관리, HMI 표시, 경보, 사용 시간 제한을 갖춥니다.</li>
-<li>시운전 override(start-up bypass)는 타이머나 공정 조건으로 자동 해제되도록 합니다.</li>
-<li>트립 후에는 원인이 해소되었더라도 수동 리셋 전까지 재기동되지 않는 것이 원칙입니다. 자동 리셋이 필요하면 SRS에 근거와 함께 명시합니다.</li>
-<li>bypass 중의 PFD 증가는 7.7절의 시험 중 bypass와 같은 구조입니다. 장시간 bypass는 별도 위험 평가 대상입니다.</li>
-</ul>
-</div>
+<h3><span class="sec">10.7</span>Bypass·override·리셋·강제(forcing)</h3>
+<div class="tbl"><table>
+<thead><tr><th>조항</th><th>요구(요지)</th></tr></thead>
+<tbody>
+<tr><td class="mono">11.7.2.2</td><td>운전원이 옵션을 고르거나 위험이 있는 동안 bypass할 필요를 최소화하고, 운전원 조치가 필요하면 오조작 방지 수단(확인 단계 등)</td></tr>
+<tr><td class="mono">11.7.2.3</td><td>bypass 스위치·수단은 무단 사용 방지(키 잠금, 비밀번호 + 효과적인 관리 통제). bypass 시간 제한과 동시 bypass 수 제한을 고려</td></tr>
+<tr><td class="mono">11.7.2.4</td><td>운전원 인터페이스에 표시할 상태: 시퀀스 위치, 보호 동작 발생, bypass 중인 기능, 투표 감등·결함 처리 발생, 센서·최종요소 상태, 안전에 영향을 주는 에너지 상실, 진단 결과, SIS를 지원하는 환경 설비 고장</td></tr>
+<tr><td class="mono">11.7.3</td><td>유지보수·엔지니어링 인터페이스는 고장 나도 SIF를 해치지 않아야 하고(평상시 프로그래밍 패널 분리), 운전원 인터페이스로 쓰지 않으며, bypass를 설치해도 경보와 수동 정지가 무력화되지 않게 하고, 읽기·쓰기 접근의 활성화는 형상 관리 절차와 인증 같은 보안 수단으로만</td></tr>
+<tr><td class="mono">11.8.1</td><td>SIS는 종단 간(센서 측 공정 유체부터 작동 측 공정 유체까지) 또는 구간별로 시험할 수 있게 설계. <strong>정기 정지 간격이 증명시험 주기보다 길면 온라인 시험 설비가 필요</strong></td></tr>
+<tr><td class="mono">11.8.3–11.8.5</td><td>bypass는 경보나 운전 절차로 운전원에게 알리고, 수리·시험 중 bypass 상태로 운전할 수 있는 <strong>최대 시간</strong>을 정하며, 그동안 §11.3의 보상 조치를 제공</td></tr>
+<tr><td class="mono">11.8.6</td><td>PE SIS의 입출력 강제(forcing)는 응용 프로그램·운전 절차·정비의 일부로 쓰지 않음. SIS를 정지하지 않은 상태의 강제는 절차와 접근 보안이 있을 때만 허용하고, 알림이나 경보를 띄움</td></tr>
+<tr><td class="mono">16.2.3–16.2.4</td><td>bypass로 SIS가 무력화·열화된 동안 운전 한계(시간, 공정 변수)를 갖춘 보상 조치를 적용하고, 운전원에게 bypass 전·중·해제 전 절차와 최대 bypass 시간을 알림. SIS 장치를 bypass한 채 운전을 계속하는 것은 위험 분석으로 보상 조치가 충분하다고 판단한 경우에만 허용</td></tr>
+<tr><td class="mono">16.2.7</td><td>모든 bypass의 상태를 bypass 기록에 남기고, 모든 bypass에 승인과 표시가 필요</td></tr>
+</tbody></table></div>
+<div class="prose"><ul>
+<li>시운전 override(start-up bypass)는 타이머나 공정 조건으로 자동 해제되도록 하고, 확인 단계에서 동작을 시험합니다(§15.2.4).</li>
+<li>트립 후에는 원인이 해소되었더라도 리셋 전까지 안전 상태를 유지합니다(§11.2.7). 응용 프로그램은 전원 상실과 복구 때도, SIS 기동 시에도 안전 출력을 리셋 전까지 안전 상태로 유지해야 합니다(§12.2.5–12.2.6).</li>
+<li>bypass 중의 PFD 증가는 7.7절의 시험 중 bypass와 같은 구조입니다. 장시간 bypass는 별도 위험 분석 대상입니다(§16.2.4).</li>
+</ul></div>
 
 <h3><span class="sec">10.8</span>오동작 트립률</h3>
 <div class="prose"><p>오동작 트립(spurious trip)은 생산 손실뿐 아니라 시운전·재기동이라는 위험한 과도 운전을 늘리고, 운전원이 SIF를 bypass하고 싶게 만듭니다. SRS에 최대 허용 오동작 트립률을 두는 이유입니다. 채널 안전 고장률을 λ<sub>S</sub>(검출 위험 고장이 트립을 일으키도록 설계했다면 λ<sub>DD</sub> 포함), 안전 고장 채널의 복구 시간을 MTTR<sub>S</sub>라 하면 근사식은 다음과 같습니다 <span class="src">[유도]</span>.</p></div>
@@ -1415,16 +1640,26 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 </tbody></table></div>
 <div class="box judg"><span class="lbl">실무 판단:</span><p>구조화 텍스트(ST)처럼 경계에 있는 언어는 공급자의 안전 매뉴얼이 허용하는 부분집합과 제한 규칙에 따라 LVL로 취급할 수 있는지가 달라집니다. 분류 근거를 응용 프로그램 SRS나 설계 문서에 남겨 두십시오.</p></div>
 
-<h3><span class="sec">11.2</span>61511의 응용 프로그램 수명주기</h3>
+<h3><span class="sec">11.2</span>61511의 응용 프로그램 요건(§12)</h3>
 <div class="prose">
-<p>2판에서 응용 프로그램 안전 수명주기는 §6.3으로, 응용 프로그램 SRS는 §10.3.3–10.3.6으로 옮겨졌고, §12는 일반 요건(12.2), 설계(12.3), 구현(12.4), 검증(12.5: 검토와 시험), 방법론과 도구(12.6)로 재구성되었습니다 <span class="src">[BRATT] [61511-PV]</span>. 2판의 대표 조항은 다음과 같습니다 <span class="src">[BRATT]</span>.</p>
-<ul>
-<li><strong>§12.2.4</strong>: 응용 프로그램이 안전 기능과 비안전 기능을 함께 구현하면, 프로그램 전체를 SIS의 일부로 보고 61511을 따라야 하며, 평가와 시험으로 비안전 기능이 안전 기능을 방해할 수 없음을 보여야 합니다.</li>
-<li><strong>§12.2.7</strong>: 안전 매뉴얼이 다른 방식을 허용하지 않는 한 응용 프로그램의 모든 부분이 매 스캔마다 실행되도록 설계하고, 스캔 요구를 정할 때 공정안전시간을 고려합니다.</li>
-<li><strong>§12.4.2 f)</strong>: 응용 프로그램이나 관련 문서에 각 SIF와 그 SIL을 식별해 두어야 합니다.</li>
-<li><strong>§7.2.2</strong>: 응용 프로그램 시험도 검증의 틀 안에서 요구됩니다.</li>
-</ul>
+<p>2판에서 응용 프로그램 안전 수명주기는 §6.3(그림 8, 표 3)으로, 응용 프로그램 SRS는 §10.3.3–10.3.6으로 옮겨졌고, §12는 일반 요건(12.2), 설계(12.3), 구현(12.4), 검증(12.5), 방법론과 도구(12.6)로 재구성되었습니다 <span class="src">[61511-1 §6.3, §12]</span>.</p>
 </div>
+<div class="tbl"><table>
+<thead><tr><th>조항</th><th>요구(요지)</th></tr></thead>
+<tbody>
+<tr><td class="mono">12.2.1</td><td>응용 프로그램은 응용 프로그램 안전 요구와 §12를 따르며, 적용 범위는 <strong>SIL 3까지</strong></td></tr>
+<tr><td class="mono">12.2.2</td><td>프로그래머는 SRS와 응용 프로그램 요구가 포괄적·명확·이해 가능·일관적인지 검토하고, 결함은 해결하며, 요구 변경은 영향 분석</td></tr>
+<tr><td class="mono">12.2.3</td><td>61511은 LVL 프로그래밍과 FPL 장치를 다루고, <strong>FVL과 SIL 4 응용 프로그래밍은 다루지 않음</strong>. FVL로 작성한 기능 블록은 61508-3으로 개발·변경</td></tr>
+<tr><td class="mono">12.2.4</td><td>안전·비안전 기능을 함께 구현하면 프로그램 전체를 SIS로 보고, 평가와 시험으로 비간섭을 입증</td></tr>
+<tr><td class="mono">12.2.5–12.2.6</td><td>안전 상태 유지는 전원 상실과 전원 복구 때도 리셋 전까지. SIS 기동(전원 투입) 시 안전 출력은 리셋 전까지 안전 상태(대개 무통전) 유지</td></tr>
+<tr><td class="mono">12.2.7</td><td>안전 매뉴얼이 다른 방식을 허용하지 않는 한 매 스캔마다 프로그램 전체 실행. 스캔 요구에 공정안전시간 고려</td></tr>
+<tr><td class="mono">12.2.8</td><td>응용 프로그램과 데이터는 변경·리비전·버전 관리, 백업·복원 절차 대상</td></tr>
+<tr><td class="mono">12.3</td><td>설계는 모든 운전 모드의 SIS 로직을 다루고 SRS로 추적 가능하며 FSA가 가능해야 함. 설계에 담을 것: 안전 상태 달성 기능, 구성 요소와 상호작용, 스캔 시간과 타이밍 제약, 표준·응용 특화 기능 블록, 메모리 할당, 전역 변수와 그 보호, 비SIF와의 인터페이스, 입출력 태그와 데이터 형식, HMI·BPCS·주변 장치와 교환하는 데이터, 진단 처리·기록, 경보 우선순위, 응용 수준 진단(외부 watchdog, 데이터 무결성 검사, 센서 검증), 온라인·오프라인 주기 시험 기능, 안전한 정비 기능, 복잡성 최소화</td></tr>
+<tr><td class="mono">12.4.2</td><td>프로그램이나 관련 문서에 담을 정보: 작성자, 목적, 사용한 안전 매뉴얼 버전, SIF별 의존 모듈, SRS 추적성, <strong>각 SIF와 SIL</strong>, 기호와 라이브러리, 입출력 신호, 통신 정보 흐름, 프로그램 구조와 처리 순서·스캔 제약, (SRS가 요구하면) 현장 데이터와 통신 데이터의 정확성 확보·보안 수단, 버전과 변경 이력</td></tr>
+<tr><td class="mono">12.4.3</td><td>기존 라이브러리 기능은 61508 적합(FVL의 proven in use는 실행 장치도 61508-2 proven in use 평가 필요) 또는 61511 prior use(§11.5.4/11.5.5)로 정당화하고, 미사용 기능이 해롭지 않음을 입증</td></tr>
+<tr><td class="mono">12.4.4</td><td>구조적 작성: 모듈 분해, SIF 복잡성에 맞는 최소 복잡성, 시험 가능성(결함 허용 기능 포함), 추적성, <strong>하드웨어 구조와 응용 프로그램 구조의 일대일 대응</strong></td></tr>
+<tr><td class="mono">12.6</td><td>안전 매뉴얼의 제약을 따르고, 방법·도구는 결함 유입 최소화, 결함 발견·제거, 남은 결함의 영향 억제, 변경 관리, 품질 증거 제공을 목표로 선택</td></tr>
+</tbody></table></div>
 
 <h3><span class="sec">11.3</span>응용 프로그램 설계 원칙</h3>
 <div class="prose"><ul>
@@ -1437,7 +1672,10 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 </ul></div>
 
 <h3><span class="sec">11.4</span>검증, 시험, 형상 관리</h3>
-<div class="prose"><p>응용 프로그램 검증은 SRS 대비 코드 검토, 오프라인 시뮬레이션 시험, FAT(§13), 현장 통합 시험, 확인(§15)으로 이어집니다. 변경 후에는 영향 분석에 따라 회귀 시험 범위를 정하고, 다운로드된 프로그램이 승인된 버전과 같은지(체크섬, 버전 비교)를 확인합니다. 이는 §5.2.7 형상 관리의 일부입니다.</p></div>
+<div class="prose">
+<p>응용 프로그램과 문서는 <strong>원래 개발에 관여하지 않은 역량자</strong>가 검토하고, 검토 방법과 결과를 문서화해야 합니다(§12.5.2). 검증은 서면 절차와 시험 명세에 따른 검토·분석·시뮬레이션·시험으로 하며, 프로그램의 모든 부분 실행, 대표적인 데이터 범위, <strong>고장 조건 시험(negative testing)</strong>, 타이밍과 실행 순서, SIS 통신, 로직 솔버 하드웨어와의 통합, 로직 솔버가 겉보기에만 동작하는 것이 아니라 예상대로 동작하는지 확인하는 내부 데이터 흐름 점검, 가능하면 제3자 장치와의 통합을 다룹니다(§12.5.3). 입출력 데이터와 프로그램의 대응(데이터 형식·범위 포함)도 검증하고(§12.5.4), 시험 중 변경은 영향 분석으로 재설계·재검증 범위를 정합니다(§12.5.5). 시험 기록에는 프로그램·도구 버전, 시험자와 날짜, 결과, 기준 충족 여부, 실패 원인 분석과 재시험이 들어갑니다(§12.5.6).</p>
+<p>운전 중 응용 프로그램을 바꾸면 영향받는 SIF의 전체 확인과 증명시험이 필요하며, 변경이 갱신된 안전 요구대로 설계·구현되었음을 적절한 검토와 부분 시험으로 확인하는 경우만 예외입니다(§16.3.1.6). 다운로드된 프로그램이 승인된 버전과 같은지 확인하는 것은 형상 관리(§5.2.7)의 일부입니다.</p>
+</div>
 
 <h3><span class="sec">11.5</span>IEC 61508-3 핵심</h3>
 <div class="prose">
@@ -1447,10 +1685,11 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <caption>소프트웨어 도구 분류 (61508-3)</caption>
 <thead><tr><th>등급</th><th>정의(요지)</th><th>예</th></tr></thead>
 <tbody>
-<tr><td>T1</td><td>실행 코드에 직접·간접으로 기여하는 출력을 만들지 않음</td><td>텍스트 편집기, 코드 생성 기능이 없는 요구사항 관리 도구</td></tr>
+<tr><td>T1</td><td>실행 코드(데이터 포함)에 직접·간접으로 기여하는 출력을 만들지 않음</td><td>텍스트 편집기, 자동 코드 생성이 없는 요구사항·설계 지원 도구, 형상 관리 도구</td></tr>
 <tr><td>T2</td><td>설계나 실행 코드의 시험·검증을 지원. 도구 오류가 결함을 놓칠 수는 있지만 실행 코드에 오류를 직접 만들지는 않음</td><td>시험 하니스, 정적 분석기, 커버리지 측정 도구</td></tr>
-<tr><td>T3</td><td>실행 코드에 직접·간접으로 기여하는 출력을 만듦</td><td>컴파일러, 코드 생성기, 안전 PLC 구성·다운로드 도구</td></tr>
+<tr><td>T3</td><td>실행 코드에 직접·간접으로 기여하는 출력을 만듦</td><td>최적화 컴파일러(소스와 목적 코드의 관계가 명확하지 않음), 실행 런타임 패키지를 포함하는 컴파일러, 안전 PLC 구성·다운로드 도구</td></tr>
 </tbody></table></div>
+<div class="prose"><p>온라인 지원 도구는 안전관련계의 소프트웨어 요소로 봅니다. T2·T3 도구는 동작과 사용 제약을 정의한 사양·제품 문서가 있어야 하고, 도구에 대한 의존 수준과 실행 소프트웨어에 영향을 줄 수 있는 도구 고장 메커니즘을 평가해 완화해야 합니다(알려진 버그 회피, 기능 제한 사용, 출력 확인, 다양한 도구 사용 등). T3 도구는 사양 적합의 증거(유사 환경·용도의 성공적 사용 이력과 도구 확인)가 필요하고, 증거가 없으면 도구로 인한 결함을 통제하는 대책이 있어야 합니다. 함수 매개변수, 계기 범위, 경보·트립 값, 고장 시 출력 상태를 만드는 <strong>응용 데이터 도구</strong>도 오프라인 도구에 포함됩니다 <span class="src">[61508-3 §7.4.4; 61508-4 3.2.10–3.2.11]</span>. 61511도 설계·개발·생산 도구가 SIS에 나쁜 영향이 없음을 평가하거나 출력을 검증하도록 요구합니다(§5.2.6.1.6).</p></div>
 <div class="box trap"><span class="lbl">함정:</span><p>"소프트웨어에도 고장률(λ)을 주고 PFD에 더한다"는 틀린 접근입니다. 소프트웨어 고장은 체계적 고장이므로 확률로 정량화하지 않고, 수명주기 기법·조치와 SC로 관리합니다.</p></div>
 <div class="box exam"><span class="lbl">시험 포인트:</span><ul>
 <li>FPL·LVL → 61511, FVL·임베디드 → 61508-3.</li>
@@ -1464,16 +1703,34 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>12</span></div><div><p class="eyebrow">IEC 61511-1 §13–18 · HSE CRR 428</p><h2>설치·검증·운전·변경·폐기</h2></div></div>
 
 <h3><span class="sec">12.1</span>FAT, 설치·시운전, 안전 확인</h3>
+<div class="tbl"><table>
+<thead><tr><th>단계</th><th>핵심 요구(요지)</th></tr></thead>
+<tbody>
+<tr><td>FAT (§13)</td><td>필요 여부를 안전 계획에서 정함. 계획에 블랙박스 기능 시험, 성능 시험, 내부 점검, 환경 시험(EMC, 수명·스트레스), 인터페이스 시험, 열화·고장 상태 시험, 예외 시험, 전원 상실과 복구 후 재기동 시 안전 반응 시험, 운전·정비 매뉴얼 적용을 포함. 시험 사례·데이터, 시험 환경·도구, 구성, 합격 기준, 시정 절차, 시험 인원 역량, 장소, 저장 에너지 등 시험 위험, 시험 구성도, 기록. 정해진 로직 솔버 버전으로 시험하고, 시험 중 변경은 SIF별 영향과 재시험 범위를 안전 분석으로 정함</td></tr>
+<tr><td>설치·시운전 (§14)</td><td>설치·시운전 계획, 설계대로 설치. 시운전에서 확인할 것: 접지, 에너지원 연결과 동작, 운송용 고정구·포장재 제거, 물리적 손상 없음, 계기 교정·구성, 현장 장치 동작, 로직 솔버와 입출력 동작, 다른 시스템·주변 장치 인터페이스, 원격 SIS 간 통신. 설치가 설계와 다르면 역량자가 안전 영향을 평가해, 영향이 없으면 준공(as-built) 도면으로 갱신하고 나쁜 영향이 있으면 설치를 고침</td></tr>
+<tr><td>안전 확인 (§15)</td><td>설치·시운전된 SIS가 SRS를 만족하는지 <strong>점검과 시험</strong>으로 확인(현장 인수 시험, SAT라고도 함). 계획에는 모든 운전 모드(준비·설정, 시운전, 자동·수동·반자동, 정상, 리셋, 정지, 정비), 공장을 위험에 빠뜨리지 않고 확인하는 방법, 수행자와 독립성, 기준 정보(C&amp;E), 필요한 설비(밸브 시험용 격리 밸브, 누설 검지 장비)를 포함</td></tr>
+</tbody></table></div>
 <div class="prose">
-<p>FAT(§13)는 2판에서 권고(recommendations) 조항입니다 <span class="src">[61511-PV]</span>. 설치·시운전(§14)은 SIS가 설계대로 설치되고 동작 준비가 되었음을 확인합니다. 안전 확인(§15)은 설치된 SIS가 SRS를 만족하는지 확인 계획에 따라 시험하는 활동으로, 위험이 존재하기 전에 마쳐야 하며 그 뒤에 FSA 단계 3이 옵니다.</p>
-<p>확인 시험이 다룰 내용은 SRS의 모든 항목입니다. 트립 설정점과 동작, 투표와 감등 로직, 응답 시간, 진단과 결함 시 거동, bypass·override와 해제, 수동 정지, 리셋, 통신 상실과 전원 상실 시 거동, HMI 표시와 경보가 포함됩니다.</p>
+<p>확인 활동(§15.2.4)에는 정상·비정상 운전 모드에서의 동작, BPCS와 연결된 시스템의 나쁜 상호작용 없음, 데이터 과부하 같은 이상 조건을 포함한 통신, 모든 중복 채널을 포함한 센서·로직·최종요소의 동작, 설계 문서와 설치 상태의 일치, 무효한 공정 변수(범위 이탈)에 대한 동작, 정지 시퀀스, 경보와 표시, 범위 경계와 그 너머까지의 연산, 리셋, bypass, 시운전 override, 수동 정지, 정비 절차에 문서화된 증명시험 정책, 진단 경보, 유틸리티 상실과 복구 후 원하는 상태로의 복귀, SRS에 정한 EMC 내성이 포함됩니다. 로직 솔버는 FAT 결과를 인정할 수 있지만, 설치 후 전체 루프 확인은 따로 해야 합니다.</p>
+<p>확인 후 위험이 존재하기 전에는 모든 bypass(PE 로직 솔버·센서 강제, 무효화된 경보)를 정상 위치로 돌리고, 공정 격리 밸브를 시운전 요구대로 맞추고, 시험 물질을 제거하고, 시운전 override와 강제 허가를 모두 해제해야 합니다(§15.2.8). 그다음이 위험 존재 전 FSA(§5.2.6.1.5)입니다.</p>
 </div>
 
 <h3><span class="sec">12.2</span>운전·유지보수(§16)</h3>
-<div class="prose">
-<p>운전·유지보수 단계의 목표는 설계 때 정한 SIL을 수명 동안 유지하는 것입니다. 필요한 것은 운전 절차(경보·진단에 대한 대응, bypass), 유지보수 절차(증명시험, 수리, 교체), 교육, 그리고 SIS 성능 감시입니다. 2판은 bypass 중 보상 조치(§16.2.3)와 bypass 기록·승인·표시(§16.2.7)를 신설했고 <span class="src">[BRATT]</span>, TR 61511-4는 결함 검출·bypass·보상 조치, 수리·변경 후 증명시험을 주요 변경으로 꼽습니다 <span class="src">[TR61511-4]</span>.</p>
-<p>증명시험과 점검(§16.3)은 문서화된 절차로 수행하고, 결과를 기록하며(§16.3.3), 발견된 결함을 시정합니다 <span class="src">[61511-PV]</span>.</p>
-</div>
+<div class="tbl"><table>
+<thead><tr><th>조항</th><th>요구(요지)</th></tr></thead>
+<tbody>
+<tr><td class="mono">16.2.1</td><td>운전·유지보수 계획: 일상·비정상 운전, 점검·증명시험·예방·고장 정비, 절차와 기법, 진단·점검·증명시험으로 확인된 결함에 대한 운전 대응, 절차 준수 확인, 시기, 책임자, SIS 정비 계획(SIL별로 달라도 됨)</td></tr>
+<tr><td class="mono">16.2.2</td><td>절차에 담을 것: 설계된 기능안전을 유지하는 일상 방법, 증명시험의 품질·일관성과 장치 교체 후 확인, 정비·운전 중 위험 상태를 막는 조치(bypass 중 추가 위험저감), 진단 시험 방법, SIS 고장과 요구율 정보, 요구율과 신뢰성 매개변수 데이터 수집 절차, 감사·시험 결과, 고장 시 정비(진단과 수리, 재확인, 보고, 정비 성과 추적)</td></tr>
+<tr><td class="mono">16.2.3–16.2.4</td><td>bypass 중 보상 조치와 운전 한계, 운전원에게 절차와 최대 bypass 시간 제공(정기 검토). bypass 상태로 운전을 계속하려면 위험 분석으로 보상 조치의 충분성을 확인</td></tr>
+<tr><td class="mono">16.2.6</td><td>운전원 교육: SIS의 기능(트립 설정점과 동작, 나머지 공장에 주는 영향), 막는 위험, bypass·override 사용 조건, 수동 정지와 수동 기동(리셋, 재기동), 진단 경보 시 기대 조치, 진단 확인 방법</td></tr>
+<tr><td class="mono">16.2.7</td><td>모든 bypass 상태를 bypass 기록에 남기고, 모든 bypass에 승인과 표시</td></tr>
+<tr><td class="mono">16.2.9</td><td>기대 거동과 실제 거동의 차이를 분석하고 필요하면 변경. 감시 대상: SIF별 요구율, 요구 후 조치, 정상 운전·점검·시험·요구에서 확인된 장비 고장과 고장 모드, 요구의 원인, 오동작 트립의 원인과 빈도, 보상 조치 장비의 고장</td></tr>
+<tr><td class="mono">16.2.11</td><td><strong>모든 SIF</strong>에 대해 진단으로 못 찾는 위험 고장을 드러내는 서면 증명시험 절차. 모든 단계를 기술하고, 각 센서와 최종요소의 올바른 동작, 로직 동작, 경보·표시를 포함. 결함수, FMEA, RCM으로 시험할 미검출 고장을 정할 수 있음</td></tr>
+<tr><td class="mono">16.2.12–16.2.13</td><td>bypass 기간을 줄이도록 예비품 확보(동일 사양이 아닌 교체는 변경으로 관리). 운전·유지보수 책임자는 H&amp;RA·할당·설계의 가정(재실, 부식 방지 등)이 유효한지 검토</td></tr>
+<tr><td class="mono">16.3.1</td><td>서면 절차로 주기 증명시험. 센서, 로직 솔버, 최종요소(차단밸브, 전동기)를 포함한 <strong>SIS 전체</strong>를 종단 간 또는 구간별로 시험. 시험 일정은 SRS를 따르고, 빈도는 설치 상태의 SIS로 §11.9의 계산으로 정함. 결함은 안전하고 신속하게 고치고 <strong>수리 후 증명시험을 반복</strong>. 시험 이력·경험·열화로 빈도를 주기적으로 재평가. 시험 연기(deferral)는 관리 절차로 통제</td></tr>
+<tr><td class="mono">16.3.2</td><td>무단 변경과 눈에 보이는 열화(볼트·덮개 누락, 녹슨 브래킷, 노출 전선, 파손된 전선관·열선, 보온재 누락)를 찾는 주기적 육안 점검</td></tr>
+<tr><td class="mono">16.3.3</td><td>기록 최소 항목: 시험·점검 내용과 절차서 식별, 날짜, 수행자, 고유 식별자(루프·태그·장비·SIF 번호), 결과(<strong>as-found 상태</strong>, 발견한 모든 결함과 고장 모드, <strong>as-left 상태</strong>)</td></tr>
+</tbody></table></div>
 
 <h3><span class="sec">12.3</span>증명시험 설계 이론</h3>
 <div class="prose">
@@ -1507,24 +1764,31 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 </ul>
 </div>
 
+<div class="box basis"><span class="lbl">근거: 증명시험 모델에서 놓치기 쉬운 것 [61511-2 A.11.9]</span><p>61511-2는 증명시험 절차와 시험 설비의 신뢰성을 분석할 때 시험 시간, 시험 중 공정 상태(운전·정지), 시험 중 장치 상태(시험 중 오프라인이면 PFD<sub>avg</sub>의 큰 기여 요인), 증명시험으로 원리상 결코 찾을 수 없는 고장, 시험을 위한 상태 변화로 생기는 고장, 중복 장치 시험의 시차, 그리고 시험이 SIS 상태를 잘못 판정할 가능성(시험 설비 결함, 실제 고장을 못 찾거나 시험을 빠뜨리거나 시험·수리 후 장치를 오프라인으로 두는 사람의 오류)을 고려하라고 안내합니다. 증명시험 주기를 명시적으로 모델링하지 않으면 검출 위험 고장의 MTTR을 증명시험 주기의 절반 + MRT로 잡을 수 있다고도 적습니다.</p></div>
 <h3><span class="sec">12.4</span>운전 성능 감시와 고장률 갱신</h3>
 <div class="prose">
-<p>FSA 단계 4와 §16의 감시 요건은 "설계 가정이 현장에서 맞는가"를 묻습니다. 확인할 것은 실제 요구율(LOPA의 D<sub>SIF</sub>와 비교), 오동작 트립 횟수, 증명시험에서 발견된 위험 고장(as-found 불합격)입니다.</p>
+<p>§5.2.5.3과 §16.2.9의 감시 요건, 그리고 FSA 단계 4는 "설계 가정이 현장에서 맞는가"를 묻습니다. 신뢰성 매개변수가 설계 가정과 맞는지 감시하고, 고장률이 가정보다 크면 시정 조치를 정하며, 실제 요구율을 위험성평가의 가정과 비교해야 합니다. 확인할 것은 실제 요구율(LOPA의 D<sub>SIF</sub>와 비교), 요구의 원인, 오동작 트립의 원인과 빈도, 증명시험에서 발견된 위험 고장(as-found 불합격)입니다. 61511-2는 이 데이터 수집이 실제 고장률이 설계보다 낮을 때 정비 비용을 줄이고 신규 설계를 덜 보수적으로 만드는 이점도 있다고 적습니다(§16.2.2 주석 1).</p>
 <p>예시값으로 송신기 40대를 4년 운전하며 증명시험에서 DU 고장 3건을 발견했다면 τ = 40 × 4 × 8 760 = 1.40×10<sup>6</sup> h, 점추정 λ̂ = 2.1×10<sup>−6</sup>/h, 70% 상한은 약 3.4×10<sup>−6</sup>/h입니다(도구 3). 설계 값이 5×10<sup>−7</sup>/h였다면 실제 성능이 4배 나쁜 것이므로 원인 분석, 시험 주기 단축, 설계 개선을 검토해야 합니다. SINTEF는 운전 단계 SIS 추적 관리 지침을 공개하고 있습니다 <span class="src">[PDS]</span>.</p>
 </div>
 
 <h3><span class="sec">12.5</span>변경 관리(§17)와 폐기(§18)</h3>
 <div class="prose">
 <ul>
-<li>모든 변경은 승인 전에 영향 분석을 하고, 영향을 받는 수명주기 단계로 되돌아가 그 단계의 요건을 다시 만족시킵니다.</li>
-<li>변경에 대한 FSA는 영향 분석을 고려해야 합니다(§5.2.6.1.9) <span class="src">[BRATT]</span>.</li>
-<li>수리·변경 후에는 영향받은 부분의 증명시험이 필요합니다 <span class="src">[TR61511-4]</span>.</li>
-<li>동일 사양 교체(replacement in kind)는 변경이 아니지만, 펌웨어 리비전·재질·사양이 다르면 변경입니다.</li>
-<li>폐기도 영향 분석과 변경 관리 대상이며, FSA 단계 5는 폐기 전에 수행합니다.</li>
+<li>변경 전에 변경 승인·통제 절차가 있어야 하고, 작업과 영향받는 위험을 식별하는 방법이 있어야 합니다(§17.2.1–17.2.2).</li>
+<li>응용 프로그램을 포함한 모든 변경은 실행 전에 기능안전 영향을 분석하고, 안전에 영향을 줄 수 있으면 <strong>영향받는 수명주기의 첫 단계</strong>로 돌아갑니다(§17.2.3).</li>
+<li>변경과 재검증의 안전 계획이 있어야 하고, 영향받는 모든 문서를 갱신합니다(§17.2.4–17.2.5).</li>
+<li><strong>변경 작업은 §5.2.6.1.9에 따른 FSA와 적절한 승인을 마치기 전에는 시작하지 않습니다</strong>(§17.2.6).</li>
+<li>기록: 변경 내용과 이유, 영향받는 위험과 SIF, 영향 분석, 승인, 변경이 올바르게 구현되었는지와 변경하지 않은 부분에 나쁜 영향이 없는지 확인한 시험, 변경 기록, 형상 이력(§17.2.7). 자격을 갖추고 교육받은 인원이 수행하고, 관련 인원에게 알리고 교육합니다(§17.2.8).</li>
+<li>BPCS, 다른 설비, 공정, 운전 조건의 변경이 SIS 요구의 성격이나 빈도를 바꾸는지도 검토합니다(§17.1 주석).</li>
+<li>동일 사양 교체(replacement in kind: 똑같은 품목 또는 SIS 변경이 필요 없는 승인된 대체품)는 MOC 대상이 아니지만(§5.2.6.2.4), 펌웨어 리비전·재질·사양이 다르면 변경입니다.</li>
+<li>폐기는 승인·통제 절차와 영향 분석이 필요하며, 영향 분석에는 <strong>H&amp;RA의 갱신</strong>이 포함되고, 폐기 작업 중의 기능안전과 인접 운전 설비·공용 설비에 주는 영향도 고려합니다. 폐기 중에도 필요한 SIF는 동작해야 하고, 문서화와 승인 없이 시작하지 않습니다(§18).</li>
 </ul>
 </div>
 <div class="box exam"><span class="lbl">시험 포인트:</span><ul>
-<li>확인(§15)은 위험이 존재하기 전에 완료, 이어서 FSA 단계 3.</li>
+<li>확인(§15)은 점검과 시험으로, 위험이 존재하기 전에 완료. 그 뒤 bypass·강제·시험 물질 정리(§15.2.8), 이어서 FSA.</li>
+<li>모든 SIF에 서면 증명시험 절차(§16.2.11), SIS 전체를 시험하고 수리 후 재시험(§16.3.1).</li>
+<li>기록에는 as-found와 as-left(§16.3.3).</li>
+<li>변경 작업은 FSA(§5.2.6.1.9)와 승인 전에 시작 불가(§17.2.6). 폐기 영향 분석에는 H&amp;RA 갱신 포함(§18.2.3).</li>
 <li>PTC는 시험 절차가 드러내는 DU 고장 모드의 비율.</li>
 <li>교정 ≠ 증명시험. as-found 기록이 고장 데이터의 원천.</li>
 <li>변경은 영향 분석 → 해당 단계 복귀 → 검증 → (필요 시) FSA.</li>
@@ -1601,14 +1865,264 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 
 <!-- ===================== CH 14 ===================== -->
 <section class="chapter" id="ch14">
-<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>14</span></div><div><p class="eyebrow">Practice exam · 객관식 40 + 서술·계산 8</p><h2>모의시험</h2></div></div>
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>14</span></div><div><p class="eyebrow">IEC 61511-1 Ed. 2.1 §1–§19 · 조항별 점검 질문</p><h2>IEC 61511-1 조항별 마스터 노트</h2></div></div>
+<div class="prose">
+<p>61511-1에 적합하다는 것은 §5부터 §19까지의 모든 요구를 정해진 기준으로 만족해 각 조항의 목적을 달성했음을 보이는 것입니다 <span class="src">[61511-1 §4]</span>. 이 장은 그 요구를 <strong>점검 질문</strong> 형태로 바꿔 조항 순서대로 정리했습니다. FSA나 감사 체크리스트의 뼈대로 쓸 수 있고, 시험 직전에 조항 번호와 요구를 연결하는 데도 씁니다. 오른쪽 열은 이 교재에서 자세히 다룬 곳입니다.</p>
+</div>
+
+<h3><span class="sec">14.1</span>§1–§4 범위·정의·적합</h3>
+<div class="tbl compact"><table>
+<thead><tr><th>조항</th><th>점검 질문(요지)</th><th>교재</th></tr></thead>
+<tbody>
+<tr><td class="mono">§1</td><td>대상이 SIL 1 이상 SIF이고, 장치 개발이 아니라 사용·통합인가? FVL·임베디드 소프트웨어 개발이면 61508-3으로 가야 하지 않는가?</td><td>1.2</td></tr>
+<tr><td class="mono">3.2.39</td><td>모드를 정의대로 판정했는가(저빈도 ≤ 연 1회, 고빈도 &gt; 연 1회, 연속)? 고빈도면 PFH 기준을 검토했는가(3.2.39.1 주석 2)?</td><td>1.4, 3.4</td></tr>
+<tr><td class="mono">3.2.37</td><td>계산의 MTTR(검출+대기+수리+복귀)과 MRT(대기+수리+복귀), MPRT를 구분했는가?</td><td>1.4, 7.2</td></tr>
+<tr><td class="mono">3.2.52.1</td><td>공정안전시간을 공정의 속성으로 산정했는가(공정 지연 포함)?</td><td>5.3</td></tr>
+<tr><td class="mono">§4</td><td>§5–§19의 모든 요구를 정해진 기준으로 만족했음을 보일 수 있는가?</td><td>본 장</td></tr>
+</tbody></table></div>
+
+<h3><span class="sec">14.2</span>§5 기능안전 관리</h3>
+<div class="tbl compact"><table>
+<thead><tr><th>조항</th><th>점검 질문(요지)</th><th>교재</th></tr></thead>
+<tbody>
+<tr><td class="mono">5.2.1</td><td>기능안전 정책·전략과 그 달성 평가 방법을 정하고 조직에 알렸는가?</td><td>2.3</td></tr>
+<tr><td class="mono">5.2.2.1–2</td><td>단계별 책임자를 정해 알렸는가? 역량 항목 a)–i)(공정 지식, 기술, 센서·최종요소, 안전공학, 법규, 관리·리더십, 결과 이해, SIL, 새로움·복잡성)을 다루고 문서화했는가?</td><td>2.3</td></tr>
+<tr><td class="mono">5.2.2.3</td><td>역량 관리 절차가 있고, 주기적 평가와 역할 변경 시 평가를 기록하는가?</td><td>2.3</td></tr>
+<tr><td class="mono">5.2.3–5.2.4</td><td>§8에 따라 위험을 식별·평가했는가? 안전 계획(SIS 안전 수명주기 계획)을 활동 수준까지 세우고 갱신하는가?</td><td>2.2</td></tr>
+<tr><td class="mono">5.2.5.1</td><td>H&amp;RA·보증·검증·확인·FSA·감사·사고 후 조사의 권고를 신속히 추적·해결하는가?</td><td>2.3</td></tr>
+<tr><td class="mono">5.2.5.2</td><td>공급자가 품질관리체계를 갖췄는가? 공급자의 기능안전 주장을 적합성 근거로 쓰면 공급자에게 61508-1 6장 수준의 FSMS가 있는가?</td><td>2.3</td></tr>
+<tr><td class="mono">5.2.5.3</td><td>체계적 고장 식별, 신뢰성 매개변수와 설계 가정 비교, 고장률 초과 시 시정, 실제 요구율과 위험성평가 가정 비교를 절차로 하는가?</td><td>12.4</td></tr>
+<tr><td class="mono">5.2.5.4</td><td>표준 이전에 만든 기존 SIS가 안전하게 설계·유지·점검·시험·운전되고 있는지 사용자가 판단했는가?</td><td>2.3</td></tr>
+<tr><td class="mono">5.2.6.1.1–3</td><td>FSA 절차가 모든 SIF의 기능안전과 안전무결성을 판단하게 되어 있는가? 팀에 기술·응용·운전 전문성과, 단계 1–3은 설계팀 외부, 단계 4–5는 운전·유지보수 외부의 선임 역량자가 있는가? 범위·인원·권한·독립성·변경 후 재확인 방법을 계획했는가?</td><td>2.5</td></tr>
+<tr><td class="mono">5.2.6.1.4</td><td>이전 FSA가 다루지 않은 앞 단계를 모두 검토하고 이전 권고를 고려했는가? FSA 단계와 시점을 안전 계획에서 정했는가?</td><td>2.5</td></tr>
+<tr><td class="mono">5.2.6.1.5</td><td>위험 존재 전 FSA가 확인 목록(H&amp;RA와 권고, 설계 변경 절차, 이전 FSA 권고, SRS대로의 설치, 절차, 확인 완료, 교육, 이후 FSA 계획)을 모두 확인했는가?</td><td>2.5</td></tr>
+<tr><td class="mono">5.2.6.1.6</td><td>설계·개발·생산 도구(시뮬레이션, 시험·측정 장비, 정비 장비, 형상 관리 도구)를 평가했거나 출력을 검증했는가?</td><td>11.5</td></tr>
+<tr><td class="mono">5.2.6.1.9–10</td><td>변경 FSA가 영향 분석을 고려했는가? 운전 중 주기적 FSA를 하는가?</td><td>2.5, 12.5</td></tr>
+<tr><td class="mono">5.2.6.2.1–3</td><td>감사가 FSMS의 존재·최신성·준수를 보고, SIS 작업을 하지 않는 독립된 사람이 수행하며, 빈도·독립성·후속 조치를 정했는가?</td><td>2.4</td></tr>
+<tr><td class="mono">5.2.6.2.4–5</td><td>동일 사양 교체 외의 모든 SIS 변경과, SIS 요구에 영향을 주는 변경(BPCS 재설계, 인력 배치)에 MOC 절차가 있는가?</td><td>12.5</td></tr>
+<tr><td class="mono">5.2.7</td><td>형상 관리 절차(정식 관리 시작 시점, 구성요소 고유 식별, 무단 장치 투입 방지)가 있고, SIS 소프트웨어(응용·임베디드·유틸리티)·하드웨어·절차가 리비전 관리되는가?</td><td>2.6</td></tr>
+</tbody></table></div>
+
+<h3><span class="sec">14.3</span>§6–§8 수명주기·검증·H&amp;RA</h3>
+<div class="tbl compact"><table>
+<thead><tr><th>조항</th><th>점검 질문(요지)</th><th>교재</th></tr></thead>
+<tbody>
+<tr><td class="mono">6.2.1–6.2.2</td><td>응용 프로그래밍을 포함한 SIS 안전 수명주기를 정했고, 단계마다 입력·출력·검증을 정했는가(표 2)?</td><td>2.2</td></tr>
+<tr><td class="mono">6.2.3</td><td>모든 운전 모드의 요구 달성, 설치·시운전, 설치 후 무결성, 운전 중 유지(증명시험, 고장 분석), SIS 정비 중 공정 위험 관리를 계획했는가?</td><td>2.2</td></tr>
+<tr><td class="mono">6.2.4</td><td>앞 단계에 관한 변경이 생기면 그 단계와 이후 단계를 재검토·수정·재검증하는가?</td><td>2.2</td></tr>
+<tr><td class="mono">6.3</td><td>응용 프로그램 수명주기의 단계별 활동·입력·출력·검증을 정했는가(그림 8, 표 3)?</td><td>11.2</td></tr>
+<tr><td class="mono">7.2.1–7.2.2</td><td>검증 계획에 활동, 기법, 시기, 수행자와 독립성, 대상, 기준 정보, 부적합 처리, 도구, 추적성, 시험 가능성이 있는가? 시험이면 통합 전략, 범위, 사례, 환경, 합격 기준, 장소, MOC가 있는가?</td><td>2.4</td></tr>
+<tr><td class="mono">7.2.3–7.2.6</td><td>안전 기능과 통합된 비안전 기능의 비간섭을 검증했는가? 시험 중 변경은 영향 분석을 했는가? 결과가 남아 있는가?</td><td>2.4</td></tr>
+<tr><td class="mono">8.2.1</td><td>H&amp;RA가 위험사건과 요인, 가능성과 결과, 운전 모드, 추가 위험저감, 조치, 가정(요구율, 원인 고장 빈도, 운전 제약·사람 개입 credit), SIF 식별을 담았는가?</td><td>3.1</td></tr>
+<tr><td class="mono">8.2.2</td><td>BPCS를 원인으로 쓸 때 평균 위험 고장 빈도를 10<sup>−5</sup>/h 미만으로 가정하지 않았는가?</td><td>4.2</td></tr>
+<tr><td class="mono">8.2.3</td><td>H&amp;RA 항목 간 관계를 추적할 수 있게 기록했는가?</td><td>3.1</td></tr>
+<tr><td class="mono">8.2.4</td><td>보안 위험성 평가(대상 장치, 위협과 취약점, 결과와 가능성, 단계별 고려, 추가 위험저감, 대책)를 했는가?</td><td>3.1, 10.9</td></tr>
+</tbody></table></div>
+
+<h3><span class="sec">14.4</span>§9–§10 할당·SRS</h3>
+<div class="tbl compact"><table>
+<thead><tr><th>조항</th><th>점검 질문(요지)</th><th>교재</th></tr></thead>
+<tbody>
+<tr><td class="mono">9.2.1–9.2.4</td><td>안전기능을 보호계층에 배정하고 SIF마다 위험저감 또는 PFH를 배정했는가? 요구 모드는 표 4 또는 5, 연속 모드는 표 5로 SIL을 정했는가?</td><td>4.1</td></tr>
+<tr><td class="mono">9.2.5–9.2.7</td><td>RRF &gt; 10 000 또는 PFH &lt; 10<sup>−8</sup>/h가 나오면 재검토했는가? 여러 계층에 나눴다면 독립성(요구 원인과의 공통원인, 계층 간 공통원인, 동시 증명시험)을 평가했는가? 구현했다면 정량 평가를 했는가?</td><td>4.1</td></tr>
+<tr><td class="mono">9.2.8–9.2.9</td><td>한 SIS의 여러 SIF에 나눈 위험저감을 SIS 전체가 만족하는가? 할당 결과를 공정 기능 요구(동작, 설정점, 반응 시간, 지연, 결함 처리, 밸브 닫힘)와 위험저감 요구로 기록했는가?</td><td>4.1</td></tr>
+<tr><td class="mono">9.3.2–9.3.3</td><td>BPCS 보호계층의 위험저감이 10 이하인가? 10을 넘으면 그 BPCS를 61511대로 설계·관리했는가?</td><td>4.2</td></tr>
+<tr><td class="mono">9.3.4–9.3.5</td><td>BPCS가 원인이면 BPCS 보호계층 1개, 아니면 2개 이하인가? 각 계층이 원인과 서로로부터 독립·분리되어 있는가(hot backup은 독립 아님)?</td><td>4.2</td></tr>
+<tr><td class="mono">9.4</td><td>보호계층 간, 보호계층과 BPCS 간 공통원인·공통모드·종속 고장을 독립성·다양성·물리적 분리 관점에서 평가했는가?</td><td>4.2, 9.4</td></tr>
+<tr><td class="mono">10.2</td><td>요구사항이 명확·정밀·검증 가능·유지보수 가능·실현 가능한가?</td><td>5.2</td></tr>
+<tr><td class="mono">10.3.2</td><td>29개 항목(태그 리스트, 증명시험 이행, 출력 성공 기준·누설률, 최대 오동작 트립률, bypass 서면 절차, 실현 가능한 MRT 등)을 빠짐없이 담았는가?</td><td>5.2</td></tr>
+<tr><td class="mono">10.3.3–10.3.6</td><td>응용 프로그램 안전 요구를 SRS와 구조, 안전 매뉴얼 제약에서 도출했고, 불량 공정 변수 처리·실시간 성능·통신 제한·위험 출력 조합 회피를 다뤘으며 H&amp;RA까지 추적되는가?</td><td>5.2</td></tr>
+</tbody></table></div>
+
+<h3><span class="sec">14.5</span>§11 설계·엔지니어링</h3>
+<div class="tbl compact"><table>
+<thead><tr><th>조항</th><th>점검 질문(요지)</th><th>교재</th></tr></thead>
+<tbody>
+<tr><td class="mono">11.2.2–11.2.4</td><td>SIF에 영향을 줄 수 있는 모든 부분을 가장 높은 SIL로 다뤘는가? BPCS와 충분히 분리·독립했는가?</td><td>10.2</td></tr>
+<tr><td class="mono">11.2.5–11.2.6</td><td>운전성·유지보수성·진단·점검·시험 가능성과 사람의 능력·한계를 설계에 반영했는가?</td><td>10.2</td></tr>
+<tr><td class="mono">11.2.7–11.2.8</td><td>리셋 전까지 안전 상태가 유지되는가? 로직 솔버와 독립된 수동 정지 수단이 있는가?</td><td>10.2, 10.5</td></tr>
+<tr><td class="mono">11.2.9–11.2.10</td><td>SIS와 BPCS·다른 계층의 독립성·종속성을 고려했는가? 요구와 SIF 실패를 동시에 일으킬 수 있는 BPCS 장치 공유를 분석 없이 하지 않았는가?</td><td>10.5</td></tr>
+<tr><td class="mono">11.2.11–11.2.14</td><td>유틸리티 상실 시 안전 상태로 가지 않는 장치의 상실·회로 건전성을 검출·경보하는가? 보안 복원력, 안전 매뉴얼, 안전 등급 통신 기법을 갖췄는가?</td><td>10.6, 10.9</td></tr>
+<tr><td class="mono">11.3</td><td>위험 결함 검출 시 보상 조치 또는 안전 상태 조치를 정했는가? 보상 조치가 운전원의 경보 대응에 의존하면 그 경보를 SIS로 다루고 증명시험·MOC를 적용하는가?</td><td>10.2</td></tr>
+<tr><td class="mono">11.4.1–11.4.5</td><td>SIF마다 최소 HFT를 61511 경로·Route 1H·Route 2H 중 하나로 만족하는가(표 6)? 고장 배제는 근거를 문서화했는가?</td><td>8.4</td></tr>
+<tr><td class="mono">11.4.6–11.4.9</td><td>HFT를 줄였다면 FVL·LVL 프로그래머블 장치가 없는 서브시스템이고 근거가 있는가? HFT 0이면 고장 모드 배제 증거가 있는가? FVL·LVL 장치 DC ≥ 60%, 데이터 70% 상한을 지켰는가?</td><td>8.4</td></tr>
+<tr><td class="mono">11.5.2–11.5.3</td><td>장치가 61508-2·3 또는 §11.5.3–11.5.6에 맞고 운전 환경에 적합한가? prior use 증거(제조사 품질·형상 관리, 식별·사양, 유사 환경 성능, 운전 경험량)와 리비전·MOC 관리가 있는가?</td><td>8.5</td></tr>
+<tr><td class="mono">11.5.4–11.5.6</td><td>FPL은 SIL 3에서 추가 평가, LVL prior use는 SIL 2까지(SIL 2 PE 로직 솔버 정식 평가), FVL은 61508을 따르는가?</td><td>8.5</td></tr>
+<tr><td class="mono">11.6</td><td>필드 장치를 환경(부식, 동결, 고형물, 응축 등)에 맞게 설치했는가? 통전 트립 회로·전원 건전성 수단이 있는가? 스마트 센서는 쓰기 보호인가?</td><td>10.3, 10.6</td></tr>
+<tr><td class="mono">11.7.2</td><td>BPCS HMI 고장을 고려했는가? bypass 수단 무단 사용 방지, 필수 상태 표시, 운전원 인터페이스로 프로그램 변경 불가, BPCS→SIS 정보 전달 확인을 갖췄는가?</td><td>10.7</td></tr>
+<tr><td class="mono">11.7.3–11.7.4</td><td>엔지니어링 인터페이스 고장이 SIF를 해치지 않고, 운전원 인터페이스로 쓰지 않으며, 읽기·쓰기 활성화를 형상 관리·인증으로만 하는가? 통신 고장·EMI·접지 차이에 견디는가?</td><td>10.4, 10.7</td></tr>
+<tr><td class="mono">11.8</td><td>종단 간 또는 구간별 시험이 가능한가? 정지 간격이 증명시험 주기보다 길면 온라인 시험 설비가 있는가? 최대 bypass 시간과 보상 조치를 정했는가? 강제(forcing)를 통제하는가?</td><td>10.7</td></tr>
+<tr><td class="mono">11.9.1–11.9.2</td><td>계산된 실패척도가 SRS 목표 이하인가? 구조, DD·DU, 진단과 증명시험 모두로 못 찾는 고장, 시험 유발 고장, CCF, 진단 설비 고장, PTC, 수리 중 상태, 통신, 운전원, 유틸리티를 반영했는가?</td><td>7.1</td></tr>
+<tr><td class="mono">11.9.3–11.9.5</td><td>데이터가 credible·traceable·documented·justified이고 현장 피드백 기반인가? 불확실성을 반영했는가(70% 상한 또는 Monte Carlo)? 미달 시 기여 요소를 찾아 개선했는가?</td><td>6.6, 7.1</td></tr>
+</tbody></table></div>
+
+<h3><span class="sec">14.6</span>§12–§15 응용 프로그램·FAT·설치·확인</h3>
+<div class="tbl compact"><table>
+<thead><tr><th>조항</th><th>점검 질문(요지)</th><th>교재</th></tr></thead>
+<tbody>
+<tr><td class="mono">12.2</td><td>SIL 3 이하·LVL/FPL 범위인가? 프로그래머가 요구사항을 검토했는가? 안전·비안전 혼재 시 비간섭을 입증했는가? 전원 상실·복구·기동 시 안전 상태를 유지하는가? 매 스캔 전체 실행인가? 백업·복원 절차가 있는가?</td><td>11.2</td></tr>
+<tr><td class="mono">12.3–12.4</td><td>설계가 모든 운전 모드를 다루고 SRS로 추적되며 FSA가 가능한가? 프로그램·문서에 SIF와 SIL, 안전 매뉴얼 버전, 변경 이력이 있는가? 하드웨어 구조와 일대일로 대응하는가?</td><td>11.2</td></tr>
+<tr><td class="mono">12.5</td><td>원 개발에 관여하지 않은 역량자가 검토했는가? 모든 부분 실행, negative 시험, 타이밍, 통신, 내부 데이터 흐름, 입출력 대응을 검증했는가?</td><td>11.4</td></tr>
+<tr><td class="mono">12.6</td><td>안전 매뉴얼 제약을 지켰고, 방법·도구가 결함 유입을 줄이고 품질 증거를 주는가?</td><td>11.2</td></tr>
+<tr><td class="mono">§13</td><td>FAT 필요 여부를 안전 계획에서 정했는가? 계획(시험 종류, 사례, 환경, 기준, 인원 역량, 시험 위험), 정해진 로직 솔버 버전, 기록, 시험 중 변경의 영향 분석이 있는가?</td><td>12.1</td></tr>
+<tr><td class="mono">§14</td><td>설치·시운전 계획과 확인 항목(접지, 에너지원, 운송 고정구, 손상, 교정·구성, 입출력, 인터페이스, 통신)을 기록했는가? 설계와 다른 설치를 평가했는가?</td><td>12.1</td></tr>
+<tr><td class="mono">15.2.1–15.2.3</td><td>확인 계획이 모든 운전 모드와 공장을 위험에 빠뜨리지 않는 방법, 독립성, 필요한 설비를 다루는가? 응용 프로그램 확인 계획과 추적 가능성 확인이 있는가? 측정 장비 교정이 추적 가능한가?</td><td>12.1</td></tr>
+<tr><td class="mono">15.2.4–15.2.7</td><td>확인 항목(모드, BPCS 상호작용, 통신·과부하, 중복 채널, 무효 변수, 리셋, bypass, override, 수동 정지, 진단, 유틸리티 상실·복구, EMC)을 시험하고 불일치를 분석했는가?</td><td>12.1</td></tr>
+<tr><td class="mono">15.2.8</td><td>위험 존재 전 bypass·강제·무효 경보 원복, 격리 밸브 설정, 시험 물질 제거, 시운전 override 해제를 했는가?</td><td>12.1</td></tr>
+</tbody></table></div>
+
+<h3><span class="sec">14.7</span>§16–§19 운전·변경·폐기·문서</h3>
+<div class="tbl compact"><table>
+<thead><tr><th>조항</th><th>점검 질문(요지)</th><th>교재</th></tr></thead>
+<tbody>
+<tr><td class="mono">16.2.1–16.2.2</td><td>운전·유지보수 계획과 절차(시험 품질, 장치 교체 후 확인, bypass 중 추가 위험저감, 진단 시험, 요구율·고장 데이터 수집)가 있는가?</td><td>12.2</td></tr>
+<tr><td class="mono">16.2.3–16.2.7</td><td>bypass 중 보상 조치와 최대 시간을 운전원에게 알리는가? bypass 상태 운전을 위험 분석으로 정당화했는가? 운전원 교육 항목을 다뤘는가? bypass 기록·승인·표시가 있는가?</td><td>10.7, 12.2</td></tr>
+<tr><td class="mono">16.2.8–16.2.10</td><td>정비 인원 교육, 기대와 실제 거동 차이 분석(요구율, 요구 원인, 고장 모드, 오동작 트립, 보상 조치 장비 고장), 절차 개정이 이뤄지는가?</td><td>12.2</td></tr>
+<tr><td class="mono">16.2.11–16.2.13</td><td>모든 SIF에 서면 증명시험 절차가 있는가? 예비품을 확보했는가? 운전·유지보수 책임자가 H&amp;RA·설계 가정(재실, 부식 방지)을 검토했는가?</td><td>12.2</td></tr>
+<tr><td class="mono">16.3.1</td><td>SIS 전체를 시험하는가? 빈도가 설치 상태의 계산에 근거하는가? 수리 후 재시험하는가? 빈도를 주기적으로 재평가하는가? 응용 프로그램 변경 후 영향받는 SIF를 확인·시험하는가? 시험 연기를 통제하는가?</td><td>12.2</td></tr>
+<tr><td class="mono">16.3.2–16.3.3</td><td>주기적 육안 점검을 하는가? 기록에 절차서, 날짜, 수행자, 식별자, as-found·결함·고장 모드·as-left가 있는가?</td><td>12.2</td></tr>
+<tr><td class="mono">§17</td><td>변경 전 승인·통제 절차와 영향 분석이 있고, 영향받는 첫 단계로 돌아가는가? 변경 계획·문서 갱신, FSA와 승인 전 작업 금지, 변경 기록, 교육이 이뤄지는가?</td><td>12.5</td></tr>
+<tr><td class="mono">§18</td><td>폐기 전 승인·통제, H&amp;RA 갱신을 포함한 영향 분석, 폐기 중 기능안전과 인접 설비 영향 검토, 재검증·재확인, 문서·승인이 있는가?</td><td>12.5</td></tr>
+<tr><td class="mono">§19</td><td>문서가 정확·최신·이해 가능하고, 고유 식별·유형 표시·리비전 색인이 있으며, H&amp;RA까지 추적되고, 정보 통제 체계로 관리되는가? H&amp;RA 결과와 가정, SIF 장비와 요구, 책임 조직, 절차, 변경 정보, 안전 매뉴얼, 설계·구현·시험·확인 문서를 유지하는가?</td><td>2.6</td></tr>
+</tbody></table></div>
+<div class="box judg"><span class="lbl">실무 판단:</span><p>이 표를 그대로 FSA 체크리스트로 쓰면 질문마다 "증거 문서"와 "판정(적합/부적합/권고)" 열을 덧붙이십시오. 61508-1 §8.2.11의 표현대로 FSA의 결론은 수용, 조건부 수용, 거부 중 하나의 권고로 남깁니다. 감사(§5.2.6.2)와 혼동하지 않도록, 절차가 지켜졌는지를 보는 질문(감사)과 기능안전이 달성되었는지를 보는 질문(FSA)을 구분해 표시하면 좋습니다.</p></div>
+</section>
+
+<!-- ===================== CH 15 ===================== -->
+<section class="chapter" id="ch15">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>15</span></div><div><p class="eyebrow">IEC 61508-1·-2·-3·-4 : 2010</p><h2>IEC 61508 핵심 조항 노트</h2></div></div>
+<div class="prose"><p>61511을 쓰는 공정 엔지니어에게 61508은 "장치 인증서의 근거"이자 "61511이 위임하는 곳"입니다. 61511-1은 Route 1H·2H(61508-2 §7.4.4), 장치 적합성(61508-2·3), FVL과 SIL 4 응용 프로그래밍(61508-3), 계산 기법(61508-6 부속서 B)을 직접 참조합니다. 아래는 그런 연결 지점을 중심으로 정리한 핵심 조항입니다.</p></div>
+
+<h3><span class="sec">15.1</span>61508-1: 관리·할당·FSA</h3>
+<div class="tbl compact"><table>
+<thead><tr><th>조항</th><th>요지</th></tr></thead>
+<tbody>
+<tr><td class="mono">6.2.1–6.2.5</td><td>전체 책임자 지정(조정, 인터페이스, FSA 조정), 정책·전략, 책임자 식별(검증·FSA 수행자, 규제 기관 포함), 의사소통 절차, 권고 후속 조치(H&amp;RA, FSA, 검증, 확인, 형상 관리, 사고 분석)</td></tr>
+<tr><td class="mono">6.2.7–6.2.10</td><td>주기 감사(빈도, 독립성, 문서·후속), 변경 착수·승인 절차, 위험·안전기능 정보 유지, 형상 관리(정식 관리 시점, 하드웨어·소프트웨어 고유 식별, 무단 품목 방지)</td></tr>
+<tr><td class="mono">6.2.12</td><td>운전·유지보수 성과 분석 절차: 체계적 결함 식별, 운전 중 요구율과 고장률이 설계 가정과 맞는지 평가</td></tr>
+<tr><td class="mono">6.2.13–6.2.15</td><td>역량 절차(갱신·지속 평가 포함). 역량 적합성 요소: 책임, 감독 수준, 결과가 클수록·SIL이 높을수록·새로울수록 엄격하게, 경험의 적합성, 자격·훈련·리더십, 공학·안전공학 지식, 법규, 자격의 관련성. 역량 문서화</td></tr>
+<tr><td class="mono">7.5.2.5–7.5.2.6</td><td>EUC 제어계 기능의 위험 고장 빈도를 10<sup>−5</sup>/h 미만으로 주장하면 그 제어계는 안전관련계가 됨(10<sup>−6</sup>–10<sup>−5</sup>이면 SIL 1 요건). 안전관련계로 지정하지 않으려면 주장하는 고장률을 운전 경험·인정된 신뢰성 분석·산업 데이터로 뒷받침하고 10<sup>−5</sup>/h보다 낮게 주장하지 않음. 61511 §8.2.2와 같은 원리</td></tr>
+<tr><td class="mono">7.6.2.7–7.6.2.8</td><td>계층을 독립으로 취급하려면: 동시 고장 가능성이 충분히 낮고, 기능적으로 다양하고, 기술이 다르고, 공통 부품·서비스(전원 등)와 공통 운전·유지보수·시험 절차가 없어야 함. 아니면 공통원인을 반영해 할당</td></tr>
+<tr><td class="mono">7.6.2.9</td><td>저빈도는 표 2(PFD<sub>avg</sub>), 고빈도·연속은 표 3(PFH). 정성 방법으로 SIL을 정해도 표의 수치가 하드웨어 무결성 한계. 수리 없는 임무 시간 동안 운전하는 고빈도 기능은 임무 시간 중 요구 고장 확률을 임무 시간으로 나눠 PFH를 정함</td></tr>
+<tr><td class="mono">7.6.2.10–7.6.2.12</td><td>SIL이 다른 기능의 독립성 부족 부분은 최고 SIL. SIL 4는 재검토와 정량 평가. 단일 안전기능의 목표 하한: PFD<sub>avg</sub> 10<sup>−5</sup>, PFH 10<sup>−9</sup>/h</td></tr>
+<tr><td class="mono">8.2</td><td>FSA는 모든 단계에 적용하고 위험 존재 전에 반드시 수행. 계획(범위·문서 리비전, 조직, 자원, 수행자, 독립성, 역량, 출력)을 FSM 책임자와 함께 승인. 결론은 수용·조건부 수용·거부. 독립성은 표 4(결과 A–D)와 표 5(SIL/SC)의 X, X1/X2, Y</td></tr>
+</tbody></table></div>
+
+<h3><span class="sec">15.2</span>61508-2: 하드웨어와 시스템</h3>
+<div class="tbl compact"><table>
+<thead><tr><th>조항</th><th>요지</th></tr></thead>
+<tbody>
+<tr><td class="mono">7.4.2.2</td><td>설계는 a) 하드웨어 안전무결성(구조적 제약 7.4.4 + 정량화 7.4.5), b) 온칩 중복 IC(부속서 E), c) 체계적 능력(Route 1S 회피·통제, 2S proven in use, 3S 기존 소프트웨어), d) 결함 시 거동(7.4.8), e) 데이터 통신(7.4.11)을 모두 만족</td></tr>
+<tr><td class="mono">7.4.2.3–7.4.2.5</td><td>안전·비안전 기능 혼재 시 충분한 독립성이 없으면 전부 안전관련. SIL이 다르면 최고 SIL. 독립성 방법과 근거 문서화(FMECA, 종속 고장 분석)</td></tr>
+<tr><td class="mono">7.4.2.12–7.4.2.13</td><td>초기 설계 후, 안전관련계의 예견 가능한 고장이 위험 상황이나 다른 대책에 대한 요구를 일으키는지 분석해 설계 변경을 우선. 디레이팅 고려(약 2/3가 전형), 한계 운전은 근거 문서화</td></tr>
+<tr><td class="mono">7.4.3</td><td>SC N + SC N(충분히 독립) → 최대 SC N+1, 한 요소는 한 번만</td></tr>
+<tr><td class="mono">7.4.4.1</td><td>HFT 정의(진단 미고려, 연쇄 결함은 하나, 고장 배제 가능). Type A/B 조건. SFF 진단 credit 조건(HFT 0 고빈도: 진단+조치 &lt; 공정안전시간 또는 진단률/요구율 ≥ 100; 그 밖: 진단+수리 &lt; MTTR)</td></tr>
+<tr><td class="mono">7.4.4.2</td><td>Route 1H 절차와 표 2·3, 직렬은 최저, 병렬은 최고 채널 + N</td></tr>
+<tr><td class="mono">7.4.4.3</td><td>Route 2H 최소 HFT, Type A 한정 HFT 감축(고장 배제 1%), 현장 데이터와 90% 초과 신뢰, Type B DC ≥ 60%</td></tr>
+<tr><td class="mono">7.4.5</td><td>정량화 고려 요소(구조, DD 고장률과 운전 조건 보정, CCF, DC와 진단 주기, 진단 고장, MTTR·MRT, 증명시험 주기와 효과, 수리 시간, 사람의 무작위 오류, 모델 선택). 미달 시 개선 절차</td></tr>
+<tr><td class="mono">7.4.8</td><td>결함 검출 시 거동: HFT &gt; 0은 안전 상태 또는 격리 후 MRT 내 수리, HFT 0 저빈도는 안전 상태 또는 MRT 내 수리 + 동등 이상 무결성의 추가 조치, HFT 0 고빈도·연속은 안전 상태만</td></tr>
+<tr><td class="mono">7.4.9.3–7.4.9.7</td><td>요소별 제공 정보(기능 사양, 적용 제약, SC, 구성 식별, 검출·미검출 고장 모드와 고장률, 환경·수명 한계, 증명시험 요구, DC와 진단 주기, 진단 고장률, MRT 정보, SFF·Type, HFT)를 안전 매뉴얼(부속서 D)로. 고장률은 FMEA 또는 이전 사용 경험, 70% 신뢰 권고, 유효 수명 8–12년이 흔함</td></tr>
+<tr><td class="mono">7.4.10</td><td>Proven in use: 제한된 기능, 특정 구성의 운전 경험, 사용 조건 동등성과 차이 영향 분석, 위험 고장률 미초과의 통계적 증거, 복잡성·SC·새로움 고려, 미사용 기능 무해성</td></tr>
+<tr><td class="mono">7.4.11</td><td>통신 잔류 오류율(전송 오류, 반복, 삭제, 삽입, 순서, 손상, 지연, 위장), 화이트 채널 / 블랙 채널</td></tr>
+<tr><td class="mono">부속서 A·C·D</td><td>A: 진단 기법별 최대 DC(Low 60/Medium 90/High 99%), 체계적 고장 통제 기법. C: FMEA 기반 DC·SFF 계산(영향 없음·부품 없음 고장 제외). D: 적합 품목의 안전 매뉴얼 요구</td></tr>
+</tbody></table></div>
+
+<h3><span class="sec">15.3</span>61508-3: 소프트웨어</h3>
+<div class="prose">
+<p>61508-3은 6장(소프트웨어 안전 관리의 추가 요건), 7장(소프트웨어 안전 수명주기: 7.2 소프트웨어 안전 요구사항 명세, 7.3 소프트웨어 측면의 확인 계획, 7.4 설계·개발, 7.5 PE 통합, 7.6 운전·변경 절차, 7.7 시스템 확인의 소프트웨어 측면, 7.8 변경, 7.9 검증), 8장(FSA)으로 구성됩니다. 부속서 A(규범)는 SIL별 기법·조치 선택 표(A.1 요구사항 명세, A.2 구조 설계, A.3 지원 도구와 언어, A.4 상세 설계, A.5 모듈 시험·통합, A.6 PE 통합, A.7 확인, A.8 변경, A.9 검증, A.10 FSA), 부속서 B는 상세 표, C는 체계적 능력을 위한 소프트웨어 속성, D(규범)는 적합 품목 안전 매뉴얼의 소프트웨어 추가 요구, E는 61508-2와의 관계, F는 소프트웨어 요소 간 비간섭 기법, G는 데이터 구동 시스템의 수명주기 조정 지침입니다 <span class="src">[61508-3 목차]</span>.</p>
+<p>공정 엔지니어가 꼭 알아야 할 부분은 도구 요건(§7.4.4)입니다. 온라인 도구는 안전관련계의 소프트웨어 요소이고, 오프라인 도구는 T1/T2/T3로 나눠 T2·T3에 사양 문서와 고장 메커니즘 평가를, T3에 적합성 증거를 요구합니다. 응용 데이터 도구(계기 범위, 경보·트립 값)도 오프라인 도구에 포함됩니다(11.5절).</p>
+</div>
+
+<h3><span class="sec">15.4</span>61508-4: 시험에 나오는 정의</h3>
+<div class="tbl compact"><table>
+<thead><tr><th>번호</th><th>용어</th><th>핵심</th></tr></thead>
+<tbody>
+<tr><td class="mono">3.2.10–3.2.11</td><td>온라인·오프라인 지원 도구</td><td>T1 실행 코드에 기여하는 출력 없음(편집기, 코드 생성 없는 설계 도구, 형상 관리 도구), T2 시험·검증 지원(결함을 놓칠 수는 있으나 오류를 만들지 않음), T3 실행 코드에 기여(최적화 컴파일러)</td></tr>
+<tr><td class="mono">3.3.6</td><td>채널</td><td>요소 안전기능을 독립적으로 구현하는 요소 또는 요소 그룹</td></tr>
+<tr><td class="mono">3.4.4–3.4.5</td><td>서브시스템, 요소</td><td>서브시스템의 위험 고장이 안전기능의 위험 고장이 되는 최상위 구조 단위 / 서브시스템의 일부로 요소 안전기능을 수행(센서, PLC, 최종요소)</td></tr>
+<tr><td class="mono">3.5.9</td><td>체계적 능력</td><td>안전 매뉴얼대로 적용할 때 요소의 체계적 무결성이 SIL을 만족한다는 신뢰의 척도(SC 1–4)</td></tr>
+<tr><td class="mono">3.5.16</td><td>운전 모드</td><td>저빈도 ≤ 연 1회, 고빈도 &gt; 연 1회, 연속(정상 운전 중 EUC를 안전 상태로 유지)</td></tr>
+<tr><td class="mono">3.6.13–3.6.15</td><td>부품 없음·영향 없음 고장, SFF</td><td>두 고장은 SFF에서 제외. SFF = (Σλ<sub>S</sub> + Σλ<sub>Dd</sub>) / (Σλ<sub>S</sub> + Σλ<sub>Dd</sub> + Σλ<sub>Du</sub>)</td></tr>
+<tr><td class="mono">3.6.20</td><td>공정안전시간</td><td>EUC·EUC 제어계의 고장부터 위험사건을 막기 위한 조치를 끝내야 하는 시점까지</td></tr>
+<tr><td class="mono">3.8.5</td><td>증명시험</td><td>숨은 위험 고장을 찾아 "신품" 또는 그에 가까운 상태로 복원. 시험 시간은 시험 중에도 요구에 대응 가능하거나 EUC가 정지된 경우에만 무시 가능, MTTR은 수리 중 EUC 정지나 동등한 다른 조치가 있을 때만 무시 가능</td></tr>
+<tr><td class="mono">3.8.6</td><td>진단 커버리지</td><td>자동 온라인 진단으로 검출되는 위험 고장의 비율 Σλ<sub>DD</sub>/Σλ<sub>D</sub></td></tr>
+<tr><td class="mono">3.8.11–3.8.13</td><td>독립된 사람·부서·조직</td><td>평가 대상 단계의 활동과 분리되어 직접 책임이 없는 사람 / 그 단계 담당 부서와 분리된 부서 / 관리와 자원이 분리된 조직</td></tr>
+</tbody></table></div>
+</section>
+
+<!-- ===================== CH 16 ===================== -->
+<section class="chapter" id="ch16">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>16</span></div><div><p class="eyebrow">IEC 61508-5·-6·-7 · IEC 61511-2·-3</p><h2>부속서·지침 활용 지도</h2></div></div>
+<div class="prose"><p>규범 조항이 "무엇을"이라면, 참고 부분(61508-5·6·7, 61511-2·3)은 "어떻게"입니다. 질문별로 어디를 펼쳐야 하는지부터 정리하고, 각 문서의 구성을 요약합니다.</p></div>
+
+<h3><span class="sec">16.1</span>질문별 찾아보기</h3>
+<div class="tbl compact"><table>
+<thead><tr><th>질문</th><th>펼칠 곳</th></tr></thead>
+<tbody>
+<tr><td>PFD<sub>avg</sub>·PFH 단순식과 가정</td><td>61508-6 B.3.1–B.3.3 (7장)</td></tr>
+<tr><td>불완전 증명시험의 영향</td><td>61508-6 B.3.2.5, 표 B.9 (7.6절)</td></tr>
+<tr><td>결함수·Markov·Petri net·Monte Carlo, 시차 시험, 시험 시간, 수리 정책</td><td>61508-6 B.4–B.6</td></tr>
+<tr><td>β 산정</td><td>61508-6 부속서 D (9.3절, 도구 7)</td></tr>
+<tr><td>DC·SFF 계산</td><td>61508-2 부속서 C, 61508-6 부속서 C</td></tr>
+<tr><td>진단 기법별 최대 DC</td><td>61508-2 부속서 A 표 A.2–A.14 (10.3절)</td></tr>
+<tr><td>기법·조치 설명(진단, 체계적 고장 회피, 소프트웨어)</td><td>61508-7 부속서 A–C</td></tr>
+<tr><td>SIL 결정 방법 비교·선택</td><td>61511-3 부속서 A.8, 61508-5 부속서 B</td></tr>
+<tr><td>위험 그래프 보정</td><td>61511-3 부속서 D·I, 61508-5 부속서 E (4.3절)</td></tr>
+<tr><td>LOPA</td><td>61511-3 부속서 F·G, 61508-5 부속서 F, 61511-2 F.11 (4.4절)</td></tr>
+<tr><td>여러 안전 시스템의 종속성</td><td>61511-3 부속서 J, 61508-5 A.5.4–A.5.5 (9.4절)</td></tr>
+<tr><td>ALARP와 허용위험</td><td>61511-3 부속서 K, 61508-5 부속서 C (3.2절)</td></tr>
+<tr><td>조항별 적용 지침</td><td>61511-2 부속서 A (A.5–A.19가 61511-1의 5–19장에 대응)</td></tr>
+<tr><td>응용 프로그램 개발 예와 규칙</td><td>61511-2 부속서 B·E</td></tr>
+<tr><td>P&amp;ID에서 SIS 요구로 가는 예, 전체 프로젝트 예(LOPA, SRS, SIL 검증 계산)</td><td>61511-2 부속서 D·F</td></tr>
+</tbody></table></div>
+
+<h3><span class="sec">16.2</span>IEC 61508-5: 위험 개념과 SIL 결정 방법</h3>
+<div class="prose">
+<p>부속서 A(위험과 안전무결성 개념), B(방법 선택), C(ALARP와 허용위험), D(정량적 방법), E(위험 그래프), F(LOPA 반정량 방법), G(정성적 위험사건 심각도 행렬)로 구성됩니다. 시험과 실무에 중요한 문장은 셋입니다. 첫째, EUC 위험은 지정된 안전 보호 장치 없이 EUC와 제어계, 사람 요인만 고려한 위험이고, EUC 제어계에 대한 주장은 제한됩니다(A.5.1). 둘째, 총 요구율이 연 1회를 넘으면 안전관련계의 위험 고장률이 결정적이며, 잔여 위험사건 빈도는 그 고장률을 넘을 수 없습니다(A.5.2). 셋째, 같은 형식의 장비 공유, 동시 증명시험, 같은 요소의 다중 사용 같은 종속성이 있으면 계층의 단순 곱셈이 성립하지 않으며 결함수·Markov 같은 전용 모델이 필요하고, 다양성은 친숙하지 않은 장비로 인한 오류라는 부작용도 있습니다(A.5.4).</p>
+</div>
+
+<h3><span class="sec">16.3</span>IEC 61508-6: 2부·3부 적용 지침</h3>
+<div class="prose">
+<p>부속서 A(2부·3부 적용 흐름), B(하드웨어 고장 확률 평가 기법: 기본 확률 계산 B.2, 단순식 B.3, Boolean 방법 B.4, 상태 전이 방법 B.5, 불확실성 처리 B.6), C(DC·SFF 계산 예), D(β 정량화와 이항 고장률 모델 D.7), E(SIL 2·SIL 3 소프트웨어 표 적용 예)로 구성됩니다. 7장의 식과 표 B.9, 9장의 표 D.1–D.5가 여기서 나왔습니다. B.4는 결함수로 PFD<sub>avg</sub>를 구할 때 순간 확률을 계산한 뒤 평균해야 한다는 원리와 시차 시험의 효과를, B.5는 다상 Markov 모델로 요구 자체에 의한 고장, 시험 시간, 2oo3→1oo2 재구성을 다루는 법을 보여 줍니다.</p>
+</div>
+
+<h3><span class="sec">16.4</span>IEC 61508-7: 기법·조치 개요</h3>
+<div class="prose"><p>부속서 A(무작위 하드웨어 고장 통제 기법), B(체계적 고장 회피 기법), C(소프트웨어 안전무결성 달성 기법), D(기존 소프트웨어의 안전무결성을 운전 경험으로 판단하는 확률적 접근), E(ASIC 설계 기법), F(소프트웨어 수명주기 단계 속성 정의), G(객체 지향 소프트웨어 지침)로 구성됩니다. 61508-2 부속서 A 표의 각 진단 기법 옆에 적힌 번호(예: 입력 비교·투표 A.6.5)는 이 문서의 해당 설명을 가리킵니다 <span class="src">[61508-7 목차] [61508-2 부속서 A]</span>.</p></div>
+
+<h3><span class="sec">16.5</span>IEC 61511-2: 61511-1 적용 지침</h3>
+<div class="prose">
+<p>부속서 A가 61511-1의 조항별 지침(A.5–A.19)이고, B는 로직 솔버 응용 프로그램 개발 예, C는 비프로그래머블 기술에서 PE로 바꿀 때의 고려 사항, D는 P&amp;ID에서 SIS 요구로 가는 예, E는 응용 프로그래밍 도구와 설계·프로그래밍 규칙, F는 한 SIS 프로젝트의 전체 수명주기 예(공정 설명, 위험 평가, LOPA, 허용위험 기준, SRS, SIL 검증 계산, 응용 프로그램 요구, 장치 선정, 공통원인과 체계적 고장, 배선, 보안, 설치·시운전·확인)입니다.</p>
+<p>A.11.9의 두 가지는 꼭 읽어 두십시오. 증명시험 모델에서 놓치기 쉬운 요소(시험 시간, 시험 중 오프라인, 원리상 못 찾는 고장, 시험 유발 고장, 시차, 사람의 오류; 12.3절)와, Monte Carlo로 PFD<sub>avg</sub> 분포를 구했을 때 신뢰 수준 70%와 90%가 SIL을 한 단계 바꾸는 예(6.6절)입니다.</p>
+</div>
+
+<h3><span class="sec">16.6</span>IEC 61511-3: 요구 SIL 결정 지침</h3>
+<div class="tbl compact"><table>
+<thead><tr><th>부속서</th><th>내용</th><th>쓰임</th></tr></thead>
+<tbody>
+<tr><td>A</td><td>위험과 안전무결성 일반 지침, 방법 선택</td><td>방법 선택 근거</td></tr>
+<tr><td>B</td><td>반정량: 사건수 분석 예</td><td>복수 결과·분기 시나리오</td></tr>
+<tr><td>C</td><td>안전층 행렬</td><td>보호계층 수를 함께 보는 반정량 방법</td></tr>
+<tr><td>D</td><td>반정성: 보정된 위험 그래프(보정 예, 환경·자산 결과)</td><td>4.3절의 보정 표</td></tr>
+<tr><td>E</td><td>정성적 위험 그래프</td><td>보정 없는 예시</td></tr>
+<tr><td>F</td><td>LOPA(심각도, 원인 빈도, 보호계층 PFD 예, IPL 기준, 예제)</td><td>4.4절</td></tr>
+<tr><td>G</td><td>위험 행렬을 쓰는 LOPA</td><td>회사 위험 행렬과 연계</td></tr>
+<tr><td>H</td><td>정성적 위험 추정과 SIL 배정</td><td>간이 선별</td></tr>
+<tr><td>I</td><td>위험 그래프 설계·보정 절차</td><td>사내 위험 그래프 제정</td></tr>
+<tr><td>J</td><td>다중 안전 시스템(체계적 종속성, 반정량·Boolean·상태 전이 접근)</td><td>RRF 10 000 초과, 여러 SIS 종속성</td></tr>
+<tr><td>K</td><td>ALARP와 허용위험</td><td>위험 기준 설정</td></tr>
+</tbody></table></div>
+<div class="box trap"><span class="lbl">함정:</span><p>61511-3과 61508-5의 표에 나오는 원인 빈도와 PFD 값(제어 루프 0.1, 운전원 대응 0.1 등)은 예시입니다. 표준 스스로 일반값으로 특정 평가에 쓰지 말라고 적고 있습니다 <span class="src">[61511-3 F.5, F.6]</span>. 사내 LOPA 지침이나 CCPS 같은 근거 자료로 값을 정하고, 그 근거를 기록해야 합니다.</p></div>
+</section>
+<!-- ===================== CH 17 ===================== -->
+<section class="chapter" id="ch17">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>17</span></div><div><p class="eyebrow">Practice exam · 객관식 100 + 서술·계산 12 · 근거 조항 표기</p><h2>모의시험</h2></div></div>
 <div class="prose">
 <p>실제 시험은 기관에 따라 객관식 60문항 + 사례 7개(Yokogawa), 객관식 130문항 + 계산 5문제(Schneider Electric) 같은 형식이고 합격선은 75%입니다(0.3절). 아래 객관식은 답을 고르면 바로 채점되고 해설이 열립니다. 선택한 답은 이 브라우저에만 저장됩니다.</p>
 </div>
-<div class="quiz-bar"><button type="button" id="qzReset" class="ghost">답안 지우기</button><span id="qzScore" class="mono">0 / 40 응답 · 정답 0</span></div>
+<div class="quiz-bar"><button type="button" id="qzReset" class="ghost">답안 지우기</button><span id="qzScore" class="mono">0 / 100 응답 · 정답 0</span></div>
 <div id="quiz"></div>
 
-<h3><span class="sec">14.2</span>서술·계산 문제</h3>
+<h3><span class="sec">17.2</span>서술·계산 문제</h3>
 <div class="prose"><p>계산기를 쓰되, 중간값(t<sub>CE</sub>, t<sub>GE</sub>, CCF 항)을 반드시 적으십시오. 실제 시험에서도 풀이 과정에 부분 점수가 있는 경우가 많습니다.</p></div>
 
 <details class="sol"><summary>문제 1 · 불완전 증명시험이 있는 1oo1</summary>
@@ -1650,49 +2164,99 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <p>운전 중 공정 조건 변경으로 SIF의 트립 설정점을 바꾸려 합니다. 61511에 따라 필요한 활동을 순서대로 쓰십시오.</p>
 <p><b>풀이 요지.</b> ① 변경 요청과 MOC 착수(§17) ② 영향 분석: H&amp;RA·LOPA 가정(공정안전시간, 응답시간 예산), 다른 SIF와의 상호작용, 오동작 트립 영향 ③ SRS 개정 ④ 응용 프로그램 변경(§12)과 검증·시험, 형상 관리(§5.2.7) ⑤ 변경된 SIF의 시험(확인) ⑥ 문서·절차·교육 갱신 ⑦ 영향 분석을 고려한 FSA(§5.2.6.1.9) ⑧ 승인 후 운전 복귀, 기록.</p>
 </details>
-</section>
-<!-- ===================== CH 15 ===================== -->
-<section class="chapter" id="ch15">
-<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>15</span></div><div><p class="eyebrow">Formula sheet · 시험 전날용</p><h2>공식집</h2></div></div>
 
-<div class="grid2">
+<details class="sol"><summary>문제 9 · Route 1H 조합과 61511 표 6</summary>
+<p>저빈도 SIL 2 SIF의 구성(모두 예시값): 압력 송신기 1oo2(Type B, 각 SFF 85%), 안전 PLC(인증서상 SIL 3 능력), 차단밸브 1oo2(Type A, 각 SFF 67%). (a) Route 1H로 서브시스템별·시스템 최대 SIL을 구하고 (b) 61511 표 6으로 판정한 뒤 (c) 목표가 SIL 3이면 무엇이 달라지는지 쓰십시오.</p>
+<p><b>풀이.</b> (a) 송신기 채널은 각각 Type B, SFF 60–90%, HFT 0이므로 SIL 1이고, 병렬 HFT 1을 더해 <b>SIL 2</b>입니다. 밸브 채널은 각각 Type A, SFF 60–90%, HFT 0이므로 SIL 2이고, HFT 1을 더해 <b>SIL 3</b>입니다. 로직 솔버는 안전 매뉴얼의 사용 조건을 지킬 때 SIL 3입니다. 직렬 결합은 가장 낮은 서브시스템이 정하므로 시스템 최대는 <b>SIL 2</b>이고, 목표를 만족합니다 <span class="src">[61508-2 7.4.4.2.1–7.4.4.2.4, 표 2·3]</span>. (b) 표 6에서 저빈도 SIL 2의 최소 HFT는 0이므로 세 서브시스템 모두 충족합니다. 이 경로를 택하면 §11.4.8(로직 솔버 같은 FVL·LVL 장치의 DC 60% 이상)과 §11.4.9(70% 신뢰 상한 데이터)도 함께 만족해야 합니다. (c) Route 1H로는 송신기가 SIL 2에 묶입니다. SFF 90% 이상 송신기를 쓰거나 HFT 2(1oo3)로 가야 합니다. <b>2oo3은 HFT 1이므로 여전히 SIL 2</b>라는 점이 함정입니다. 61511 표 6을 쓰면 SIL 3의 최소 HFT는 1이므로 현재 1oo2로도 HFT 요건은 충족합니다. 대신 PFD 목표, β, §11.4.9 데이터, §11.5.4의 SIL 3 추가 평가가 판정을 좌우합니다. 61511 경로는 Route 2H에서 유래했기 때문에 SFF 대신 데이터의 신뢰 수준을 요구합니다 <span class="src">[61511-1 11.4.3 주석, 11.4.5]</span>.</p>
+</details>
+
+<details class="sol"><summary>문제 10 · 부속서 D로 β 산정</summary>
+<p>2oo3 압력 송신기에 표 D.1을 적용한 결과 X = 24, Y = 32였습니다. 진단은 DC 90% 이상, 진단 주기 2시간 미만이고 주석 4의 조건(검출 시 안전 상태로 이행)을 충족합니다(모두 예시값). β와 β<sub>D</sub>를 구하십시오. 주석 4의 조건을 충족하지 못하면 어떻게 됩니까?</p>
+<p><b>풀이.</b> 표 D.3에서 Z = 1.5. S = X + Y = 56이므로 표 D.4의 센서·최종요소 45–70 구간에서 β<sub>int</sub> = 5%입니다. S<sub>D</sub> = X(Z+1) + Y = 24×2.5 + 32 = 92이므로 70–120 구간에서 β<sub>D,int</sub> = 2%입니다. 표 D.5의 2oo3 배율 1.5를 곱하면 <b>β = 7.5%, β<sub>D</sub> = 3%</b>입니다. 조건을 충족하지 못하면 Z = 0이므로 S<sub>D</sub> = S = 56이고 β<sub>D</sub>도 7.5%가 됩니다. 진단은 X에만 곱해지고 Y 항목에는 영향이 없다는 구조를 기억하십시오. 도구 7에서 같은 조건을 넣어 확인할 수 있습니다 <span class="src">[61508-6 D.4, 표 D.3–D.5]</span>.</p>
+</details>
+
+<details class="sol"><summary>문제 11 · 1oo2D와 K</summary>
+<p>1oo2D 로직 솔버(예시값): λ<sub>DU</sub> = 1×10<sup>−8</sup>/h, λ<sub>DD</sub> = 1×10<sup>−6</sup>/h, λ<sub>SD</sub> = 1×10<sup>−6</sup>/h, β = 2%, β<sub>D</sub> = 1%, K = 0.98, T<sub>1</sub> = 1년, MTTR = MRT = 8 h. t′<sub>CE</sub>와 PFD<sub>avg</sub>를 구하고 지배 항을 찾으십시오. K = 0.90이면 어떻게 됩니까?</p>
+<p><b>풀이.</b> t′<sub>CE</sub> = [λ<sub>DU</sub>(T<sub>1</sub>/2 + MRT) + (λ<sub>DD</sub> + λ<sub>SD</sub>)MTTR]/(λ<sub>DU</sub> + λ<sub>DD</sub> + λ<sub>SD</sub>) = (4.388×10<sup>−5</sup> + 1.6×10<sup>−5</sup>)/2.01×10<sup>−6</sup> = 29.79 h, t′<sub>GE</sub> = T<sub>1</sub>/3 + MRT = 2 928 h. 독립 항 2(1−β)λ<sub>DU</sub>[(1−β)λ<sub>DU</sub> + (1−β<sub>D</sub>)λ<sub>DD</sub> + λ<sub>SD</sub>]t′<sub>CE</sub>t′<sub>GE</sub> = 3.42×10<sup>−9</sup>. K 항 2(1−K)λ<sub>DD</sub>t′<sub>CE</sub> = 1.19×10<sup>−6</sup>. CCF 항 βλ<sub>DU</sub>(T<sub>1</sub>/2 + MRT) = 8.78×10<sup>−7</sup>. 합계 <b>2.07×10<sup>−6</sup></b>이고 K 항이 약 57%로 지배합니다. K = 0.90이면 K 항이 5.96×10<sup>−6</sup>, 합계 6.84×10<sup>−6</sup>으로 약 3.3배가 됩니다. 이 식에는 β<sub>D</sub>λ<sub>DD</sub>MTTR 항이 없습니다. 검출된 위험 고장 중 비교·전환 메커니즘이 처리하지 못하는 몫(1−K)이 K 항으로 들어갑니다 <span class="src">[61508-6 B.3.2.2.4]</span>. K는 제조사 FMEA에서 나오는 값이므로 인증서·안전 매뉴얼에서 확인해야 합니다.</p>
+</details>
+
+<details class="sol"><summary>문제 12 · 고장이 있는 현장 데이터의 신뢰상한</summary>
+<p>동일 모델 차단밸브 집단의 누적 운전시간 τ = 3×10<sup>6</sup> h 동안 위험 미검출 고장이 2건 관측되었습니다(예시값). 점추정과 70%·90% 단측 상한을 구하고, 61511 §11.4.9와 Route 2H에서 각각 어떤 값을 써야 하는지 쓰십시오.</p>
+<p><b>풀이.</b> 점추정은 n/τ = 6.67×10<sup>−7</sup>/h입니다. 상한은 λ<sub>U</sub> = χ<sup>2</sup>(CL; 2n+2)/(2τ)이고 n = 2이면 자유도 6입니다. χ<sup>2</sup>(0.70; 6) = 7.231, χ<sup>2</sup>(0.90; 6) = 10.645이므로 <b>λ<sub>70</sub> = 1.21×10<sup>−6</sup>/h, λ<sub>90</sub> = 1.77×10<sup>−6</sup>/h</b>입니다. 61511 경로는 70% 이상 상한을 요구하므로 1.21×10<sup>−6</sup>/h 이상을 씁니다 <span class="src">[61511-1 11.4.9]</span>. Route 2H는 목표 달성에 90% 초과 신뢰를 요구합니다. 각 고장률에 90% 상한을 쓰는 것이 가장 간단하고 보수적인 방법입니다 <span class="src">[61508-2 7.4.4.3.3]</span>. 점추정을 그대로 쓰면 70% 상한보다 약 1.8배 낮게 잡게 됩니다(6.6절).</p>
+</details>
+</section>
+<!-- ===================== CH 18 ===================== -->
+<section class="chapter" id="ch18">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>18</span></div><div><p class="eyebrow">Formula sheet · 시험 전날용</p><h2>공식집</h2></div></div>
+
+<div class="grid2 fgrid">
 <div class="card"><h4>고장 분류</h4>
-<div class="eq">\[ SFF=\frac{\lambda_S+\lambda_{DD}}{\lambda_S+\lambda_D},\quad DC=\frac{\lambda_{DD}}{\lambda_D} \]</div>
-<div class="eq">\[ \mathrm{RRF}=1/\mathrm{PFD}_{avg},\quad 1\ \mathrm{FIT}=10^{-9}/\mathrm{h} \]</div>
+<div class="eq">\[ SFF=\frac{\lambda_S+\lambda_{DD}}{\lambda_S+\lambda_D} \]</div>
+<div class="eq">\[ DC=\frac{\lambda_{DD}}{\lambda_D},\quad \mathrm{RRF}=\frac{1}{\mathrm{PFD}_{avg}} \]</div>
+<div class="eq">\[ 1\ \mathrm{FIT}=10^{-9}/\mathrm{h} \]</div>
 </div>
 <div class="card"><h4>단순 근사(CCF·수리 제외)</h4>
-<div class="eq">\[ 1oo1:\tfrac{\lambda T}{2},\ 1oo2:\tfrac{(\lambda T)^2}{3},\ 2oo3:(\lambda T)^2,\ 1oo3:\tfrac{(\lambda T)^3}{4},\ 2oo2:\lambda T \]</div>
+<div class="eq">\[ 1oo1:\tfrac{\lambda T}{2},\quad 1oo2:\tfrac{(\lambda T)^2}{3},\quad 2oo2:\lambda T \]</div>
+<div class="eq">\[ 2oo3:(\lambda T)^2,\quad 1oo3:\tfrac{(\lambda T)^3}{4} \]</div>
 </div>
 <div class="card"><h4>등가 정지시간</h4>
 <div class="eq">\[ t_{CE}=\tfrac{\lambda_{DU}}{\lambda_D}\!\left(\tfrac{T_1}{2}+MRT\right)+\tfrac{\lambda_{DD}}{\lambda_D}MTTR \]</div>
-<div class="eq">\[ t_{GE}:\ \tfrac{T_1}{3},\qquad t_{G2E}:\ \tfrac{T_1}{4} \]</div>
+<div class="eq">\[ t_{GE}=\tfrac{\lambda_{DU}}{\lambda_D}\!\left(\tfrac{T_1}{3}+MRT\right)+\tfrac{\lambda_{DD}}{\lambda_D}MTTR \]</div>
+<div class="eq">\[ t_{G2E}=\tfrac{\lambda_{DU}}{\lambda_D}\!\left(\tfrac{T_1}{4}+MRT\right)+\tfrac{\lambda_{DD}}{\lambda_D}MTTR \]</div>
 </div>
 <div class="card"><h4>PFD<sub>avg</sub> (IEC 61508-6)</h4>
-<div class="eq">\[ 1oo1=(\lambda_{DU}+\lambda_{DD})t_{CE},\quad 2oo2=2\lambda_D t_{CE} \]</div>
-<div class="eq">\[ 1oo2=2\lambda_i^2 t_{CE}t_{GE}+C,\quad 2oo3=6\lambda_i^2 t_{CE}t_{GE}+C \]</div>
-<div class="eq">\[ \lambda_i=(1-\beta_D)\lambda_{DD}+(1-\beta)\lambda_{DU},\quad C=\beta_D\lambda_{DD}MTTR+\beta\lambda_{DU}\!\left(\tfrac{T_1}{2}+MRT\right) \]</div>
+<div class="eq">\[ 1oo1=(\lambda_{DU}+\lambda_{DD})\,t_{CE} \]</div>
+<div class="eq">\[ 2oo2=2\lambda_D\,t_{CE} \]</div>
+<div class="eq">\[ 1oo2=2\lambda_i^2\,t_{CE}t_{GE}+C \]</div>
+<div class="eq">\[ 2oo3=6\lambda_i^2\,t_{CE}t_{GE}+C \]</div>
+<div class="eq">\[ 1oo3=6\lambda_i^3\,t_{CE}t_{GE}t_{G2E}+C \]</div>
+<div class="eq">\[ \lambda_i=(1-\beta_D)\lambda_{DD}+(1-\beta)\lambda_{DU} \]</div>
+<div class="eq">\[ C=\beta_D\lambda_{DD}MTTR+\beta\lambda_{DU}\!\left(\tfrac{T_1}{2}+MRT\right) \]</div>
 </div>
 <div class="card"><h4>PFH</h4>
 <div class="eq">\[ 1oo1=\lambda_{DU},\quad 2oo2=2\lambda_{DU} \]</div>
-<div class="eq">\[ 1oo2=2\lambda_i(1-\beta)\lambda_{DU}t_{CE}+\beta\lambda_{DU},\quad 2oo3=6\lambda_i(1-\beta)\lambda_{DU}t_{CE}+\beta\lambda_{DU} \]</div>
+<div class="eq">\[ 1oo2=2\lambda_i(1-\beta)\lambda_{DU}\,t_{CE}+\beta\lambda_{DU} \]</div>
+<div class="eq">\[ 2oo3=6\lambda_i(1-\beta)\lambda_{DU}\,t_{CE}+\beta\lambda_{DU} \]</div>
+<div class="eq">\[ 1oo3=6\lambda_i^2(1-\beta)\lambda_{DU}\,t_{CE}t_{GE}+\beta\lambda_{DU} \]</div>
+<p class="small">1oo1·2oo2 식은 위험 고장을 검출하면 안전 상태로 가는 것을 전제합니다 <span class="src">[61508-6 B.3.3.2]</span>.</p>
+</div>
+<div class="card"><h4>1oo2D (K = 채널 비교·전환 효율)</h4>
+<div class="eq">\[ t'_{CE}=\frac{\lambda_{DU}\left(\tfrac{T_1}{2}+MRT\right)+(\lambda_{DD}+\lambda_{SD})MTTR}{\lambda_{DU}+\lambda_{DD}+\lambda_{SD}} \]</div>
+<div class="eq">\[ t'_{GE}=\tfrac{T_1}{3}+MRT \]</div>
+<div class="eq">\[ \lambda'=(1-\beta)\lambda_{DU}+(1-\beta_D)\lambda_{DD}+\lambda_{SD} \]</div>
+<div class="eq">\[ \begin{aligned}\mathrm{PFD}&=2(1-\beta)\lambda_{DU}\lambda'\,t'_{CE}t'_{GE}\\ &\quad+2(1-K)\lambda_{DD}\,t'_{CE}\\ &\quad+\beta\lambda_{DU}\!\left(\tfrac{T_1}{2}+MRT\right)\end{aligned} \]</div>
+<div class="eq">\[ \begin{aligned}\mathrm{PFH}&=2(1-\beta)\lambda_{DU}\lambda'\,t'_{CE}\\ &\quad+2(1-K)\lambda_{DD}+\beta\lambda_{DU}\end{aligned} \]</div>
+<p class="small">λ<sub>SD</sub> = λ<sub>S</sub>·DC. β<sub>D</sub>λ<sub>DD</sub>MTTR 항이 없음. 61508-6의 표는 K = 0.98을 가정 <span class="src">[61508-6 B.3.2.2.4, B.3.3.2.4]</span>.</p>
+</div>
+<div class="card"><h4>β 인자(부속서 D)</h4>
+<div class="eq">\[ S=X+Y\ \to\ \beta_{int} \]</div>
+<div class="eq">\[ S_D=X(Z+1)+Y\ \to\ \beta_{D,int} \]</div>
+<div class="eq">\[ \beta=\beta_{int}\times m_{MooN} \]</div>
+<div class="eq">\[ \lambda_{CCF}=\beta\lambda_{DU}+\beta_D\lambda_{DD} \]</div>
+<p class="small">표 D.4 점수 ≥120 / 70–120 / 45–70 / 45 미만 → 로직 0.5 / 1 / 2 / 5%, 센서·최종요소 1 / 2 / 5 / 10%. 표 D.5 배율 m: 1oo2 1, 1oo3 0.5, 2oo3 1.5, 1oo4 0.3, 2oo4 0.6, 3oo4 1.75, 1oo5 0.2, 2oo5 0.4, 3oo5 0.8, 4oo5 2. 센서·최종요소 열의 최대 점수는 101.5이므로 β<sub>int</sub>는 2%가 하한입니다(9.3절).</p>
 </div>
 <div class="card"><h4>불완전 증명시험(1oo1)</h4>
-<div class="eq">\[ \lambda_{DD}MTTR+PTC\,\lambda_{DU}\tfrac{T_1}{2}+(1-PTC)\lambda_{DU}\tfrac{T_2}{2} \]</div>
+<div class="eq">\[ \begin{aligned}\mathrm{PFD}&\approx\lambda_{DD}MTTR+PTC\,\lambda_{DU}\tfrac{T_1}{2}\\ &\quad+(1-PTC)\,\lambda_{DU}\tfrac{T_2}{2}\end{aligned} \]</div>
 <p class="small">중복 구조는 t<sub>CE</sub>, t<sub>GE</sub>, CCF 항의 T<sub>1</sub> 자리를 PTC·T<sub>1</sub>과 (1−PTC)·T<sub>2</sub>로 나눕니다(식 7.17–7.19).</p>
 </div>
 <div class="card"><h4>LOPA와 모드</h4>
-<div class="eq">\[ f^C=\sum_i f_i^I EC_i\prod_j PFD_{ij}\prod_k CM_k,\quad RRF=f^C_{\text{SIF 없음}}/F_t \]</div>
+<div class="eq">\[ f^C=\sum_i f_i^I\,EC_i\prod_j PFD_{ij}\prod_k CM_k \]</div>
+<div class="eq">\[ RRF=f^C_{\text{SIF 없음}}/F_t \]</div>
 <p class="small">D<sub>SIF</sub>는 SIF 이전 IPL만 곱함. D<sub>SIF</sub> &gt; 1/yr이면 PFH 목표 = F<sub>t</sub> / (8 760 × SIF 이후 PFD × CM).</p>
 </div>
 <div class="card"><h4>오동작 트립(근사)</h4>
-<div class="eq">\[ 1oo1:\lambda_S,\ 1oo2:(2-\beta)\lambda_S,\ 2oo2:2[(1-\beta)\lambda_S]^2MTTR_S+\beta\lambda_S \]</div>
+<div class="eq">\[ 1oo1:\lambda_S,\quad 1oo2:(2-\beta)\lambda_S \]</div>
+<div class="eq">\[ 2oo2:2[(1-\beta)\lambda_S]^2MTTR_S+\beta\lambda_S \]</div>
 <div class="eq">\[ 2oo3:6[(1-\beta)\lambda_S]^2MTTR_S+\beta\lambda_S \]</div>
 </div>
 <div class="card"><h4>데이터 신뢰상한</h4>
-<div class="eq">\[ \lambda_U=\frac{\chi^2_{CL}(2n+2)}{2\tau},\quad n=0:\ \lambda_{70}=\frac{1.204}{\tau},\ \lambda_{90}=\frac{2.303}{\tau} \]</div>
+<div class="eq">\[ \lambda_U=\frac{\chi^2_{CL}(2n+2)}{2\tau} \]</div>
+<div class="eq">\[ n=0:\ \lambda_{70}=\frac{1.204}{\tau},\quad \lambda_{90}=\frac{2.303}{\tau} \]</div>
+<p class="small">61511 경로는 70% 이상 상한(§11.4.9), Route 2H는 목표 달성 90% 초과 신뢰(61508-2 §7.4.4.3.3). n = 2이면 χ²(0.70; 6) = 7.231, χ²(0.90; 6) = 10.645.</p>
 </div>
 <div class="card"><h4>요구율–위험사건</h4>
-<div class="eq">\[ DT_1\ll1:\ H\approx D\cdot PFD_{avg};\qquad DT_1\gg1:\ H\approx\lambda_{DU} \]</div>
+<div class="eq">\[ DT_1\ll1:\ H\approx D\cdot PFD_{avg} \]</div>
+<div class="eq">\[ DT_1\gg1:\ H\approx\lambda_{DU} \]</div>
 <p class="small">교차점 D = 2/T<sub>1</sub>(1판의 경계 조건). 2판 경계는 연 1회.</p>
 </div>
 </div>
@@ -1719,7 +2283,29 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 </tbody></table></div>
 </div>
 
-<h3><span class="sec">15.1</span>IEC 61511-1 조항 지도</h3>
+<h3><span class="sec">18.1</span>구조적 제약과 진단 요약</h3>
+<div class="tbl compact"><table>
+<caption>Route 1H 최대 SIL(61508-2 표 2·3) · 서브시스템 HFT별</caption>
+<thead><tr><th>요소의 SFF</th><th class="c">Type A<br>HFT 0 / 1 / 2</th><th class="c">Type B<br>HFT 0 / 1 / 2</th></tr></thead>
+<tbody>
+<tr><td>60% 미만</td><td class="c">1 / 2 / 3</td><td class="c">불가 / 1 / 2</td></tr>
+<tr><td>60% – 90% 미만</td><td class="c">2 / 3 / 4</td><td class="c">1 / 2 / 3</td></tr>
+<tr><td>90% – 99% 미만</td><td class="c">3 / 4 / 4</td><td class="c">2 / 3 / 4</td></tr>
+<tr><td>99% 이상</td><td class="c">3 / 4 / 4</td><td class="c">3 / 4 / 4</td></tr>
+</tbody></table></div>
+<div class="tbl compact"><table>
+<caption>경로별 핵심 조건</caption>
+<thead><tr><th>경로</th><th>최소 HFT</th><th>추가 조건</th></tr></thead>
+<tbody>
+<tr><td>Route 1H</td><td>위 표(SFF와 Type으로 결정)</td><td>요소별 SFF는 HFT 0 기준. 직렬은 최저 SIL, 병렬 HFT N은 최고 채널 SIL + N <span class="src">[61508-2 7.4.4.2]</span></td></tr>
+<tr><td>Route 2H</td><td>SIL 4: 2 · SIL 3: 1 · SIL 2 고빈도·연속: 1 · SIL 2 저빈도: 0 · SIL 1: 0</td><td>현장 데이터로 목표 달성 90% 초과 신뢰, Type B는 DC 60% 이상, HFT 감축은 Type A만 <span class="src">[61508-2 7.4.4.3]</span></td></tr>
+<tr><td>61511 §11.4</td><td>표 6(Route 2H와 같은 값)</td><td>FVL·LVL을 쓰지 않는 서브시스템만 감축 가능(§11.4.6), FVL·LVL 장치 DC 60% 이상(§11.4.8), 데이터는 70% 이상 상한(§11.4.9) <span class="src">[61511-1 11.4.3–11.4.9]</span></td></tr>
+<tr><td>고장 배제</td><td>—</td><td>근거 문서화. 고장 배제한 직렬 요소의 위험 고장 빈도 합은 목표의 1% 이하 <span class="src">[61508-2 7.4.4.3.2, 61511-1 3.2.20.1]</span></td></tr>
+<tr><td>진단 등급</td><td>—</td><td>Low / Medium / High = DC 60 / 90 / 99%. 진단의 SFF 반영은 진단 시험률/요구율 ≥ 100 등 조건부 <span class="src">[61508-2 부속서 A, 7.4.4.1.4]</span></td></tr>
+<tr><td>SC 결합</td><td>—</td><td>충분히 독립인 SC N 요소의 결합은 SC N+1까지 한 번만 <span class="src">[61508-2 7.4.3]</span></td></tr>
+</tbody></table></div>
+
+<h3><span class="sec">18.2</span>IEC 61511-1 조항 지도</h3>
 <div class="tbl compact"><table>
 <thead><tr><th>조항</th><th>내용</th><th>조항</th><th>내용</th></tr></thead>
 <tbody>
@@ -1732,42 +2318,51 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 </tbody></table></div>
 </section>
 
-<!-- ===================== CH 16 ===================== -->
-<section class="chapter" id="ch16">
-<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>16</span></div><div><p class="eyebrow">Glossary · EN → KR</p><h2>용어집</h2></div></div>
+<!-- ===================== CH 19 ===================== -->
+<section class="chapter" id="ch19">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>19</span></div><div><p class="eyebrow">Glossary · EN → KR</p><h2>용어집</h2></div></div>
 <div class="tbl compact"><table>
 <thead><tr><th>영문</th><th>국문</th><th>요지</th></tr></thead>
 <tbody>
+<tr><td>Application program</td><td>응용 프로그램</td><td>사용자가 SRS를 구현하려고 로직 솔버에 작성하는 프로그램. LVL·FPL은 61511 §12, FVL은 61508-3</td></tr>
 <tr><td>Architectural constraints</td><td>구조적 제약</td><td>SIL별 최소 HFT 요건(Route 1H/2H)</td></tr>
 <tr><td>Basic process control system (BPCS)</td><td>기본 공정 제어계</td><td>정상 운전 제어 시스템. 보호계층 주장 시 RRF ≤ 10</td></tr>
+<tr><td>Channel / Element / Subsystem</td><td>채널 / 요소 / 서브시스템</td><td>서브시스템은 위험 고장이 곧 안전기능의 위험 고장이 되는 최상위 구조 단위, 요소는 그 안의 부품·부품군, 채널은 요소 안전기능을 독립적으로 수행하는 요소(군) [61508-4 3.3.6, 3.4.4–3.4.5]</td></tr>
 <tr><td>Common cause failure (CCF)</td><td>공통원인고장</td><td>하나의 원인으로 여러 장치 고장</td></tr>
 <tr><td>Common mode failure</td><td>공통모드고장</td><td>CCF 중 같은 방식으로 고장 나는 것</td></tr>
-<tr><td>Compensating measure</td><td>보상 조치</td><td>bypass·열화 중 안전을 유지하는 임시 조치</td></tr>
+<tr><td>Compensating measure</td><td>보상 조치</td><td>SIS 성능 저하를 알고 있는 동안 위험을 관리하는, 계획·문서화된 임시 방법(3.2.7, §11.3, §16.2)</td></tr>
 <tr><td>Conditional modifier</td><td>조건부 수정계수</td><td>점화·재실·치명상 확률 등</td></tr>
 <tr><td>Dangerous failure</td><td>위험 고장</td><td>요구 시 동작을 막거나 확률을 낮추는 고장</td></tr>
 <tr><td>Demand mode / Continuous mode</td><td>요구 모드 / 연속 모드</td><td>요구 모드는 저빈도(≤1/yr)·고빈도(&gt;1/yr)</td></tr>
 <tr><td>Diagnostic coverage (DC)</td><td>진단 커버리지</td><td>λ<sub>DD</sub>/λ<sub>D</sub></td></tr>
 <tr><td>Enabling condition</td><td>조건</td><td>원인이 결과로 진행하는 데 필요한 상태</td></tr>
 <tr><td>Equipment under control (EUC)</td><td>피제어 설비</td><td>61508의 보호 대상 설비</td></tr>
+<tr><td>Fault exclusion</td><td>고장 배제</td><td>발생 가능성이 매우 낮다는 근거로 특정 고장 모드를 분석에서 빼는 것. 근거 문서화, 직렬 합계는 목표의 1% 이하(§11.4.4, 3.2.20.1)</td></tr>
 <tr><td>Final element</td><td>최종요소</td><td>밸브, 차단기 등 공정에 작용하는 장치</td></tr>
 <tr><td>FPL / LVL / FVL</td><td>고정 / 제한 가변 / 완전 가변 언어</td><td>FVL은 61508-3 적용</td></tr>
 <tr><td>Functional safety assessment (FSA)</td><td>기능안전 평가</td><td>달성한 기능안전에 대한 독립적 판단(단계 1–5)</td></tr>
 <tr><td>Functional safety audit</td><td>기능안전 감사</td><td>절차 준수와 효과의 확인</td></tr>
 <tr><td>Hardware fault tolerance (HFT)</td><td>하드웨어 결함 허용도</td><td>N개 결함까지 기능 유지</td></tr>
+<tr><td>Hazardous event</td><td>위험사건</td><td>해를 일으킬 수 있는 사건. 실제 해 여부는 노출에 달림 [61508-4 3.1.4]</td></tr>
 <tr><td>Independent protection layer (IPL)</td><td>독립 보호계층</td><td>독립성·유효성·신뢰성·감사 가능성</td></tr>
 <tr><td>Inspection</td><td>점검</td><td>상태를 확인하는 주기 활동(§16.3.2)</td></tr>
-<tr><td>Mean repair time (MRT)</td><td>평균 수리시간</td><td>수리 시작부터 완료까지</td></tr>
-<tr><td>Mean time to restoration (MTTR)</td><td>평균 복구시간</td><td>고장 발생부터 복귀까지(검출 포함)</td></tr>
-<tr><td>Mission time</td><td>임무 시간</td><td>전면 정비 없이 운전하는 기간. T<sub>2</sub>에 해당</td></tr>
+<tr><td>Maximum permitted repair time (MPRT)</td><td>최대 허용 수리시간</td><td>결함 검출 후 수리에 허용하는 최대 시간. MRT보다 짧게(위험 감소) 또는 길게 정할 수 있고, 정하면 계산에서 MRT 대신 씀(3.2.37.3)</td></tr>
+<tr><td>Mean repair time (MRT)</td><td>평균 수리시간</td><td>수리 착수 전 대기, 실제 수리, 운전 복귀 전 시간의 합(3.2.37.1). 검출 시간은 제외</td></tr>
+<tr><td>Mean time to restoration (MTTR)</td><td>평균 복구시간</td><td>검출 시간에 MRT의 세 구간(착수 전 대기, 실제 수리, 복귀 전)을 더한 것(3.2.37.2)</td></tr>
+<tr><td>Mission time</td><td>임무 시간</td><td>전면 정비 없이 운전하는 기간. 실무 계산에서 불완전 시험의 T<sub>2</sub>로 씀(61508-6 B.3.2.5는 T<sub>2</sub>를 요구 간격으로 정의, 7.6절)</td></tr>
+<tr><td>No part failure / No effect failure</td><td>무관 부품 고장 / 무영향 고장</td><td>안전기능에 관여하지 않는 부품의 고장 / 안전기능에 영향이 없는 고장. 둘 다 SFF 계산에서 제외 [61508-4 3.6.13–3.6.14]</td></tr>
 <tr><td>Prior use</td><td>사용 실적</td><td>61511 장치 선정 근거(§11.5.3)</td></tr>
 <tr><td>Proven in use</td><td>사용 입증</td><td>61508 SC 입증 경로(Route 2S)</td></tr>
 <tr><td>Process safety time (PST)</td><td>공정안전시간</td><td>원인 고장부터 위험사건까지의 시간</td></tr>
 <tr><td>Proof test / Proof test coverage (PTC)</td><td>증명시험 / 증명시험 커버리지</td><td>DU 고장을 드러내는 주기 시험과 그 비율</td></tr>
 <tr><td>Probability of failure on demand (PFD)</td><td>요구 시 고장확률</td><td>저빈도 모드 실패척도</td></tr>
 <tr><td>Average frequency of dangerous failure (PFH)</td><td>시간당 위험 고장 빈도</td><td>고빈도·연속 모드 실패척도</td></tr>
+<tr><td>Random hardware failure</td><td>무작위 하드웨어 고장</td><td>하드웨어 열화 메커니즘으로 무작위 시점에 일어나는 고장. 확률로 정량화 [61508-4 3.6.5]</td></tr>
+<tr><td>Replacement in kind</td><td>동일 사양 교체</td><td>동일품, 정확한 복제품, 또는 수정이 필요 없는 승인된 대체품으로 바꾸는 것. MOC 대상이 아님(§5.2.6.2.4)</td></tr>
 <tr><td>Risk reduction factor (RRF)</td><td>위험저감계수</td><td>1/PFD<sub>avg</sub></td></tr>
 <tr><td>Safe failure fraction (SFF)</td><td>안전 고장 비율</td><td>(λ<sub>S</sub>+λ<sub>DD</sub>)/λ<sub>total</sub></td></tr>
 <tr><td>Safe state</td><td>안전 상태</td><td>SRS가 정의하는 위험이 없는 공정 상태</td></tr>
+<tr><td>Safety configured PE logic solver</td><td>안전 구성 PE 로직 솔버</td><td>범용 산업용 PE 로직 솔버를 §11.5에 따라 안전 용도로 구성한 것. prior use 근거로는 SIL 1–2만(3.2.36.1, §11.5.5)</td></tr>
 <tr><td>Safety instrumented function (SIF)</td><td>안전계장기능</td><td>특정 위험에 대해 안전 상태를 달성·유지하는 기능</td></tr>
 <tr><td>Safety instrumented system (SIS)</td><td>안전계장시스템</td><td>센서·로직·최종요소로 SIF를 구현</td></tr>
 <tr><td>Safety integrity level (SIL)</td><td>안전무결성수준</td><td>SIF의 무결성 등급 1–4</td></tr>
@@ -1775,18 +2370,20 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <tr><td>Safety requirements specification (SRS)</td><td>안전 요구사항 명세</td><td>SIF의 기능·무결성 요구(§10)</td></tr>
 <tr><td>Spurious trip</td><td>오동작 트립</td><td>요구 없이 일어난 트립</td></tr>
 <tr><td>Systematic capability (SC)</td><td>체계적 능력</td><td>체계적 고장 방어 수준 SC 1–4</td></tr>
+<tr><td>Systematic failure</td><td>체계적 고장</td><td>설계·제조·절차·문서 같은 특정 원인과 결정론적으로 연결되어 그 원인을 고쳐야만 없앨 수 있는 고장 [61508-4 3.6.6]</td></tr>
+<tr><td>Tolerable risk</td><td>허용 위험</td><td>현재 사회의 가치 기준으로 주어진 상황에서 받아들여지는 위험 [61508-4 3.1.7]</td></tr>
 <tr><td>Type A / Type B element</td><td>A형 / B형 요소</td><td>고장 거동이 완전히 정의되는지 여부</td></tr>
 <tr><td>Validation</td><td>안전 확인</td><td>설치된 SIS가 SRS를 만족하는지 확인(§15)</td></tr>
 <tr><td>Verification</td><td>검증</td><td>각 단계의 출력이 요건을 만족하는지 확인(§7)</td></tr>
 </tbody></table></div>
 </section>
 
-<!-- ===================== CH 17 ===================== -->
-<section class="chapter" id="ch17">
-<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>17</span></div><div><p class="eyebrow">Reference library · 웹 조사 결과</p><h2>기술교재 라이브러리</h2></div></div>
-<div class="prose"><p>웹 조사로 찾은 자료를 성격별로 정리했습니다. 무료 공개 자료는 링크로 바로 열 수 있고, 표준과 단행본은 유료입니다. 링크는 교재 작성 시점에 확인한 주소이며, 일부 사이트는 자동 접근을 막아 브라우저에서만 열릴 수 있습니다.</p></div>
+<!-- ===================== CH 20 ===================== -->
+<section class="chapter" id="ch20">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>20</span></div><div><p class="eyebrow">Reference library · 웹 조사 결과</p><h2>기술교재 라이브러리</h2></div></div>
+<div class="prose"><p>이 교재의 조항·식·표 값은 IEC 61508-1~7과 61511-1~3 원문과 대조했습니다. 표준은 저작권 자료이므로 교재에는 요지만 옮겼고, 원문은 각 조직이 구매한 정본으로 확인하십시오. 아래는 웹 조사로 찾은 자료를 성격별로 정리한 것입니다. 무료 공개 자료는 링크로 바로 열 수 있고, 표준과 단행본은 유료입니다. 링크는 교재 작성 시점에 확인한 주소이며, 일부 사이트는 자동 접근을 막아 브라우저에서만 열릴 수 있습니다.</p></div>
 
-<h3><span class="sec">17.1</span>먼저 읽을 무료 자료</h3>
+<h3><span class="sec">20.1</span>먼저 읽을 무료 자료</h3>
 <div class="tbl"><table>
 <thead><tr><th>자료</th><th>쓰임</th><th>장</th></tr></thead>
 <tbody>
@@ -1804,7 +2401,7 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <tr><td><a href="https://www.sintef.no/globalassets/project/pds/reports/pds-report-sis_follow_up_guideline_final_v01.pdf" target="_blank" rel="noopener">SINTEF — 운전 단계 SIS 추적 관리 지침</a></td><td>현장 고장 데이터로 성능 감시와 시험 주기 조정</td><td>12</td></tr>
 </tbody></table></div>
 
-<h3><span class="sec">17.2</span>해설·실무 자료</h3>
+<h3><span class="sec">20.2</span>해설·실무 자료</h3>
 <div class="tbl"><table>
 <thead><tr><th>자료</th><th>쓰임</th></tr></thead>
 <tbody>
@@ -1818,7 +2415,7 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <tr><td><a href="https://www.hse.gov.uk/eci/functional.htm" target="_blank" rel="noopener">UK HSE — Functional safety</a> · <a href="https://www.hse.gov.uk/comah/sragtech/techmeascontsyst.htm" target="_blank" rel="noopener">COMAH 기술 조치: 제어 시스템</a> · <a href="https://www.hse.gov.uk/pubns/books/hsg238.htm" target="_blank" rel="noopener">HSG238 Out of control</a></td><td>규제 기관의 기대 수준, 제어 시스템 사고 사례 분석. 증명시험은 HSE CRR 428/2002와 운영 지침 OG54를 함께 보십시오</td></tr>
 </tbody></table></div>
 
-<h3><span class="sec">17.3</span>표준과 단행본(유료)</h3>
+<h3><span class="sec">20.3</span>표준과 단행본(유료)</h3>
 <div class="tbl"><table>
 <thead><tr><th>구분</th><th>자료</th><th>이 과정에서의 가치</th></tr></thead>
 <tbody>
@@ -1836,7 +2433,7 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <tr><td>데이터</td><td>OREDA Handbook / SINTEF PDS Data Handbook / exida SERH</td><td>고장률·고장 모드 분포</td></tr>
 </tbody></table></div>
 
-<h3><span class="sec">17.4</span>과정·시험 정보와 국내 자료</h3>
+<h3><span class="sec">20.4</span>과정·시험 정보와 국내 자료</h3>
 <div class="tbl"><table>
 <thead><tr><th>자료</th><th>내용</th></tr></thead>
 <tbody>
@@ -1846,10 +2443,11 @@ footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top
 <tr><td><a href="https://portal.kosha.or.kr" target="_blank" rel="noopener">KOSHA 안전보건 포털</a></td><td>C-C-62-2026 방호계층분석(LOPA)기법 기술지원규정, D-69-2020 SIS를 이용한 화학설비 안전성 향상 기술지침 검색</td></tr>
 </tbody></table></div>
 <div class="box judg"><span class="lbl">실무 판단: 이 교재 다음에 읽을 순서</span><ol>
-<li>61508 Association 계산 자료로 7장 계산을 다시 한 번 손으로 따라가기.</li>
-<li>NTNU 슬라이드의 8장(PFD 공식), 10장(CCF), 11장(불완전 시험).</li>
-<li>Bratt 자료와 61511-1 미리보기로 2판 변경점 정리.</li>
-<li>시간이 있으면 ISO/TR 12489와 Rausand 2014로 계산 이론 심화.</li>
+<li>61511-1 원문의 §3(정의), §9–§11, §16을 14장 점검 질문표와 함께 한 번 통독.</li>
+<li>같은 조항의 61511-2 해설, 61511-3 부속서 F(LOPA)·D(위험 그래프 보정)로 SIL 결정 근거 정리(16장 지도).</li>
+<li>61508-6 부속서 B(B.3.1 가정과 식)·D(β 점수표)를 7·9장 계산과 대조하며 손으로 재현. 61508 Association 계산 자료로 한 번 더 확인.</li>
+<li>61508-2 §7.4.4(구조적 제약), §7.4.9(장치 사용 조건), 부속서 A(기법별 최대 DC).</li>
+<li>NTNU 슬라이드 8장(PFD), 10장(CCF), 11장(불완전 시험), 이어서 ISO/TR 12489와 Rausand 2014로 계산 이론 심화.</li>
 </ol></div>
 </section>
 </main>
@@ -2171,9 +2769,9 @@ function pfdIEC(p){
       var tce2 = (p.ldu * tdu + (p.ldd + p.lsd) * p.mttr) / (p.ldu + p.ldd + p.lsd);
       var tge2 = p.ptc * (p.T1 / 3 + p.mrt) + (1 - p.ptc) * (p.T2 / 3 + p.mrt);
       var g = (1 - p.b) * p.ldu + (1 - p.bd) * p.ldd + p.lsd;
-      ind = 2 * (1 - p.b) * p.ldu * g * tce2 * tge2; total = ind + ccf;
+      ind = 2 * (1 - p.b) * p.ldu * g * tce2 * tge2; ccf = 2 * (1 - p.k) * p.ldd * tce2 + p.b * p.ldu * tdu; total = ind + ccf;
       var tce2H = (p.ldu * (p.T1 / 2 + p.mrt) + (p.ldd + p.lsd) * p.mttr) / (p.ldu + p.ldd + p.lsd);
-      pfh = 2 * (1 - p.b) * p.ldu * g * tce2H + p.b * p.ldu; break;
+      pfh = 2 * (1 - p.b) * p.ldu * g * tce2H + 2 * (1 - p.k) * p.ldd + p.b * p.ldu; break;
   }
   return {total:total, ind:ind, ccf:ccf, tce:tce, tge:tge, pfh:pfh};
 }
@@ -2196,7 +2794,7 @@ function readPfd(){
   var a = $("pfArch").value;
   var p = {arch:a, ldu:Math.max(num("pfLdu", 0), 0), ldd:Math.max(num("pfLdd", 0), 0), lsd:Math.max(num("pfLsd", 0), 0),
     T1:Math.max(num("pfT1", 8760), 1), mttr:Math.max(num("pfMttr", 8), 0), mrt:Math.max(num("pfMrt", 8), 0),
-    b:clamp01(num("pfB", 0.1)), bd:clamp01(num("pfBd", 0.1)), ptc:clamp01(num("pfPtc", 1)), T2:Math.max(num("pfT2", 87600), 1)};
+    b:clamp01(num("pfB", 0.1)), bd:clamp01(num("pfBd", 0.1)), ptc:clamp01(num("pfPtc", 1)), T2:Math.max(num("pfT2", 87600), 1), k:clamp01(num("pfK", 0.98))};
   if (p.T2 < p.T1) p.T2 = p.T1;
   if ($("pfD5").checked && D5[a]) { p.b = Math.min(1, p.b * D5[a]); p.bd = Math.min(1, p.bd * D5[a]); }
   return p;
@@ -2273,50 +2871,178 @@ function toolStr(){
   fill("stOut", [kv("STR", sciE(s) + " /h"), kv("연간 오동작 트립", sci(s * Y) + " 회/yr"), kv("MTTF_spurious", s > 0 ? sci(1 / s / Y) + " 년" : "—")]);
 }
 
+/* ---------- Tool 7: beta factor (61508-6 Annex D, sensors/final elements) ---------- */
+var BI = [
+["분리·격리", "채널별 신호 케이블을 모든 구간에서 분리 배선", 1.0, 2.0, true],
+["분리·격리", "전용 제어 전자부가 채널별로 별도 PCB", 2.5, 1.5, false],
+["분리·격리", "전용 제어 전자부가 채널별로 실내·별도 캐비닛", 2.5, 0.5, false],
+["다양성·중복", "감지 원리가 서로 다름(예: 압력과 온도)", 9.0, 0, false],
+["다양성·중복", "전기적 원리·설계가 다름(디지털/아날로그, 다른 제조사 등)", 6.5, 0, false],
+["다양성·중복", "시운전 때 채널별로 다른 시험 방법·인원", 1.0, 2.0, false],
+["다양성·중복", "채널별 정비를 다른 사람이 다른 시간에", 3.0, 0, false],
+["복잡성·설계·성숙도", "채널 간 정보 교환은 진단·투표용만", 0.5, 0.5, false],
+["복잡성·설계·성숙도", "현장에서 5년 넘게 성공적으로 쓰인 설계 기법", 1.0, 1.0, true],
+["복잡성·설계·성숙도", "유사 환경에서 같은 하드웨어 경험 5년 초과", 1.5, 1.5, true],
+["복잡성·설계·성숙도", "입출력 과전압·과전류 보호", 1.5, 0.5, true],
+["복잡성·설계·성숙도", "모든 부품을 2배 이상 여유로 정격 선정", 2.0, 0, false],
+["평가·분석·피드백", "FMEA·FTA로 공통원인 원천을 찾아 설계로 제거", 0, 3.0, false],
+["평가·분석·피드백", "설계 검토에서 공통원인을 다루고 반영(문서 증거)", 0, 3.0, false],
+["평가·분석·피드백", "모든 현장 고장을 분석해 설계에 피드백(절차 증거)", 0.5, 3.5, true],
+["절차·인간 인터페이스", "고장 근본 원인 규명과 유사 품목 점검의 서면 체계", 0.5, 1.5, true],
+["절차·인간 인터페이스", "채널별 정비·교정 시차 + 그 사이 진단 정상 확인", 2.0, 1.0, false],
+["절차·인간 인터페이스", "독립 중복 부분(케이블 등) 이설 금지를 절차에 명시", 0.5, 0.5, false],
+["절차·인간 인터페이스", "PCB 정비는 외부 공인 센터, 수리품은 설치 전 전수 시험", 0.5, 1.5, false],
+["절차·인간 인터페이스", "진단이 현장 교체 모듈 단위까지 고장 보고", 1.0, 1.0, false],
+["역량·훈련·안전 문화", "설계자 공통원인고장 교육(기록)", 2.0, 3.0, true],
+["역량·훈련·안전 문화", "정비자 공통원인고장 교육(기록)", 0.5, 4.5, true],
+["환경 관리", "인원 접근 제한(잠금 캐비닛 등)", 0.5, 2.5, true],
+["환경 관리", "외부 환경 제어 없이 시험된 환경 범위 안에서 운전", 3.0, 1.0, true],
+["환경 관리", "신호·전원 케이블을 모든 구간에서 분리", 2.0, 1.0, true],
+["환경 시험", "인정된 표준 수준의 환경 영향(EMC·온도·진동·충격·습도) 내성 시험", 10.0, 10.0, true]
+];
+var ZT = [[0,0,0,0],[1.0,0.5,0,0],[1.5,1.0,0.5,0],[2.0,1.5,1.0,0]];
+var D5M = {"1oo2":1, "1oo3":0.5, "2oo3":1.5, "1oo4":0.3, "2oo4":0.6, "3oo4":1.75};
+function betaSF(s){ return s >= 120 ? 0.01 : s >= 70 ? 0.02 : s >= 45 ? 0.05 : 0.10; }
+function buildBeta(){
+  var host = $("betaItems"); if (!host) return;
+  host.textContent = "";
+  var cat = null, box = null;
+  BI.forEach(function(it, i){
+    if (it[0] !== cat) {
+      cat = it[0]; box = document.createElement("fieldset"); box.className = "card"; box.style.margin = "8px 0";
+      var lg = document.createElement("legend"); lg.textContent = cat; lg.style.fontWeight = "700"; lg.style.fontSize = ".85rem"; box.appendChild(lg); host.appendChild(box);
+    }
+    var lab = document.createElement("label"); lab.className = "check"; lab.style.alignItems = "flex-start";
+    var c = document.createElement("input"); c.type = "checkbox"; c.id = "bi" + i; c.checked = it[4]; c.addEventListener("change", toolBeta);
+    var t = document.createElement("span"); t.textContent = it[1] + "  (X " + it[2] + ", Y " + it[3] + ")";
+    lab.appendChild(c); lab.appendChild(t); box.appendChild(lab);
+  });
+}
+function toolBeta(){
+  if (!$("betaOut")) return;
+  var X = 0, Y = 0, catSum = {}, total = 0;
+  BI.forEach(function(it, i){ var c = $("bi" + i); if (c && c.checked) { X += it[2]; Y += it[3]; catSum[it[0]] = (catSum[it[0]] || 0) + it[2] + it[3]; } });
+  total = X + Y;
+  var dc = parseInt($("bDc").value, 10), iv = parseInt($("bInt").value, 10);
+  var Z = $("bZok").checked ? ZT[dc][iv] : 0;
+  var S = X + Y, SD = X * (Z + 1) + Y;
+  var bi = betaSF(S), bdi = betaSF(SD), m = D5M[$("bArch").value] || 1;
+  var weak = [];
+  var cats = []; BI.forEach(function(it){ if (cats.indexOf(it[0]) < 0) cats.push(it[0]); });
+  cats.forEach(function(k){ if ((catSum[k] || 0) < total / 20) weak.push(k); });
+  fill("betaOut", [
+    kv("X / Y", X.toFixed(1) + " / " + Y.toFixed(1)),
+    kv("S = X + Y", S.toFixed(1), "β_int → " + (bi * 100).toFixed(0) + "%"),
+    kv("Z, S_D = X(Z+1) + Y", Z.toFixed(1) + ", " + SD.toFixed(1), "β_D,int → " + (bdi * 100).toFixed(0) + "%"),
+    kv("최종 β / β_D (" + $("bArch").value + ")", (bi * m * 100).toFixed(2) + "% / " + (bdi * m * 100).toFixed(2) + "%", "표 D.5 배율 ×" + m)
+  ]);
+  $("betaMsg").textContent = weak.length ? "점수가 전체의 1/20에 못 미치는 범주: " + weak.join(", ") + ". 범주를 고르게 갖추도록 권고됩니다(표 D.1 주석 1)." : "모든 범주가 전체 점수의 1/20 이상입니다.";
+}
+
 /* ---------- Quiz ---------- */
 var QZ = [
-["IEC 61508 시리즈에서 규범(normative)인 부는?", ["1–7부 전부","1–4부","1–3부","1, 2, 3, 6부"], 1, "1–4부가 규범(기본 안전 출판물), 5–7부는 참고입니다. 계산식이 있는 61508-6도 참고입니다. (1.2절)"],
-["IEC 61511-1을 적용하지 않는 경우는?", ["LVL로 안전 PLC 응용 프로그램 작성","Prior use 근거로 송신기 선정","제조사가 장치의 SIS 적합성을 주장하기 위한 개발","자산 보호 목적의 SIF"], 2, "제조사의 적합성 주장은 61508-2·3 대상입니다. 자산 보호에도 61511을 적용할 수 있습니다. (1.2절)"],
-["FVL로 SIS 응용 프로그램을 개발할 때 따르는 표준은?", ["IEC 61511-1 §12","IEC 61508-3","IEC 61511-3","IEC 61508-6 부속서 E"], 1, "61511-1 그림 3: FVL 응용 프로그램과 임베디드 소프트웨어는 61508-3. (1.2, 11.1절)"],
-["IEC 61508 2판의 저빈도 요구 모드 조건은?", ["요구 빈도 연 1회 이하","요구 빈도 연 10회 이하","요구 빈도가 증명시험 빈도의 2배 이하","요구 빈도 월 1회 이하"], 0, "2판은 연 1회. '증명시험 빈도의 2배'는 1판의 추가 조건이며 식 (3.6)의 교차점입니다. (3.4절)"],
-["PFDavg = 1.0×10⁻²인 SIF의 SIL은?", ["SIL 1","SIL 2","SIL 3","경계이므로 SIL 1·2 모두 가능"], 0, "SIL 2는 10⁻³ 이상 10⁻² 미만. 10⁻²는 SIL 1 범위입니다(RRF 100 = SIL 1). (4.1절)"],
-["위험이 존재하기 전에 반드시 수행해야 하는 FSA 단계는?", ["단계 1","단계 2","단계 3","단계 4"], 2, "단계 3: 설치·시운전·확인과 운전 절차가 갖춰진 뒤, 위험 존재 전. (2.5절)"],
-["61511의 FSA 팀 요건으로 옳은 것은?", ["외부 인증기관 평가자가 반드시 포함","프로젝트 설계팀에 속하지 않은 선임 역량자 1명 이상 포함","SIL 3 이상일 때만 독립 조직이 수행","프로젝트 관리자가 팀장"], 1, "61511은 61508-1의 독립성 표 대신 이 요건을 둡니다. (2.5절)"],
-["'설치된 SIS가 SRS를 만족하는지' 확인하는 활동은?", ["검증(verification)","안전 확인(validation)","기능안전 감사","FAT"], 1, "§15 안전 확인. 검증은 단계별 출력의 요건 충족 확인입니다. (2.4절)"],
-["FAT의 성격으로 옳은 것은?", ["안전 확인(validation)","설계 단계의 검증 활동","FSA 단계 2","운전 단계 활동"], 1, "§13 FAT는 검증 활동이며 2판에서 권고 조항입니다. (2.4절)"],
-["BPCS 보호계층 하나에 주장할 수 있는 최대 위험저감은?", ["2","10","100","제한 없음"], 1, "§9.3.2: RRF ≤ 10(PFD ≥ 0.1). (4.2절)"],
-["BPCS 고장이 원인일 때 주장할 수 있는 BPCS 보호계층 수는?", ["0개","최대 1개","최대 2개","독립이면 제한 없음"], 1, "§9.3.4: 원인이 BPCS와 무관하면 최대 2개. (4.2절)"],
-["주 컨트롤러와 hot backup 컨트롤러에 대한 설명으로 옳은 것은?", ["독립 보호계층 2개로 볼 수 있다","공통원인고장을 겪으므로 독립으로 보지 않는다","RRF 100까지 주장 가능","SIS로 분류된다"], 1, "§9.3.5 주석. (4.2절)"],
-["61511 비준수 BPCS 고장을 원인으로 쓸 때 위험 고장률 하한은?", ["10⁻³/h","10⁻⁴/h","10⁻⁵/h","10⁻⁶/h"], 2, "10⁻⁵/h보다 낮게 가정하지 않습니다(연 약 0.09회). (4.2절)"],
-["위험 그래프의 매개변수 조합은?", ["C, F, P, W","S, O, D, R","C, L, E, P","F, N, P, D"], 0, "결과, 노출, 회피 가능성, 요구율. (4.3절)"],
-["LOPA에서 SIF 요구율을 줄이는 것은?", ["SIF 뒤에 작동하는 PSV","점화 확률(CM)","SIF보다 먼저 작동하는 독립 경보·운전원 대응","방유제"], 2, "SIF 이전 IPL만 요구율을 줄입니다. 식 (4.3). (4.4.5절)"],
-["61511 2판 SRS에 새로 추가된 항목은?", ["SIF의 SIL","트립 설정점","각 SIF 관련 현장 입출력 장치 목록","수동 정지 요구"], 2, "또 하나의 신설 예는 증명시험 이행 요구입니다. 27→29항목. (5.1절)"],
-["λS 300 FIT, λDD 600 FIT, λDU 100 FIT인 요소의 SFF는?", ["75%","85.7%","90%","60%"], 2, "SFF = 900/1000 = 90%. 85.7%는 DC(600/700). (6.2절)"],
-["동시 시험되는 독립 1oo2(CCF·수리 무시)의 PFDavg는?", ["(λT)²/4","(λT)²/3","(λT)²/2","λT/2"], 1, "곱의 평균. 평균의 곱 (λT)²/4는 25% 과소. (6.4절)"],
-["2oo3(CCF·수리 무시)의 PFDavg는?", ["(λT)²/3","3(λT)²/4","(λT)²","(λT)³/4"], 2, "3·(λT)²/3 = (λT)². (6.4절)"],
-["IEC 61508-6 t_GE의 증명시험 항은?", ["T₁/2","T₁/3","T₁/4","T₁"], 1, "두 번째 고장이 겹친 상태의 평균 지속 시간. (7.2절)"],
-["고빈도 모드 1oo1의 PFH는?", ["λDU·T₁/2","λDU + λDD","λDU","λDD·MTTR"], 2, "식 (7.12). (7.4절)"],
-["IEC 61508-6 표 D.5에서 2oo3의 β 배율은?", ["0.5","1.0","1.5","2.0"], 2, "1oo3은 0.5. PDS C₂oo₃는 2.0. (7.5절)"],
-["부속서 D로 정하는 센서·최종요소의 β 범위는?", ["0.1–1%","0.5–5%","1–10%","10–20%"], 2, "로직 서브시스템은 0.5–5%. (9.3절)"],
-["PTC가 100% 미만일 때 결과를 크게 좌우하게 되는 변수는?", ["MTTR","T₂(mission time)","λSD","응답시간"], 1, "미검출 몫이 T₂/2 동안 쌓입니다. 식 (7.20). (7.6절)"],
-["Route 1H에서 Type B, SFF 75%, HFT 1 요소의 최대 SIL은?", ["SIL 1","SIL 2","SIL 3","SIL 4"], 1, "Type B 60–90% 행: HFT 0 SIL 1, HFT 1 SIL 2, HFT 2 SIL 3. (8.3절)"],
-["Route 1H에서 Type A, SFF 50%, HFT 0 요소의 최대 SIL은?", ["불허","SIL 1","SIL 2","SIL 3"], 1, "Type B였다면 불허입니다. (8.3절)"],
-["61511-1 표 6에서 저빈도 SIL 3의 최소 HFT는?", ["0","1","2","SFF에 따라 다름"], 1, "2판 표는 SFF를 쓰지 않습니다. (8.4절)"],
-["61511-1 표 6에서 고빈도 SIL 2의 최소 HFT는?", ["0","1","2","3"], 1, "저빈도 SIL 2는 0. (8.4절)"],
-["Type A 요소의 조건이 아닌 것은?", ["모든 고장 모드가 잘 정의됨","결함 상태 거동을 완전히 결정 가능","고장률 주장을 뒷받침할 신뢰 데이터","SIL 인증서 보유"], 3, "인증서는 Type 판정 조건이 아닙니다. (8.2절)"],
-["'Prior use' 장치 선정 근거를 정의하는 표준은?", ["IEC 61508-2","IEC 61511-1","IEC 61508-7","ISO 14224"], 1, "61511-1 §11.5.3. 61508의 대응 개념은 proven in use. (8.5절)"],
-["SC 3 센서, SC 2 로직, SC 3 최종요소로 된 SIF의 SC는?", ["SC 3","SC 2","가중 평균","SC 4"], 1, "가장 낮은 값으로 제한됩니다. (8.5절)"],
-["61508-3 도구 분류에서 컴파일러는?", ["T1","T2","T3","분류 대상 아님"], 2, "실행 코드에 기여하는 출력을 만듭니다. (11.5절)"],
-["응용 프로그램이 안전·비안전 기능을 함께 구현할 때 61511의 요구는?", ["비안전 부분은 적용 대상 아님","전체를 SIS로 보고 비간섭을 입증","비안전 부분만 61508-3","금지"], 1, "§12.2.4. (11.2절)"],
-["공통모드고장의 설명으로 옳은 것은?", ["다른 원인으로 같은 시각에 생긴 고장","CCF 중 같은 방식으로 고장 나는 경우","한 장치에서 여러 모드 동시 발생","BPCS와 SIS의 동시 고장 전부"], 1, "2판은 CCF와 공통모드고장 정의를 구분했습니다. (1.4절)"],
-["β를 줄이는 가장 직접적인 수단은?", ["MTTR 단축","물리적 분리와 기술 다양성","증명시험 주기 단축","SFF 향상"], 1, "결합 요인을 끊는 수단입니다. (9.5절)"],
-["같은 채널 고장률일 때 오동작 트립률이 가장 낮은 구조는?", ["1oo1","1oo2","2oo2","1oo3"], 2, "두 채널이 함께 트립해야 합니다. 대신 PFD는 나빠집니다. (10.8절)"],
-["무통전 트립의 주된 장점은?", ["오동작 트립 감소","전원·배선 상실이 안전 동작으로 이어짐","배선 감시 불필요로 PFD 0","UPS 불필요"], 1, "(10.6절)"],
-["61511 2판의 bypass 신설 요건으로 옳은 것은?", ["bypass 전면 금지","모든 bypass 상태 기록과 승인·표시","운전원 재량","bypass 중 PFD 재계산"], 1, "§16.2.7, 보상 조치는 §16.2.3. (10.7절)"],
-["61511 §11.9 신뢰성 데이터 요건이 아닌 것은?", ["신뢰할 만함(credible)","추적 가능(traceable)","제3자 인증 필수","불확실성 평가"], 2, "credible, traceable, documented, justified, 현장 피드백, 불확실성 평가. (6.6절)"],
-["누적 운전시간 τ 동안 고장이 없을 때 70% 단측 상한은?", ["0","0.5/τ","약 1.2/τ","약 2.3/τ"], 2, "−ln(0.3) = 1.204. 2.303/τ는 90% 상한. (6.6절)"]
+["IEC 61508 시리즈에서 규범(normative)인 부는?", ["1–7부 전부", "1, 2, 3, 6부", "1–3부", "1–4부"], 3, "1–4부가 규범(기본 안전 출판물), 5–7부는 참고입니다. 계산식이 있는 61508-6도 참고입니다. (1.2절)"],
+["IEC 61511-1을 적용하지 않는 경우는?", ["LVL로 안전 PLC 응용 프로그램 작성", "Prior use 근거로 송신기 선정", "자산 보호 목적의 SIF", "제조사가 장치의 SIS 적합성을 주장하기 위한 개발"], 3, "제조사의 적합성 주장은 61508-2·3 대상입니다. 자산 보호에도 61511을 적용할 수 있습니다. (1.2절)"],
+["FVL로 SIS 응용 프로그램을 개발할 때 따르는 표준은?", ["IEC 61508-3", "IEC 61511-1 §12", "IEC 61511-3", "IEC 61508-6 부속서 E"], 0, "61511-1 그림 3: FVL 응용 프로그램과 임베디드 소프트웨어는 61508-3. (1.2, 11.1절)"],
+["IEC 61508 2판의 저빈도 요구 모드 조건은?", ["요구 빈도 월 1회 이하", "요구 빈도 연 10회 이하", "요구 빈도가 증명시험 빈도의 2배 이하", "요구 빈도 연 1회 이하"], 3, "2판은 연 1회. '증명시험 빈도의 2배'는 1판의 추가 조건이며 식 (3.6)의 교차점입니다. (3.4절)"],
+["PFDavg = 1.0×10⁻²인 SIF의 SIL은?", ["SIL 1", "SIL 2", "SIL 3", "경계이므로 SIL 1·2 모두 가능"], 0, "SIL 2는 10⁻³ 이상 10⁻² 미만. 10⁻²는 SIL 1 범위입니다(RRF 100 = SIL 1). (4.1절)"],
+["위험이 존재하기 전에 반드시 수행해야 하는 FSA 단계는?", ["단계 1", "단계 2", "단계 3", "단계 4"], 2, "단계 3: 설치·시운전·확인과 운전 절차가 갖춰진 뒤, 위험 존재 전. (2.5절)"],
+["61511의 FSA 팀 요건(단계 1–3)으로 옳은 것은?", ["프로젝트 설계팀에 속하지 않은 선임 역량자 1명 이상 포함", "외부 인증기관 평가자가 반드시 포함", "SIL 3 이상일 때만 독립 조직이 수행", "프로젝트 관리자가 팀장"], 0, "§5.2.6.1.2. 단계 4–5는 SIS 운전·유지보수에 관여하지 않은 선임 역량자. (2.5절)"],
+["'설치된 SIS가 SRS를 만족하는지' 확인하는 활동은?", ["검증(verification)", "FAT", "기능안전 감사", "안전 확인(validation)"], 3, "§15 안전 확인. 검증은 단계별 출력의 요건 충족 확인입니다. (2.4절)"],
+["FAT에 관한 설명으로 옳은 것은?", ["FAT 필요 여부는 안전 계획에서 정하고, 로직 솔버 FAT 결과는 확인에서 인정받을 수 있다", "FAT를 하면 §15 확인은 생략할 수 있다", "FAT는 설치 후 현장에서 하는 시험이다", "61511은 FAT를 다루지 않는다"], 0, "§13.2.1, §13.1 주석 2, §15.2.4 주석. 설치 후 전체 루프 확인은 따로 필요. (2.4절)"],
+["BPCS 보호계층 하나에 주장할 수 있는 최대 위험저감은?", ["2", "10", "100", "제한 없음"], 1, "§9.3.2: RRF ≤ 10(PFD ≥ 0.1). (4.2절)"],
+["BPCS 고장이 원인일 때 주장할 수 있는 BPCS 보호계층 수는?", ["0개", "최대 1개", "최대 2개", "독립이면 제한 없음"], 1, "§9.3.4: 원인이 BPCS와 무관하면 최대 2개. (4.2절)"],
+["주 컨트롤러와 hot backup 컨트롤러에 대한 설명으로 옳은 것은?", ["독립 보호계층 2개로 볼 수 있다", "SIS로 분류된다", "RRF 100까지 주장 가능", "공통원인고장을 겪으므로 독립으로 보지 않는다"], 3, "§9.3.5 주석. (4.2절)"],
+["BPCS를 원인으로 쓸 때 가정할 수 있는 평균 위험 고장 빈도의 하한은?", ["10⁻³/h", "10⁻⁴/h", "10⁻⁵/h", "10⁻⁶/h"], 2, "§8.2.2: 10⁻⁵/h 미만으로 가정 금지(연 약 0.09회). 61508-1 §7.5.2.6도 같음. (4.2절)"],
+["위험 그래프의 매개변수 조합은?", ["C, F, P, W", "S, O, D, R", "C, L, E, P", "F, N, P, D"], 0, "결과, 노출, 회피 가능성, 요구율. (4.3절)"],
+["LOPA에서 SIF 요구율을 줄이는 것은?", ["SIF보다 먼저 작동하는 독립 경보·운전원 대응", "점화 확률(CM)", "SIF 뒤에 작동하는 PSV", "방유제"], 0, "SIF 이전 IPL만 요구율을 줄입니다. 식 (4.3). (4.4.5절)"],
+["61511 2판 SRS에 새로 추가된 항목은?", ["SIF의 SIL", "트립 설정점", "수동 정지 요구", "각 SIF 관련 현장 입출력 장치 목록"], 3, "또 하나의 신설 예는 증명시험 이행 요구입니다. 27→29항목. (5.1절)"],
+["λS 300 FIT, λDD 600 FIT, λDU 100 FIT인 요소의 SFF는?", ["90%", "85.7%", "75%", "60%"], 0, "SFF = 900/1000 = 90%. 85.7%는 DC(600/700). (6.2절)"],
+["동시 시험되는 독립 1oo2(CCF·수리 무시)의 PFDavg는?", ["(λT)²/4", "λT/2", "(λT)²/2", "(λT)²/3"], 3, "곱의 평균. 평균의 곱 (λT)²/4는 25% 과소. (6.4절)"],
+["2oo3(CCF·수리 무시)의 PFDavg는?", ["(λT)²", "3(λT)²/4", "(λT)²/3", "(λT)³/4"], 0, "3·(λT)²/3 = (λT)². (6.4절)"],
+["IEC 61508-6 t_GE의 증명시험 항은?", ["T₁/2", "T₁/3", "T₁/4", "T₁"], 1, "두 번째 고장이 겹친 상태의 평균 지속 시간. (7.2절)"],
+["고빈도 모드 1oo1의 PFH는?", ["λDU·T₁/2", "λDU + λDD", "λDD·MTTR", "λDU"], 3, "식 (7.12). (7.4절)"],
+["IEC 61508-6 표 D.5에서 2oo3의 β 배율은?", ["0.5", "1.0", "1.5", "2.0"], 2, "1oo3은 0.5. PDS C₂oo₃는 2.0. (7.5절)"],
+["부속서 D로 정하는 센서·최종요소의 β 범위는?", ["0.1–1%", "0.5–5%", "1–10%", "10–20%"], 2, "로직 서브시스템은 0.5–5%. (9.3절)"],
+["PTC가 100% 미만일 때 결과를 크게 좌우하게 되는 변수는?", ["MTTR", "응답시간", "λSD", "T₂(mission time)"], 3, "미검출 몫이 T₂/2 동안 쌓입니다. 식 (7.20). (7.6절)"],
+["Route 1H에서 Type B, SFF 75%, HFT 1 요소의 최대 SIL은?", ["SIL 1", "SIL 2", "SIL 3", "SIL 4"], 1, "Type B 60–90% 행: HFT 0 SIL 1, HFT 1 SIL 2, HFT 2 SIL 3. (8.3절)"],
+["Route 1H에서 Type A, SFF 50%, HFT 0 요소의 최대 SIL은?", ["불허", "SIL 1", "SIL 2", "SIL 3"], 1, "Type B였다면 불허입니다. (8.3절)"],
+["61511-1 표 6에서 저빈도 SIL 3의 최소 HFT는?", ["0", "1", "2", "SFF에 따라 다름"], 1, "2판 표는 SFF를 쓰지 않습니다. (8.4절)"],
+["61511-1 표 6에서 고빈도 SIL 2의 최소 HFT는?", ["0", "1", "2", "3"], 1, "저빈도 SIL 2는 0. (8.4절)"],
+["Type A 요소의 조건이 아닌 것은?", ["SIL 인증서 보유", "결함 상태 거동을 완전히 결정 가능", "고장률 주장을 뒷받침할 신뢰 데이터", "모든 고장 모드가 잘 정의됨"], 0, "인증서는 Type 판정 조건이 아닙니다. (8.2절)"],
+["'Prior use' 장치 선정 근거를 정의하는 표준은?", ["IEC 61508-2", "ISO 14224", "IEC 61508-7", "IEC 61511-1"], 3, "61511-1 §11.5.3. 61508의 대응 개념은 proven in use. (8.5절)"],
+["SC 3 센서, SC 2 로직, SC 3 최종요소로 된 SIF의 SC는?", ["SC 2", "SC 3", "가중 평균", "SC 4"], 0, "가장 낮은 값으로 제한됩니다. (8.5절)"],
+["61508-3 도구 분류에서 컴파일러는?", ["T1", "T2", "T3", "분류 대상 아님"], 2, "실행 코드에 기여하는 출력을 만듭니다. (11.5절)"],
+["응용 프로그램이 안전·비안전 기능을 함께 구현할 때 61511의 요구는?", ["전체를 SIS로 보고 비간섭을 입증", "비안전 부분은 적용 대상 아님", "비안전 부분만 61508-3", "금지"], 0, "§12.2.4. (11.2절)"],
+["공통모드고장의 설명으로 옳은 것은?", ["다른 원인으로 같은 시각에 생긴 고장", "BPCS와 SIS의 동시 고장 전부", "한 장치에서 여러 모드 동시 발생", "CCF 중 같은 방식으로 고장 나는 경우"], 3, "2판은 CCF와 공통모드고장 정의를 구분했습니다. (1.4절)"],
+["β를 줄이는 가장 직접적인 수단은?", ["물리적 분리와 기술 다양성", "MTTR 단축", "증명시험 주기 단축", "SFF 향상"], 0, "결합 요인을 끊는 수단입니다. (9.5절)"],
+["같은 채널 고장률일 때 오동작 트립률이 가장 낮은 구조는?", ["1oo1", "1oo2", "1oo3", "2oo2"], 3, "두 채널이 함께 트립해야 합니다. 대신 PFD는 나빠집니다. (10.8절)"],
+["무통전 트립의 주된 장점은?", ["전원·배선 상실이 안전 동작으로 이어짐", "오동작 트립 감소", "배선 감시 불필요로 PFD 0", "UPS 불필요"], 0, "(10.6절)"],
+["61511 2판의 bypass 신설 요건으로 옳은 것은?", ["bypass 전면 금지", "bypass 중 PFD 재계산", "운전원 재량", "모든 bypass 상태 기록과 승인·표시"], 3, "§16.2.7, 보상 조치는 §16.2.3. (10.7절)"],
+["61511 §11.9 신뢰성 데이터 요건이 아닌 것은?", ["신뢰할 만함(credible)", "추적 가능(traceable)", "제3자 인증 필수", "불확실성 평가"], 2, "credible, traceable, documented, justified, 현장 피드백, 불확실성 평가. (6.6절)"],
+["누적 운전시간 τ 동안 고장이 없을 때 70% 단측 상한은?", ["0", "0.5/τ", "약 1.2/τ", "약 2.3/τ"], 2, "−ln(0.3) = 1.204. 2.303/τ는 90% 상한. (6.6절)"],
+["61511-1 적합(§4)의 의미로 옳은 것은?", ["SIL 인증 장치만 사용", "FSA 단계 3 완료", "§5–§19의 모든 요구를 정해진 기준으로 만족했음을 보임", "PFD 계산 통과"], 2, "§4. (14장)"],
+["61511 2판의 역량 관리 요구(§5.2.2.3)로 옳은 것은?", ["외부 자격증 필수", "프로젝트 관리자만 대상", "5년마다 재교육만", "역량 관리 절차와 주기적 평가, 역할 변경 시 평가 기록"], 3, "§5.2.2.3. (2.3절)"],
+["공급자가 제품의 기능안전을 주장하고 그것을 적합성 근거로 쓸 때 공급자에게 필요한 것은?", ["61508-1 6장 수준의 기능안전 관리 체계(FSMS)", "ISO 14001", "SIL 4 인증", "별도 요구 없음"], 0, "§5.2.5.2. (2.3절)"],
+["§5.2.5.3 SIS 성능 평가 절차에 포함되지 않는 것은?", ["체계적 고장 식별·예방", "신뢰성 매개변수와 설계 가정 비교", "실제 요구율과 위험성평가 가정 비교", "제조사 판매량 집계"], 3, "§5.2.5.3. (12.4절)"],
+["FSA 단계 4·5 팀의 선임 역량자는 무엇에 관여하지 않아야 하나?", ["프로젝트 설계", "H&RA", "SIS 운전·유지보수", "구매"], 2, "§5.2.6.1.2. (2.5절)"],
+["61508-1에서 FSA를 반드시 해야 하는 시점은?", ["설계 착수 전", "결정된 위험이 존재하기 전", "폐기 후", "정해진 시점 없음"], 1, "61508-1 §8.2.6. (15.1절)"],
+["61508-1 표 5에서 SIL 3 시스템 FSA의 최소 독립성은?", ["독립된 부서 또는 독립된 조직", "독립된 사람", "독립된 조직만", "제한 없음"], 0, "표 5: SIL 3은 X1(부서)/X2(조직), 독립된 사람은 Y(불충분). (2.5절)"],
+["61508-1 표 4의 결과 등급 C는?", ["경상", "1명 사망", "매우 많은 사망", "여러 명 사망"], 3, "61508-1 §8.2.17. (2.5절)"],
+["61508-1 FSA 결론의 형식은?", ["수용, 조건부 수용, 거부 중 하나의 권고", "합격/불합격", "점수", "SIL 등급"], 0, "61508-1 §8.2.11. (2.5절)"],
+["61511 기능안전 감사의 수행자는?", ["설계 책임자", "외부 인증기관만", "감사 대상 SIS 작업을 하지 않는 독립된 사람", "운전원"], 2, "§5.2.6.2.3. (2.4절)"],
+["MOC 절차가 필요 없는 경우는?", ["펌웨어 리비전이 다른 송신기로 교체", "동일 사양 교체(replacement in kind)", "트립 설정점 변경", "BPCS 재설계"], 1, "§5.2.6.2.4. (12.5절)"],
+["수명주기 중 앞 단계에 관한 변경이 필요해지면?", ["현재 단계만 수정", "기록만 남김", "FSA만 다시", "그 단계와 이후 단계를 재검토·수정·재검증"], 3, "§6.2.4. (2.2절)"],
+["61511-3 표 D.2 보정 예에서 PA(회피 가능)를 고를 조건이 아닌 것은?", ["SIS 실패를 운전원에게 알리는 수단", "재실률 0.1 미만", "경보 후 1시간 초과 또는 확실히 충분한 시간", "위험을 피하거나 대피할 독립 수단"], 1, "재실률은 F 매개변수. 61511-3 D.6. (4.3절)"],
+["§8.2.4 보안 위험성 평가가 요구하지 않는 것은?", ["대상 장치 기술", "위협과 취약점", "제3자 침투 시험 인증서", "수명주기 단계별 고려"], 2, "§8.2.4. (3.1절)"],
+["§9.2.3에 따라 요구 모드 SIF의 SIL을 정하는 표는?", ["표 4만", "표 5만", "표 4 또는 표 5", "표 6"], 2, "연속 모드는 표 5만(§9.2.4). (4.1절)"],
+["§9.2.5 재검토가 필요한 조건은?", ["RRF 10 000 초과 또는 PFH 10⁻⁸/h 미만", "SIL 2 이상", "PFD 10⁻³ 미만", "SIF 3개 이상"], 0, "단일·복수 SIS, SIS+BPCS 모두 해당. (4.1절)"],
+["RRF 10 000 초과를 실제로 구현할 때 요구되는 것은(§9.2.7)?", ["종속성·공통원인을 반영한 정량적 추가 위험 평가", "정성적 위험 그래프", "FSA 생략", "SIL 4 인증 장치"], 0, "(4.1절)"],
+["§9.2.6 주석이 지적한, 계층이 다양해도 전체 위험저감을 줄이는 요인은?", ["시차 증명시험", "동시(synchronous) 증명시험", "온라인 진단", "2oo3 투표"], 1, "61508-5 A.5.4도 같은 예. (9.4절)"],
+["BPCS 보호계층에 RRF 10 초과를 주장하려면?", ["허용 불가", "운전원 승인만", "그 BPCS를 61511대로 설계·관리", "PFD 계산만"], 2, "§9.3.3. (4.2절)"],
+["61508-1 §7.6.2.12의 저빈도 단일 안전기능 목표 하한은?", ["PFD 10⁻³", "PFD 10⁻⁴", "PFD 10⁻⁵", "PFD 10⁻⁶"], 2, "고빈도·연속은 PFH 10⁻⁹/h. (15.1절)"],
+["61508-1 §7.5.2.5: EUC 제어계 기능의 위험 고장 빈도를 10⁻⁶–10⁻⁵/h로 주장하면?", ["문제없음", "허용 불가", "SIL 3 요건", "제어계를 안전관련계로 보고 SIL 1 요건 적용"], 3, "(15.1절)"],
+["SRS(§10.3.2)가 요구하는 수리 관련 항목은?", ["MTTR 목표", "실현 가능한 평균 수리시간(MRT)", "MPRT만", "수리 비용"], 1, "항목 25: 이동 시간, 위치, 예비품, 서비스 계약, 환경. (5.2절)"],
+["SRS의 '출력 동작과 성공 기준' 항목에 예로 든 것은?", ["밸브 색상", "제조사", "밸브 무게", "밸브 누설률"], 3, "§10.3.2. (5.2절)"],
+["61511-3 F.8의 IPL 기준에 포함되는 것은?", ["BPCS 포함 금지", "SIL 3 인증", "최소 10배 위험저감과 가용도 0.9 이상", "운전원 2인 확인"], 2, "특정성·독립성·신뢰성·감사 가능성과 함께. (4.4절)"],
+["§11.2.8이 로직 솔버와 독립되도록 요구하는 것은?", ["최종요소를 작동하는 수동 수단(비상정지 버튼 등)", "HMI", "진단", "전원"], 0, "SRS가 달리 정하지 않는 한. (10.2절)"],
+["§11.2.10: BPCS 장치를 SIS에 쓰지 않아야 하는 경우는?", ["항상", "그 장치 고장이 요구와 SIF 위험 고장을 동시에 일으킬 수 있고 전체 위험 수용성을 분석으로 확인하지 않은 경우", "SIL 1일 때", "아날로그 신호일 때"], 1, "(10.5절)"],
+["§11.3.1: 보상 조치가 운전원의 경보 대응에 의존하면 그 경보는?", ["SIS의 일부(증명시험·MOC 대상)", "BPCS 경보", "무시 가능", "IPL로만 계산"], 0, "§11.3.1–11.3.2. (10.2절)"],
+["61511 §11.4.6의 HFT 감축이 허용되는 서브시스템은?", ["모든 서브시스템", "안전 PLC", "SIL 4", "FVL·LVL 프로그래머블 장치를 쓰지 않는 서브시스템"], 3, "근거 문서화 필요. (8.4절)"],
+["61511 §11.4.8: FVL·LVL 프로그래머블 장치의 최소 DC는?", ["0%", "60%", "90%", "99%"], 1, "(8.4절)"],
+["61511 §11.4.9: 실패척도 계산의 신뢰성 데이터 기준은?", ["평균값", "50% 신뢰", "70% 이상 통계적 신뢰 상한", "95% 신뢰 하한"], 2, "(6.6, 8.4절)"],
+["61508-2 Route 2H에서 목표 실패척도 달성에 요구되는 신뢰는?", ["50% 초과", "70% 초과", "90% 초과", "99% 초과"], 2, "§7.4.4.3.3. (8.4절)"],
+["61508-2 Route 2H에서 Type B 요소의 최소 DC는?", ["0%", "60%", "90%", "99%"], 1, "§7.4.4.3.4. (8.4절)"],
+["61508-2 §7.4.4.3.2의 HFT 감축이 가능한 요소는?", ["모두", "Type B만", "Type A만", "PE 장치만"], 2, "(8.4절)"],
+["고장 배제를 주장하는 직렬 요소들의 위험 고장 빈도 합의 한계는?", ["목표의 0.1%", "목표의 1%", "목표의 10%", "제한 없음"], 1, "61508-2 §7.4.4.3.2, 61511-1 3.2.20.1 주석 2. (8.4절)"],
+["HFT 0 고빈도 서브시스템에서 SFF에 진단을 반영하는 조건 중 하나는 진단 시험률/요구율이 얼마 이상?", ["10", "1000", "100", "2"], 2, "또는 진단+안전 조치 시간 < 공정안전시간. 61508-2 §7.4.4.1.4. (8.3절)"],
+["Route 1H에서 Type B, SFF 92%, HFT 0 요소의 최대 SIL은?", ["SIL 1", "SIL 2", "SIL 3", "SIL 4"], 1, "표 3. (8.3절)"],
+["Route 1H 병렬 결합: 채널 SIL 2와 SIL 1, HFT 1이면 서브시스템 최대 SIL은?", ["SIL 1", "SIL 2", "SIL 3", "SIL 4"], 2, "가장 높은 채널 SIL 2 + N(1). 61508-2 §7.4.4.2.4. (8.3절)"],
+["충분히 독립인 SC 2 요소 두 개를 결합하면 주장할 수 있는 최대 SC는?", ["SC 2", "SC 1", "SC 4", "SC 3"], 3, "SC N+1, 한 번만. 61508-2 §7.4.3. (8.5절)"],
+["LVL PE 장치를 prior use로 선정할 수 있는 최대 SIL은?", ["SIL 1", "SIL 2", "SIL 3", "SIL 4"], 1, "§11.5.5. FPL은 SIL 3까지. (8.5절)"],
+["FVL 프로그래머블 장치의 선정 요건은?", ["prior use로 충분", "61508-2·61508-3 적합", "SIL 1만 가능", "요건 없음"], 1, "§11.5.6. (8.5절)"],
+["61511 3.2.51의 prior use 평가 주체는?", ["사용자", "제조사", "인증기관", "규제 기관"], 0, "Proven in use는 제조사 설계 기준. (1.4절)"],
+["61508-2 §7.4.8.3: HFT 0, 고빈도 기능에서 위험 결함이 검출되면?", ["MRT 내 수리하며 운전", "안전 상태로 가는 지정 조치", "경보만", "무시"], 1, "(10.2절)"],
+["61508-2가 언급한 전형적인 유효 수명 범위는?", ["2–4년", "8–12년", "20–30년", "무제한"], 1, "§7.4.9.5 주석 3. (6.1절)"],
+["61508-2 부속서 A의 DC 등급 Low/Medium/High는?", ["50/80/95%", "60/80/99%", "70/90/99%", "60/90/99%"], 3, "(10.3절)"],
+["61508-2 표 A.13에서 센서 아날로그 신호 감시의 최대 DC는?", ["Low", "Medium", "High", "인정 안 됨"], 0, "(10.3절)"],
+["61508-6 B.3.1 가정: 요구 간격은 증명시험 주기의 몇 배 이상?", ["2배", "10배", "100배", "가정 없음"], 1, "(7.1절)"],
+["61508-6 1oo2D 식의 K는?", ["β 비율", "PTC", "채널 간 비교·전환 메커니즘의 효율", "정비 계수"], 2, "표 가정 0.98, 항 2(1−K)λDD t′CE. (7.3절)"],
+["61508-6 표 B.9: 1oo2에서 PTC를 100%에서 90%로 낮추면(T₂ 10년) PFD는?", ["거의 같음", "절반", "약 10배", "약 2배"], 3, "(7.6절)"],
+["61508-6 표 D.4에서 센서·최종요소의 점수 45–70은 β 몇 %?", ["1%", "2%", "5%", "10%"], 2, "(9.3절)"],
+["부속서 D에서 β_D를 구하는 점수 S_D는?", ["X + Y", "(X+Y)Z", "X(Z+1) + Y", "X + Y(Z+1)"], 2, "(9.3절)"],
+["부속서 D 주석 5: 공정 산업에서 결함 검출 시 정지하지 않으면?", ["PE 진단으로 β를 줄일 수 없음", "Z = 2", "β = 0", "D.5 생략"], 0, "(9.3절)"],
+["61508-3에서 T3 오프라인 도구에 추가로 필요한 것은?", ["없음", "사양 적합성 증거(사용 이력과 도구 확인)", "SIL 4 인증", "소스 코드 공개"], 1, "§7.4.4.6. (11.5절)"],
+["61511 §12.2.3에 따라 61511이 다루지 않는 것은?", ["FVL과 SIL 4 응용 프로그래밍", "FPL 장치", "LVL 프로그래밍", "기능 블록 사용"], 0, "(11.2절)"],
+["§12.5.2: 응용 프로그램의 검토자는?", ["작성자 본인", "원 개발에 관여하지 않은 역량자", "운전원", "제조사"], 1, "(11.4절)"],
+["§12.4.4가 요구하는 구조적 특성은?", ["단일 거대 모듈", "FVL 사용", "하드웨어 구조와 응용 프로그램 구조의 일대일 대응", "스캔 생략"], 2, "(11.2절)"],
+["§15.2.8: 확인 후 위험 존재 전에 할 일이 아닌 것은?", ["bypass·강제 원복", "시험 물질 제거", "시운전 override 해제", "SIL 재산정"], 3, "(12.1절)"],
+["§16.3.1.4: 증명시험에서 발견한 결함을 고친 뒤에는?", ["증명시험 반복", "기록만", "1년 뒤 재시험", "FSA"], 0, "(12.2절)"],
+["§16.3.3 증명시험 기록의 최소 항목은?", ["작업 비용", "날씨", "as-found·as-left 상태와 발견한 결함·고장 모드", "구매 번호"], 2, "(12.2절)"],
+["§17.2.6: 변경 작업을 시작할 수 있는 조건은?", ["설계 완료", "FSA(§5.2.6.1.9) 완료와 승인", "운전원 동의", "예산 확보"], 1, "(12.5절)"],
+["§18.2.3: 폐기 영향 분석에 포함되어야 하는 것은?", ["없음", "SIL 인증", "PFD 재계산만", "H&RA 갱신"], 3, "(12.5절)"]
 ];
-var QKEY = "fse-quiz-answers-v1";
+var QKEY = "fse-quiz-answers-v2";
 function loadAns(){ try { var s = localStorage.getItem(QKEY); return s ? JSON.parse(s) : {}; } catch(e) { return {}; } }
 function saveAns(a){ try { localStorage.setItem(QKEY, JSON.stringify(a)); } catch(e) {} }
 var answers = {};
@@ -2327,7 +3053,7 @@ function buildQuiz(){
   QZ.forEach(function(q, i){
     var box = document.createElement("div"); box.className = "q"; box.id = "q" + (i + 1);
     var h = document.createElement("div"); h.className = "qh";
-    var n = document.createElement("span"); n.className = "qn"; n.textContent = "Q" + String(i + 1).padStart(2, "0");
+    var n = document.createElement("span"); n.className = "qn"; n.textContent = "Q" + String(i + 1).padStart(3, "0");
     var t = document.createElement("span"); t.className = "qt"; t.textContent = q[0];
     h.appendChild(n); h.appendChild(t); box.appendChild(h);
     var opts = document.createElement("div"); opts.className = "opts"; opts.setAttribute("role", "radiogroup");
@@ -2376,13 +3102,15 @@ function boot(){
   onInputs(["hzLam","hzT"], toolHz);
   onInputs(["lpFt","lpIe1","lpEc1","lpIe2","lpEc2","lpB1","lpB2","lpA1","lpCm1","lpCm2","lpCm3"], toolLopa);
   onInputs(["chN","chTau","chCl"], toolChi);
-  onInputs(["pfArch","pfLdu","pfLdd","pfLsd","pfT1","pfMttr","pfMrt","pfB","pfBd","pfPtc","pfT2","pfD5"], toolPfd);
+  onInputs(["pfArch","pfLdu","pfLdd","pfLsd","pfT1","pfMttr","pfMrt","pfB","pfBd","pfPtc","pfT2","pfK","pfD5"], toolPfd);
   onInputs(["acType","acSff","acHft","acSil","acMode"], toolArch);
   onInputs(["stArch","stLs","stLdd","stB","stM","stDd"], toolStr);
-  var e1 = $("pfEx1"), e2 = $("pfEx2"), e3 = $("pfEx3");
+  var e1 = $("pfEx1"), e2 = $("pfEx2"), e3 = $("pfEx3"), e4 = $("pfEx4");
+  if (e4) e4.addEventListener("click", function(){ setPfd({pfArch:"1oo2", pfLdu:"5e-6", pfLdd:"0", pfLsd:"0", pfT1:"8760", pfMttr:"8", pfMrt:"8", pfB:"0.10", pfBd:"0.05", pfPtc:"0.9", pfT2:"87600", pfD5:false}); });
   if (e1) e1.addEventListener("click", function(){ setPfd({pfArch:"2oo3", pfLdu:"5e-7", pfLdd:"8e-7", pfLsd:"0", pfT1:"8760", pfMttr:"8", pfMrt:"8", pfB:"0.10", pfBd:"0.10", pfPtc:"1", pfT2:"87600", pfD5:false}); });
   if (e2) e2.addEventListener("click", function(){ setPfd({pfArch:"1oo2", pfLdu:"2.1e-6", pfLdd:"4e-7", pfLsd:"0", pfT1:"8760", pfMttr:"120", pfMrt:"120", pfB:"0.10", pfBd:"0.10", pfPtc:"1", pfT2:"87600", pfD5:false}); });
   if (e3) e3.addEventListener("click", function(){ setPfd({pfArch:"1oo2", pfLdu:"2.1e-6", pfLdd:"4e-7", pfLsd:"0", pfT1:"8760", pfMttr:"120", pfMrt:"120", pfB:"0.10", pfBd:"0.10", pfPtc:"0.85", pfT2:"87600", pfD5:false}); });
+  buildBeta(); onInputs(["bDc","bInt","bArch","bZok"], toolBeta);
   buildQuiz();
   var rs = $("qzReset"); if (rs) rs.addEventListener("click", function(){ answers = {}; saveAns(answers); buildQuiz(); });
   var resizeT; window.addEventListener("resize", function(){ clearTimeout(resizeT); resizeT = setTimeout(function(){ toolHz(); toolPfd(); }, 200); });
