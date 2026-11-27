@@ -129,6 +129,11 @@ final class WallpaperScene {
     }
 
     /** 앱에서 임무를 끝냈을 때: 머리 위로 경험치·골드, 장비가 나오면 등급색 반짝임 */
+    /** 테스트용: 지금 떠 있는 글자(데미지·보상) 수 */
+    int textCount() {
+        return texts.size();
+    }
+
     void reward(int xp, int gold, String rarity) {
         // 화면 위 용사는 띠가 낮아서 글자를 조금 아래에서 시작
         float base = overlay ? 22 : 30;
@@ -330,7 +335,11 @@ final class WallpaperScene {
         for (Text t : texts) {
             float life = t.s.length() > 4 ? 1.6f : 0.9f;
             int alpha = (int) (255 * Math.max(0, 1 - t.t / life));
-            PixelArt.drawText(ctx, c, t.s, t.x * S, (ground - 8 - t.y) * S, t.color, Math.max(2, S / 2) * t.size, alpha);
+            int px = Math.max(2, S / 2) * t.size;
+            float yb = (ground - 8 - t.y) * S;
+            // 화면 위 용사 띠는 낮아서, 글자(테두리 1칸 포함)가 띠 위로 잘리지 않게 붙잡는다
+            if (overlay) yb = Math.max(yb, 6 * px);
+            PixelArt.drawText(ctx, c, t.s, t.x * S, yb, t.color, px, alpha);
         }
     }
 

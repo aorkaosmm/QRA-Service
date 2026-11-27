@@ -38,7 +38,9 @@ public class HeroOverlayService extends Service {
     static volatile HeroOverlayService instance;
 
     private WindowManager wm;
-    private OverlayView view;
+    /** 테스트에서 확인할 수 있도록 패키지 공개 */
+    OverlayView view;
+    WindowManager.LayoutParams params;
     private BroadcastReceiver screenReceiver;
 
     static boolean canDraw(Context c) {
@@ -132,6 +134,7 @@ public class HeroOverlayService extends Service {
         lp.y = navBarHeight();
         // 안드로이드 12부터는 창 불투명도가 0.8 이하여야 터치가 아래 앱으로 통과한다
         lp.alpha = 0.8f;
+        params = lp;
         try {
             wm.addView(view, lp);
         } catch (RuntimeException e) {
@@ -216,6 +219,10 @@ public class HeroOverlayService extends Service {
             scene.step(dt);
             scene.draw(canvas);
             if (running) postInvalidateDelayed(50);
+        }
+
+        boolean isAnimating() {
+            return running;
         }
 
         void pause() {
