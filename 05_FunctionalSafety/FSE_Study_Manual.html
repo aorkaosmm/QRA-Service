@@ -1,0 +1,2394 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>기능안전 엔지니어 심화 매뉴얼</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="IEC 61508 / IEC 61511 Functional Safety Engineer(SIS) 과정 사전학습용 고난도 이론 교재">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+/* Layout concept: 제어실 운전 매뉴얼 — ISA-101 고성능 HMI처럼 조용한 회색 작업면, 색은 의미(실무 판단·근거·함정·시험)에만 쓴다. 좌측 고정 목차 + 본문 단일 컬럼. */
+:root{
+  --bg:#f2f4f5; --surface:#ffffff; --surface-2:#e8ecef; --surface-3:#dde3e7;
+  --ink:#172026; --ink-2:#46535d; --ink-3:#66737d;
+  --line:#d2d9de; --line-strong:#aeb9c1;
+  --accent:#126c8c; --accent-ink:#0c5470; --accent-wash:#e2f0f5;
+  --amber:#b56b00; --amber-wash:#fcf2e0; --amber-ink:#744500;
+  --slate:#6a7884; --slate-wash:#edf0f2; --slate-ink:#3c4851;
+  --red:#c23838; --red-wash:#fbebea; --red-ink:#8c2222;
+  --blue:#2b5fa8; --blue-wash:#e7eef9; --blue-ink:#1d4378;
+  --green:#2b7a4b; --green-wash:#e5f3ea;
+  --series-1:#257de0; --series-2:#f47230; --series-3:#00b894;
+  --grid:#e3e8eb; --axis:#b7c1c8;
+  --f-display:"Hahmlet","Noto Serif KR","AppleMyungjo","Batang",serif;
+  --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --radius:8px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1316; --surface:#171c20; --surface-2:#1e252a; --surface-3:#262e34;
+    --ink:#e1e6e9; --ink-2:#a2aeb7; --ink-3:#85919a;
+    --line:#2a3238; --line-strong:#3c474f;
+    --accent:#5db3d2; --accent-ink:#8fd0e6; --accent-wash:#14303a;
+    --amber:#e2a03a; --amber-wash:#2a2010; --amber-ink:#f0c47e;
+    --slate:#8c9aa5; --slate-wash:#1b2227; --slate-ink:#c3ccd3;
+    --red:#e26a6a; --red-wash:#2c1617; --red-ink:#f3a6a6;
+    --blue:#7aa6e6; --blue-wash:#16223a; --blue-ink:#b4cdf2;
+    --green:#53b67e; --green-wash:#12271b;
+    --series-1:#338ced; --series-2:#e76624; --series-3:#00a888;
+    --grid:#262e33; --axis:#48535b;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1316; --surface:#171c20; --surface-2:#1e252a; --surface-3:#262e34;
+  --ink:#e1e6e9; --ink-2:#a2aeb7; --ink-3:#85919a;
+  --line:#2a3238; --line-strong:#3c474f;
+  --accent:#5db3d2; --accent-ink:#8fd0e6; --accent-wash:#14303a;
+  --amber:#e2a03a; --amber-wash:#2a2010; --amber-ink:#f0c47e;
+  --slate:#8c9aa5; --slate-wash:#1b2227; --slate-ink:#c3ccd3;
+  --red:#e26a6a; --red-wash:#2c1617; --red-ink:#f3a6a6;
+  --blue:#7aa6e6; --blue-wash:#16223a; --blue-ink:#b4cdf2;
+  --green:#53b67e; --green-wash:#12271b;
+  --series-1:#338ced; --series-2:#e76624; --series-3:#00a888;
+  --grid:#262e33; --axis:#48535b;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth; -webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none!important; animation:none!important} }
+body{background:var(--bg); color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.78; word-break:keep-all; overflow-wrap:break-word;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); padding-block:0;}
+a{color:var(--accent); text-decoration-thickness:1px; text-underline-offset:2px}
+a:hover{color:var(--accent-ink)}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:3px}
+.skip{position:absolute; left:-999px; top:8px; background:var(--surface); padding:6px 10px; border:1px solid var(--line); z-index:50}
+.skip:focus{left:max(16px, env(safe-area-inset-left, 0px))}
+
+/* ---------- masthead ---------- */
+.masthead{max-width:1240px; margin:0 auto; padding-block:28px 18px; display:grid; gap:14px; border-bottom:1px solid var(--line)}
+.tagline{font-family:var(--f-mono); font-size:12px; letter-spacing:.08em; color:var(--ink-3); text-transform:uppercase; display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+.tagline .tag{border:1px solid var(--line-strong); padding:1px 7px; border-radius:3px; color:var(--ink-2)}
+.masthead h1{font-family:var(--f-display); font-weight:700; font-size:clamp(1.9rem, 4vw, 2.7rem); line-height:1.2; margin:0; letter-spacing:-.01em; text-wrap:balance}
+.masthead .lede{margin:0; max-width:70ch; color:var(--ink-2); font-size:1.02rem}
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0; list-style:none}
+.chips li{font-size:.82rem; background:var(--surface); border:1px solid var(--line); border-radius:999px; padding:2px 11px; color:var(--ink-2)}
+.chips li b{color:var(--ink); font-weight:600}
+
+/* ---------- layout ---------- */
+.layout{max-width:1240px; margin:0 auto; display:grid; grid-template-columns:minmax(0,1fr); gap:28px; padding-block:22px 64px}
+@media (min-width:1080px){ .layout{grid-template-columns:268px minmax(0,1fr)} }
+.toc{font-size:.9rem}
+.toc details{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 14px}
+.toc summary{cursor:pointer; font-weight:600; list-style:none; display:flex; justify-content:space-between; align-items:center}
+.toc summary::-webkit-details-marker{display:none}
+.toc summary::after{content:"펼치기"; font-family:var(--f-mono); font-size:11px; color:var(--ink-3)}
+.toc details[open] summary::after{content:"접기"}
+.toc ol{list-style:none; margin:10px 0 0; padding:0; display:grid; gap:1px}
+.toc li a{display:grid; grid-template-columns:2.1em minmax(0,1fr); gap:6px; padding:5px 6px; border-radius:5px; color:var(--ink-2); text-decoration:none; line-height:1.45}
+.toc li a .n{font-family:var(--f-mono); font-size:.8rem; color:var(--ink-3); padding-top:1px}
+.toc li a:hover{background:var(--surface-2); color:var(--ink)}
+.toc li a.active{background:var(--accent-wash); color:var(--accent-ink); font-weight:600}
+.toc .toc-foot{margin-top:10px; padding-top:10px; border-top:1px solid var(--line); font-size:.78rem; color:var(--ink-3); line-height:1.5}
+@media (min-width:1080px){
+  .toc{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 14px); align-self:start; max-height:calc(100vh - 28px); overflow:auto}
+}
+main{min-width:0}
+.chapter{max-width:880px; padding-block:8px 34px; border-bottom:1px solid var(--line); margin-bottom:34px}
+.chapter:last-of-type{border-bottom:0}
+
+/* ---------- chapter head ---------- */
+.ch-head{display:grid; grid-template-columns:auto minmax(0,1fr); gap:16px; align-items:center; margin:8px 0 18px}
+.ch-mark{width:58px; height:58px; border:2px solid var(--ink); display:grid; place-items:center; position:relative; background:var(--surface)}
+.ch-mark::before{content:""; position:absolute; width:38px; height:38px; border:1.5px solid var(--ink); transform:rotate(45deg)}
+.ch-mark span{position:relative; font-family:var(--f-mono); font-weight:600; font-size:15px}
+.eyebrow{font-family:var(--f-mono); font-size:11.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-3); margin:0 0 2px}
+.ch-head h2{font-family:var(--f-display); font-weight:700; font-size:clamp(1.45rem, 2.6vw, 1.85rem); line-height:1.3; margin:0; text-wrap:balance}
+h3{font-family:var(--f-display); font-weight:600; font-size:1.28rem; line-height:1.4; margin:2.1em 0 .6em; text-wrap:balance}
+h4{font-size:1.04rem; font-weight:700; margin:1.6em 0 .4em; line-height:1.45}
+h3 .sec, h4 .sec{font-family:var(--f-mono); font-size:.8em; color:var(--ink-3); font-weight:500; margin-right:.45em}
+p{margin:.7em 0}
+.prose{max-width:72ch}
+ul, ol{padding-left:1.35em; margin:.6em 0}
+li{margin:.2em 0}
+li::marker{color:var(--ink-3)}
+strong{font-weight:700}
+small, .small{font-size:.85rem; color:var(--ink-2)}
+code, .mono{font-family:var(--f-mono); font-size:.88em}
+code{background:var(--surface-2); padding:1px 5px; border-radius:4px}
+.src{font-family:var(--f-mono); font-size:.74rem; color:var(--ink-3); white-space:nowrap; letter-spacing:.01em}
+hr{border:0; border-top:1px solid var(--line); margin:28px 0}
+
+/* ---------- callouts ---------- */
+.box{border:1px solid var(--line); border-left:4px solid var(--slate); background:var(--slate-wash); border-radius:6px; padding:12px 16px; margin:16px 0; max-width:76ch}
+.box > .lbl{display:block; font-weight:700; font-size:.86rem; letter-spacing:.02em; margin-bottom:4px}
+.box p:first-of-type{margin-top:0}
+.box p:last-child, .box ul:last-child, .box ol:last-child{margin-bottom:0}
+.box.judg{border-left-color:var(--amber); background:var(--amber-wash)}
+.box.judg > .lbl{color:var(--amber-ink)}
+.box.basis{border-left-color:var(--slate); background:var(--slate-wash)}
+.box.basis > .lbl{color:var(--slate-ink)}
+.box.trap{border-left-color:var(--red); background:var(--red-wash)}
+.box.trap > .lbl{color:var(--red-ink)}
+.box.exam{border-left-color:var(--blue); background:var(--blue-wash)}
+.box.exam > .lbl{color:var(--blue-ink)}
+.box.deep{border-left-color:var(--accent); background:var(--surface)}
+.box.deep > .lbl{color:var(--accent-ink)}
+
+/* ---------- equations ---------- */
+.eq{overflow-x:auto; overflow-y:hidden; margin:14px 0; padding:4px 0; max-width:100%}
+.eq mjx-container[display="true"]{margin:.4em 0!important}
+mjx-container{color:inherit}
+.eqnote{font-size:.86rem; color:var(--ink-2); margin-top:-4px}
+
+/* ---------- tables ---------- */
+.tbl{overflow-x:auto; margin:16px 0; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface); max-width:100%}
+table{border-collapse:collapse; width:100%; font-size:.9rem; line-height:1.55; font-variant-numeric:tabular-nums}
+caption{caption-side:top; text-align:left; font-weight:600; font-size:.88rem; padding:10px 12px 6px; color:var(--ink-2)}
+th, td{padding:8px 11px; border-top:1px solid var(--line); vertical-align:top; text-align:left}
+thead th{background:var(--surface-2); border-top:0; font-weight:600; font-size:.84rem; color:var(--ink-2); white-space:nowrap}
+tbody tr:hover td{background:color-mix(in srgb, var(--accent-wash) 45%, transparent)}
+td.num, th.num{text-align:right; font-family:var(--f-mono); font-size:.85rem; white-space:nowrap}
+td.c, th.c{text-align:center}
+.tbl.compact td, .tbl.compact th{padding:6px 9px}
+
+/* ---------- figures ---------- */
+figure{margin:20px 0; max-width:100%}
+.fig{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:14px; overflow-x:auto}
+figcaption{font-size:.86rem; color:var(--ink-2); margin-top:8px; line-height:1.55}
+svg text{font-family:var(--f-body)}
+.svg-ink{fill:var(--ink)} .svg-ink2{fill:var(--ink-2)} .svg-ink3{fill:var(--ink-3)}
+.svg-line{stroke:var(--line-strong)} .svg-stroke{stroke:var(--ink-2)}
+.svg-box{fill:var(--surface); stroke:var(--line-strong)}
+.svg-box2{fill:var(--surface-2); stroke:var(--line-strong)}
+.svg-acc{fill:var(--accent-wash); stroke:var(--accent)}
+.svg-amb{fill:var(--amber-wash); stroke:var(--amber)}
+.svg-red{fill:var(--red-wash); stroke:var(--red)}
+
+/* ---------- tools ---------- */
+.tool{background:var(--surface); border:1px solid var(--line-strong); border-radius:10px; margin:22px 0; overflow:hidden; max-width:100%}
+.tool-head{display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; justify-content:space-between; padding:12px 16px; border-bottom:1px solid var(--line); background:var(--surface-2)}
+.tool-head h4{margin:0; font-size:1rem}
+.tool-head .src{white-space:normal}
+.tool-body{padding:14px 16px; display:grid; gap:16px}
+.fields{display:grid; grid-template-columns:repeat(auto-fit, minmax(132px, 1fr)); gap:10px 14px}
+.field{display:grid; gap:3px; min-width:0}
+.field label{font-size:.78rem; color:var(--ink-2); font-weight:600; line-height:1.35}
+.field input, .field select{font:inherit; font-family:var(--f-mono); font-size:.88rem; padding:6px 8px; border:1px solid var(--line-strong); border-radius:6px; background:var(--bg); color:var(--ink); width:100%; min-width:0}
+.field input:focus, .field select:focus{outline:2px solid var(--accent); outline-offset:0; border-color:var(--accent)}
+.field .hint{font-size:.72rem; color:var(--ink-3); line-height:1.35}
+.check{display:flex; gap:8px; align-items:center; font-size:.85rem; color:var(--ink-2)}
+.btnrow{display:flex; flex-wrap:wrap; gap:8px}
+button{font:inherit; font-size:.86rem; font-weight:600; padding:7px 14px; border-radius:6px; border:1px solid var(--accent); background:var(--accent); color:var(--surface); cursor:pointer}
+button.ghost{background:transparent; color:var(--accent)}
+button:hover{filter:brightness(1.07)}
+.results{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px}
+.kv{border:1px solid var(--line); border-radius:7px; padding:9px 11px; background:var(--bg); min-width:0}
+.kv .k{font-size:.74rem; color:var(--ink-3); font-weight:600; display:block}
+.kv .v{font-family:var(--f-mono); font-size:1.05rem; font-weight:600; display:block; overflow-wrap:anywhere}
+.kv .s{font-size:.74rem; color:var(--ink-2); display:block; line-height:1.4}
+.pill{display:inline-block; font-family:var(--f-mono); font-size:.76rem; font-weight:600; padding:1px 8px; border-radius:999px; border:1px solid var(--line-strong); background:var(--surface-2); color:var(--ink)}
+.pill.ok{border-color:var(--green); background:var(--green-wash); color:var(--green)}
+.pill.ng{border-color:var(--red); background:var(--red-wash); color:var(--red-ink)}
+.note{font-size:.8rem; color:var(--ink-2); line-height:1.5}
+.chart-wrap{position:relative; min-width:0}
+.chart-wrap svg{display:block; width:100%; height:auto}
+.legend{display:flex; flex-wrap:wrap; gap:6px 16px; font-size:.8rem; color:var(--ink-2); margin-bottom:4px}
+.legend .key{display:inline-block; width:18px; height:0; border-top:2px solid; vertical-align:middle; margin-right:6px}
+.tip{position:absolute; pointer-events:none; background:var(--surface); border:1px solid var(--line-strong); border-radius:6px; padding:6px 9px; font-size:.78rem; line-height:1.45; box-shadow:0 2px 10px rgba(0,0,0,.12); min-width:150px}
+.tip b{font-family:var(--f-mono)}
+.tip .row{display:flex; align-items:center; gap:6px; white-space:nowrap}
+.tip .row i{display:inline-block; width:12px; border-top:2px solid}
+
+/* ---------- quiz ---------- */
+.quiz-bar{position:sticky; top:env(safe-area-inset-top, 0px); z-index:5; background:var(--bg); padding:8px 0; display:flex; flex-wrap:wrap; gap:10px; align-items:center; border-bottom:1px solid var(--line)}
+.q{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:12px 14px; margin:12px 0}
+.q .qh{display:flex; gap:10px; align-items:baseline}
+.q .qn{font-family:var(--f-mono); font-size:.8rem; color:var(--ink-3); flex:none}
+.q .qt{font-weight:600}
+.q .opts{display:grid; gap:4px; margin:8px 0 0}
+.q label{display:grid; grid-template-columns:auto minmax(0,1fr); gap:8px; align-items:start; padding:5px 8px; border-radius:6px; border:1px solid transparent; cursor:pointer; font-size:.93rem}
+.q label:hover{background:var(--surface-2)}
+.q label.right{border-color:var(--green); background:var(--green-wash)}
+.q label.wrong{border-color:var(--red); background:var(--red-wash)}
+.q .why{margin-top:8px; font-size:.88rem; color:var(--ink-2); border-top:1px dashed var(--line); padding-top:8px}
+details.sol{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 14px; margin:12px 0}
+details.sol > summary{cursor:pointer; font-weight:600}
+details.sol[open] > summary{margin-bottom:8px}
+
+/* ---------- misc ---------- */
+.grid2{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:12px 14px; min-width:0}
+.card h4{margin-top:0}
+.kbd{font-family:var(--f-mono); font-size:.8em; border:1px solid var(--line-strong); border-bottom-width:2px; border-radius:4px; padding:0 5px}
+.lib-cat{font-family:var(--f-mono); font-size:.75rem; color:var(--ink-3)}
+footer.site{max-width:1240px; margin:0 auto; padding-block:20px 40px; border-top:1px solid var(--line); color:var(--ink-3); font-size:.82rem}
+@media (max-width:520px){ body{font-size:15.5px} .ch-mark{width:48px; height:48px} .ch-mark::before{width:31px; height:31px} }
+</style>
+<a class="skip" href="#ch0">본문으로 건너뛰기</a>
+<header class="masthead">
+  <div class="tagline"><span class="tag">SIS</span><span>IEC 61508:2010 (2판)</span><span>IEC 61511:2016 (2판) + AMD1:2017</span><span>사전학습 · 고급</span></div>
+  <h1>기능안전 엔지니어 심화 매뉴얼</h1>
+  <p class="lede">SIL 결정(LOPA), SIL 검증(exSILentia), SRS 실무 경험자를 위한 Functional Safety Engineer(SIS) 과정 사전학습 교재입니다. 계산 도구가 대신 처리하던 부분을 표준 조항과 신뢰성 수학으로 다시 유도하고, 계산 도구와 모의시험으로 이해도를 점검합니다.</p>
+  <ul class="chips">
+    <li><b>18</b>개 장 (수명주기 순서)</li>
+    <li>계산·시각화 도구 <b>6</b>종</li>
+    <li>모의시험 객관식 <b>40</b>문항 + 서술·계산 <b>8</b>문제</li>
+    <li>공개 기술교재 링크 모음</li>
+  </ul>
+</header>
+<div class="layout">
+<nav class="toc" aria-label="목차">
+  <details id="tocDetails" open>
+    <summary>목차</summary>
+    <ol>
+      <li><a href="#ch0"><span class="n">00</span><span>교재 안내와 시험 구조</span></a></li>
+      <li><a href="#ch1"><span class="n">01</span><span>기능안전의 틀: 개념·표준·법규</span></a></li>
+      <li><a href="#ch2"><span class="n">02</span><span>안전 수명주기와 기능안전 관리</span></a></li>
+      <li><a href="#ch3"><span class="n">03</span><span>위험성 평가·허용위험·요구율</span></a></li>
+      <li><a href="#ch4"><span class="n">04</span><span>보호계층 할당과 SIL 결정</span></a></li>
+      <li><a href="#ch5"><span class="n">05</span><span>안전 요구사항 명세(SRS)</span></a></li>
+      <li><a href="#ch6"><span class="n">06</span><span>신뢰성 이론 기초</span></a></li>
+      <li><a href="#ch7"><span class="n">07</span><span>PFDavg·PFH 계산 이론</span></a></li>
+      <li><a href="#ch8"><span class="n">08</span><span>구조적 제약과 체계적 능력</span></a></li>
+      <li><a href="#ch9"><span class="n">09</span><span>공통원인고장과 독립성</span></a></li>
+      <li><a href="#ch10"><span class="n">10</span><span>SIS 설계·엔지니어링</span></a></li>
+      <li><a href="#ch11"><span class="n">11</span><span>응용 프로그램과 IEC 61508-3</span></a></li>
+      <li><a href="#ch12"><span class="n">12</span><span>설치·검증·운전·변경·폐기</span></a></li>
+      <li><a href="#ch13"><span class="n">13</span><span>종합 사례: HIPPS 검증</span></a></li>
+      <li><a href="#ch14"><span class="n">14</span><span>모의시험</span></a></li>
+      <li><a href="#ch15"><span class="n">15</span><span>공식집</span></a></li>
+      <li><a href="#ch16"><span class="n">16</span><span>용어집</span></a></li>
+      <li><a href="#ch17"><span class="n">17</span><span>기술교재 라이브러리</span></a></li>
+    </ol>
+    <p class="toc-foot">상자 색: <b style="color:var(--amber-ink)">실무 판단</b> · <b style="color:var(--slate-ink)">근거</b> · <b style="color:var(--red-ink)">함정</b> · <b style="color:var(--blue-ink)">시험 포인트</b> · <b style="color:var(--accent-ink)">심화</b></p>
+  </details>
+</nav>
+<main id="main">
+<!-- ===================== CH 0 ===================== -->
+<section class="chapter" id="ch0">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>00</span></div><div><p class="eyebrow">How to use · Course &amp; exam structure</p><h2>교재 안내와 시험 구조</h2></div></div>
+
+<h3><span class="sec">0.1</span>이 교재의 목표</h3>
+<div class="prose">
+<p>Functional Safety Engineer(SIS) 과정은 IEC 61508과 IEC 61511 전체 수명주기를 4일 안에 훑고 시험까지 치릅니다. 이미 LOPA로 SIL을 정하고, exSILentia로 PFD를 검증하고, SRS를 써 본 엔지니어에게 이 과정의 어려운 부분은 대개 두 곳입니다. 하나는 <strong>실무에서 직접 다루지 않던 조항</strong>(기능안전 관리, FSA 독립성, 체계적 능력, 응용 프로그램 수명주기, 운전·변경 요건)이고, 다른 하나는 <strong>도구가 숨겨 둔 수학</strong>(t<sub>CE</sub>·t<sub>GE</sub>의 의미, 1oo2의 1/3 계수, 불완전 증명시험, PFH, 요구율 경계)입니다. 이 교재는 두 부분을 집중적으로 다룹니다.</p>
+<p>장 순서는 IEC 61511 SIS 안전 수명주기 순서를 따릅니다. 1–2장은 틀과 관리, 3–5장은 분석·할당·명세, 6–9장은 하드웨어 무결성의 이론, 10–12장은 설계·소프트웨어·운전, 13장은 종합 사례입니다. 14–17장은 모의시험, 공식집, 용어집, 기술교재 목록입니다.</p>
+</div>
+
+<h3><span class="sec">0.2</span>표기 규칙</h3>
+<div class="prose">
+<ul>
+<li>출처는 대괄호 태그로 적습니다. 표준 조항은 <span class="src">[61511-1 §11.4]</span>처럼 적습니다. 본 교재가 직접 유도하거나 계산한 내용은 <span class="src">[유도]</span>로 표시합니다.</li>
+<li>숫자는 출처가 있는 값만 씁니다. 학습을 위해 임의로 정한 값은 반드시 <strong>예시값</strong>이라고 밝힙니다.</li>
+<li>표준 원문은 유료 문서입니다. 이 교재의 조항 설명은 원문을 옮긴 것이 아니라 요지를 풀어 쓴 것입니다. 조항 번호는 공개 미리보기(목차)와 공개 해설 자료로 확인한 것만 적었고, 확인하지 못한 세부 번호는 적지 않았습니다.</li>
+</ul>
+</div>
+<div class="box judg"><span class="lbl">실무 판단:</span><p>현장 판단·설계 관행·해석을 담습니다. 표준이 직접 요구하는 내용과 구분해서 읽으십시오.</p></div>
+<div class="box basis"><span class="lbl">근거:</span><p>앞 문단의 주장이 어느 조항·자료에서 나왔는지, 또는 어떤 계산으로 확인되는지를 적습니다.</p></div>
+<div class="box trap"><span class="lbl">함정:</span><p>시험과 실무에서 자주 틀리는 지점입니다.</p></div>
+<div class="box exam"><span class="lbl">시험 포인트:</span><p>객관식·서술형에서 반복 출제되는 사실과 계산 유형입니다.</p></div>
+<div class="box deep"><span class="lbl">심화:</span><p>수식 유도와 이론적 배경입니다. 시험 합격에는 필수가 아니지만 계산 결과를 해석하는 힘을 기릅니다.</p></div>
+
+<h4>출처 태그</h4>
+<div class="tbl compact"><table>
+<thead><tr><th>태그</th><th>자료</th></tr></thead>
+<tbody>
+<tr><td class="mono">[61508-n]</td><td>IEC 61508-n:2010 (2판). n=1 일반 요건, 2 하드웨어, 3 소프트웨어, 4 정의, 5 SIL 결정 방법 예, 6 2·3부 적용 지침(계산식), 7 기법·조치 개요</td></tr>
+<tr><td class="mono">[61511-n]</td><td>IEC 61511-n:2016 (2판). 1부는 AMD1:2017 포함 통합판(Ed. 2.1)과 조항 구조가 같습니다</td></tr>
+<tr><td class="mono">[61511-PV]</td><td>IEC 61511-1:2016 공개 미리보기(서문·소개·적용범위·목차·그림/표 목록)</td></tr>
+<tr><td class="mono">[61508-6PV]</td><td>IEC 61508-6:2010 공개 미리보기(부속서·그림·표 목록)</td></tr>
+<tr><td class="mono">[TR61511-4]</td><td>IEC TR 61511-4:2020, 61511-1 1판→2판 변경 근거 해설(공개 미리보기 목차)</td></tr>
+<tr><td class="mono">[61508A]</td><td>The 61508 Association, “SIL Calculations – Practical Guidance in the use of IEC 61508-6:2010” (2024 워크숍 자료)</td></tr>
+<tr><td class="mono">[RAU]</td><td>M. Rausand, <i>Reliability of Safety-Critical Systems</i> (Wiley, 2014) 및 NTNU 강의 슬라이드(Lundteigen &amp; Rausand)</td></tr>
+<tr><td class="mono">[PDS]</td><td>SINTEF PDS Method Handbook / PDS Data Handbook</td></tr>
+<tr><td class="mono">[BRATT]</td><td>C. Bratt(ABB), “Changes in IEC 61511 edition 2” (2015, FDIS 기준 해설)</td></tr>
+<tr><td class="mono">[KNX]</td><td>Kenexis 해설: 61511 §9.3 BPCS 보호계층 팟캐스트, SIL 계산 정확도 칼럼</td></tr>
+<tr><td class="mono">[EXIDA]</td><td>exida 블로그·웹세미나(Site Safety Index, 증명시험 커버리지, mission time)</td></tr>
+<tr><td class="mono">[PRE]</td><td>PR electronics, SIL 포스터(61511 §11.4, Route 1H/2H, 1oo1 PFD 식 요약)</td></tr>
+<tr><td class="mono">[TUV-FS]</td><td>TÜV Rheinland FS Engineer 인증 안내 페이지</td></tr>
+<tr><td class="mono">[YKG] [SE8801] [ABB-T245] [SIE]</td><td>Yokogawa(노르웨이) 교육 안내, Schneider Electric 8801 과정 명세(2019), ABB T245 과정 안내(2023), Siemens Power Academy FS-ENG-SIS 안내</td></tr>
+<tr><td class="mono">[KOSHA-LOPA] [KOSHA-SIS]</td><td>KOSHA GUIDE C-C-62-2026 방호계층분석(LOPA)기법에 관한 기술지원규정 / D-69-2020 안전계장시스템(SIS)을 이용한 화학설비 안전성 향상에 관한 기술지침</td></tr>
+<tr><td class="mono">[HSE]</td><td>UK HSE 기능안전 안내, 증명시험 관련 OG54 및 CRR 428/2002</td></tr>
+<tr><td class="mono">[NOG070]</td><td>Offshore Norge(구 Norwegian Oil and Gas) Guideline 070</td></tr>
+<tr><td class="mono">[CCPS]</td><td>CCPS, <i>Layer of Protection Analysis</i> (2001) 및 IPL·조건부 수정계수 지침서</td></tr>
+</tbody></table></div>
+
+<h3><span class="sec">0.3</span>과정 구조와 시험 형식</h3>
+<div class="prose">
+<p>공개 웹에서는 APAVE 과정의 세부 커리큘럼을 찾지 못했습니다. 들으신 대로 TÜV Rheinland FS Engineer(SIS) 프로그램과 같은 범위라고 보고, 이 프로그램을 운영하는 공인 교육기관들의 공개 자료로 구조를 정리했습니다. 문항 수·시험 시간·계산기 허용 여부는 기관마다 다르므로 APAVE에 미리 확인하는 것이 좋습니다.</p>
+</div>
+<div class="tbl"><table>
+<caption>TÜV Rheinland FS Engineer(SIS) 계열 과정의 공개 정보</caption>
+<thead><tr><th>항목</th><th>내용</th><th>출처</th></tr></thead>
+<tbody>
+<tr><td>응시·인증 요건</td><td>기능안전 분야 실무 경력 3년 이상, 공학 학위(SIS·PH&amp;RA 과정은 학위 대신 고용주 추천서로 엔지니어급 책임을 확인 가능). 전 과정 참석과 시험 합격이 모두 필요하며, 시험만 응시해서는 인증서가 나오지 않습니다</td><td class="src">[TUV-FS] [YKG]</td></tr>
+<tr><td>유효기간</td><td>5년. 1차 연장 5년, 2차 연장(10년)은 재시험 필요</td><td class="src">[TUV-FS]</td></tr>
+<tr><td>Yokogawa</td><td>3.5일 강의 + 4일차 오전 시험, 객관식 60문항 + 사례(case) 7개, 합격 75%</td><td class="src">[YKG]</td></tr>
+<tr><td>Schneider Electric 8801</td><td>4일차 4–5시간 시험, 객관식 130문항 + 계산 문제(working problem) 5개, 합격 75%</td><td class="src">[SE8801]</td></tr>
+<tr><td>ABB T245</td><td>3일 강의 + 4일차 시험</td><td class="src">[ABB-T245]</td></tr>
+<tr><td>Siemens FS-ENG-SIS</td><td>4일 + 0.5일 시험</td><td class="src">[SIE]</td></tr>
+</tbody></table></div>
+
+<div class="tbl"><table>
+<caption>교육 모듈과 이 교재의 장 대응</caption>
+<thead><tr><th>모듈(Yokogawa 공개 일정 기준)</th><th>이 교재</th></tr></thead>
+<tbody>
+<tr><td>Day 1 — M1 Introduction to Functional Safety, M2 IEC 61508 / IEC 61511, M3 HAZOP–SIF–SIL</td><td>1, 2, 3, 4장</td></tr>
+<tr><td>Day 2 — M4 Safety Engineering, M5 Functional Safety Management, M6 Failures and Hardware Fault Tolerance</td><td>5, 10, 11장 / 2, 12장 / 6, 8장</td></tr>
+<tr><td>Day 3 — M7 Common Cause and other failure types, M8 Safety Calculations</td><td>9장 / 6, 7, 13장</td></tr>
+<tr><td>Day 4 — 시험</td><td>14장(모의시험), 15장(공식집)</td></tr>
+<tr><td>그 밖의 기관 공통 주제: SRS 템플릿, RBD·FTA·Markov, QRA, 검증·감사·평가, 운전·변경, 보안</td><td>5, 6, 7, 12, 3장</td></tr>
+</tbody></table></div>
+<p class="small">모듈 목록 출처: <span class="src">[YKG]</span>. 주제 목록 교차 확인: <span class="src">[SE8801] [ABB-T245] [SIE]</span>.</p>
+
+<h3><span class="sec">0.4</span>경험자를 위한 사전학습 순서</h3>
+<div class="prose">
+<ol>
+<li><strong>먼저 약점 영역</strong>: 2장(FSM, 검증·확인·FSA·감사 구분, FSA 단계와 독립성), 8장(Type A/B, Route 1H/2H, 체계적 능력, prior use와 proven in use), 11장(FPL/LVL/FVL, 61508-3), 12장(운전 중 요건, bypass, MOC). 이 부분은 LOPA·검증 실무만으로는 잘 다져지지 않고, 객관식에서 비중이 큽니다.</li>
+<li><strong>다음은 도구가 숨긴 수학</strong>: 6장의 PFD(t) 유도와 1oo2의 1/3 계수, 7장의 t<sub>CE</sub>·t<sub>GE</sub>와 IEC 61508-6 식, PTC·T<sub>2</sub>, PFH. 계산 문제는 이 식들을 손으로 풀게 합니다.</li>
+<li><strong>강점 영역은 점검만</strong>: 4장(LOPA·Risk graph), 5장(SRS). 다만 4.4의 "SIF 요구율은 SIF보다 먼저 작동하는 IPL만 줄인다", 3.4의 "요구율과 위험사건 빈도의 관계"는 경험자도 자주 놓칩니다.</li>
+<li><strong>마무리</strong>: 13장 사례를 계산기로 직접 재현하고, 14장 모의시험을 시간 제한을 두고 풉니다. 시험 전날에는 15장 공식집만 봅니다.</li>
+</ol>
+</div>
+<div class="box judg"><span class="lbl">실무 판단:</span><p>exSILentia 결과를 손으로 재현할 수 있는지 확인해 보십시오. 2oo3 송신기 한 서브시스템이라도 t<sub>CE</sub>, t<sub>GE</sub>, CCF 항을 따로 계산해서 도구 출력과 맞춰 보면, 시험의 계산 문제는 거의 다 풀립니다. 맞지 않는다면 대개 PTC·mission time·SSI 같은 도구 고유 입력 때문입니다(7.9절).</p></div>
+
+<h3><span class="sec">0.5</span>기호</h3>
+<div class="tbl compact"><table>
+<thead><tr><th>기호</th><th>의미</th><th>단위·비고</th></tr></thead>
+<tbody>
+<tr><td>λ, λ<sub>S</sub>, λ<sub>D</sub></td><td>고장률, 안전 고장률, 위험 고장률</td><td>1/h. 1 FIT = 10<sup>−9</sup>/h</td></tr>
+<tr><td>λ<sub>SD</sub>, λ<sub>SU</sub>, λ<sub>DD</sub>, λ<sub>DU</sub></td><td>안전·검출 / 안전·미검출 / 위험·검출 / 위험·미검출 고장률</td><td>1/h</td></tr>
+<tr><td>DC, SFF</td><td>진단 커버리지, 안전 고장 비율</td><td>8장, 6.2절</td></tr>
+<tr><td>T<sub>1</sub></td><td>증명시험 주기(proof test interval)</td><td>h</td></tr>
+<tr><td>PTC, T<sub>2</sub></td><td>증명시험 커버리지, 증명시험으로 드러나지 않는 고장이 신품 상태로 복원되는 주기(대개 mission time)</td><td>—, h</td></tr>
+<tr><td>MTTR, MRT</td><td>평균 복구시간(mean time to restoration, 검출 시간 포함), 평균 수리시간(mean repair time)</td><td>h</td></tr>
+<tr><td>t<sub>CE</sub>, t<sub>GE</sub>, t<sub>G2E</sub></td><td>채널 등가 평균 정지시간, 그룹(시스템) 등가 평균 정지시간, 2차 고장 등가 정지시간</td><td>h, 7.2절</td></tr>
+<tr><td>β, β<sub>D</sub></td><td>미검출·검출 위험 고장의 공통원인 비율</td><td>—</td></tr>
+<tr><td>PFD(t), PFD<sub>avg</sub>, RRF</td><td>순간 요구 시 고장확률, 평균값, 위험저감계수 = 1/PFD<sub>avg</sub></td><td>—</td></tr>
+<tr><td>PFH</td><td>시간당 평균 위험 고장 빈도</td><td>1/h</td></tr>
+<tr><td>D, H</td><td>SIF 요구율(demand rate), 위험사건 빈도(hazard rate)</td><td>1/yr</td></tr>
+<tr><td>HFT, SC</td><td>하드웨어 결함 허용도, 체계적 능력</td><td>8장</td></tr>
+<tr><td>PST, PVST</td><td>공정안전시간(process safety time), 부분 행정 시험(partial valve stroke test)</td><td>혼동을 피하려고 둘을 구분해 씁니다</td></tr>
+</tbody></table></div>
+</section>
+
+<!-- ===================== CH 1 ===================== -->
+<section class="chapter" id="ch1">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>01</span></div><div><p class="eyebrow">IEC 61508-1·-4 · IEC 61511-1 §1–4</p><h2>기능안전의 틀: 개념·표준·법규</h2></div></div>
+
+<h3><span class="sec">1.1</span>기능안전의 정의와 위치</h3>
+<div class="prose">
+<p>IEC 61508에서 기능안전(functional safety)은 EUC(equipment under control)와 EUC 제어계에 관련된 전체 안전 가운데, E/E/PE 안전관련계와 기타 위험저감 수단이 올바르게 기능하는 데 의존하는 부분입니다. IEC 61511은 같은 개념을 공정 산업 용어로 옮겨, 공정과 BPCS에 관련된 전체 안전 가운데 SIS와 기타 보호계층의 올바른 기능에 의존하는 부분으로 정의합니다 <span class="src">[61508-4] [61511-1 §3]</span>.</p>
+<p>이 정의에서 중요한 단어는 "의존하는 부분"입니다. 압력용기의 설계압력을 높이는 것은 본질안전(inherent safety)이고, 방유제는 수동적 보호입니다. 기능안전은 무언가를 감지하고 판단하여 동작해야 비로소 안전이 확보되는 <strong>능동적 보호의 성능</strong>을 관리하는 체계입니다. 61511 서문도 안전은 본질안전 설계로 확보하는 것이 가장 좋고, 그것이 불가능하거나 실용적이지 않을 때 보호 시스템을 결합한다고 말합니다 <span class="src">[61511-PV]</span>.</p>
+<p>IEC 61511의 두 기둥은 <strong>SIS 안전 수명주기</strong>와 <strong>안전무결성수준(SIL)</strong>입니다 <span class="src">[61511-PV]</span>. 수명주기는 "언제 무엇을 해야 하는가"를, SIL은 "얼마나 잘해야 하는가"를 정합니다.</p>
+</div>
+
+<h4>SIL 적합성의 세 조건</h4>
+<div class="prose">
+<p>SIL은 PFD 숫자 하나로 결정되지 않습니다. 하나의 SIF가 목표 SIL을 만족한다고 주장하려면 다음 세 조건을 <strong>모두</strong> 충족해야 합니다.</p>
+</div>
+<div class="tbl"><table>
+<thead><tr><th>조건</th><th>다루는 고장</th><th>근거 조항</th><th>이 교재</th></tr></thead>
+<tbody>
+<tr><td>① 목표 실패척도: PFD<sub>avg</sub>(저빈도 요구) 또는 PFH(고빈도 요구·연속)</td><td>무작위 하드웨어 고장</td><td>61511-1 §9.2, §11.9 / 61508-2 §7.4.5</td><td>6, 7장</td></tr>
+<tr><td>② 구조적 제약: 최소 HFT(Route 1H 또는 2H)</td><td>데이터 불확실성·가정 오류에 대한 방어</td><td>61511-1 §11.4 / 61508-2 §7.4.4</td><td>8장</td></tr>
+<tr><td>③ 체계적 능력(SC)과 기능안전 관리</td><td>체계적 고장(명세·설계·소프트웨어·운전 오류)</td><td>61511-1 §5, §11.5, §12 / 61508-2 §7.4.2·7.4.3, 61508-3</td><td>2, 8, 11장</td></tr>
+</tbody></table></div>
+<div class="box exam"><span class="lbl">시험 포인트:</span><p>"PFD<sub>avg</sub>가 SIL 3 범위이므로 SIL 3이다"는 틀린 진술입니다. HFT와 SC 조건을 함께 만족해야 합니다. 반대로 SIL 3 인증 장치를 썼다고 SIF가 SIL 3이 되는 것도 아닙니다. SIL은 장치가 아니라 <strong>SIF</strong>의 속성입니다.</p></div>
+
+<h3><span class="sec">1.2</span>표준 체계</h3>
+<div class="tbl"><table>
+<caption>IEC 61508 시리즈</caption>
+<thead><tr><th>부</th><th>제목(요지)</th><th>성격</th></tr></thead>
+<tbody>
+<tr><td>61508-1</td><td>일반 요건: 전체 안전 수명주기, 문서, 기능안전 관리, FSA</td><td rowspan="4">규범(normative). 1–4부는 기본 안전 출판물(basic safety publication)의 지위를 가집니다</td></tr>
+<tr><td>61508-2</td><td>E/E/PE 안전관련계 요건: 하드웨어 설계, 구조적 제약, 무작위 고장 정량화, 체계적 능력</td></tr>
+<tr><td>61508-3</td><td>소프트웨어 요건: 소프트웨어 안전 수명주기, 기법·조치, 도구 분류</td></tr>
+<tr><td>61508-4</td><td>정의와 약어</td></tr>
+<tr><td>61508-5</td><td>SIL 결정 방법의 예(위험 그래프, 위험 행렬, LOPA 등)</td><td rowspan="3">참고(informative)</td></tr>
+<tr><td>61508-6</td><td>2·3부 적용 지침: 부속서 B(PFD·PFH 계산), C(DC·SFF 계산 예), D(공통원인고장 β 산정)</td></tr>
+<tr><td>61508-7</td><td>기법과 조치의 개요</td></tr>
+</tbody></table></div>
+<div class="tbl"><table>
+<caption>IEC 61511 시리즈 <span class="src">[61511-PV] [TR61511-4]</span></caption>
+<thead><tr><th>부</th><th>제목(요지)</th><th>성격</th></tr></thead>
+<tbody>
+<tr><td>61511-1</td><td>틀, 정의, 시스템·하드웨어·응용 프로그래밍 요건</td><td>규범</td></tr>
+<tr><td>61511-2</td><td>61511-1 적용 지침(2판에서 분량이 두 배 이상으로 늘어남 <span class="src">[BRATT]</span>)</td><td>참고</td></tr>
+<tr><td>61511-3</td><td>요구 SIL 결정 지침(위험 그래프, LOPA, 안전층 행렬 등의 예, 2판에서 H&amp;RA 예와 정량 분석 고려 부속서 추가)</td><td>참고</td></tr>
+<tr><td>TR 61511-4</td><td>61511-1 1판→2판 변경의 근거와 흔한 오해</td><td>기술보고서</td></tr>
+</tbody></table></div>
+
+<h4>61511을 따를까, 61508을 따를까</h4>
+<div class="prose"><p>61511-1의 그림 3은 활동별로 따라야 할 표준을 구분합니다 <span class="src">[61511-PV]</span>. 이 구분은 시험에 그대로 나옵니다.</p></div>
+<div class="tbl"><table>
+<thead><tr><th>활동</th><th>따르는 표준</th></tr></thead>
+<tbody>
+<tr><td>새 하드웨어 장치 개발</td><td>IEC 61508</td></tr>
+<tr><td>IEC 61508로 평가된 하드웨어 장치 사용</td><td>IEC 61511</td></tr>
+<tr><td>Prior use 근거로 하드웨어 장치 사용</td><td>IEC 61511</td></tr>
+<tr><td>임베디드(시스템) 소프트웨어 개발</td><td>IEC 61508-3</td></tr>
+<tr><td>FVL(완전 가변 언어)로 응용 프로그램 개발</td><td>IEC 61508-3</td></tr>
+<tr><td>LVL(제한 가변 언어)·FPL(고정 프로그램 언어)로 응용 프로그램 개발</td><td>IEC 61511</td></tr>
+</tbody></table></div>
+
+<h4>61511-1 적용범위의 핵심 문장</h4>
+<div class="prose">
+<p>적용범위(§1)에서 시험에 자주 쓰이는 항목을 요약하면 다음과 같습니다 <span class="src">[61511-PV]</span>.</p>
+<ul>
+<li>61511-1은 IEC 61508:2010의 <strong>공정 분야 구현</strong>으로 개발되었습니다.</li>
+<li>요건을 누가 이행하는지(설계자, 공급자, 운영사, 계약자)는 지정하지 않습니다. 책임은 안전 계획과 국가 규정에 따라 배분합니다.</li>
+<li>장치가 공정 분야 SIS에 적합하다고 주장하려는 <strong>제조사</strong>에는 적용되지 않습니다(그 경우는 61508-2·-3).</li>
+<li>사람, 일반 대중, 환경 보호를 위한 SIF에 적용하며, 자산 보호 같은 비안전 용도에도 적용할 수 있습니다.</li>
+<li>SIL 4를 61511-1로 구현할 수 있는 최대 성능으로, SIL 1을 61511-1이 적용되는 최소 성능으로 정의합니다.</li>
+<li>SIL별 수치 목표(PFD<sub>avg</sub>, PFH)와 최소 HFT 요건을 정합니다.</li>
+<li>특정 용도에 필요한 SIL은 정하지 않습니다. 그것은 H&amp;RA로 정합니다.</li>
+<li>개별 운전원·정비원에게 직접 요구를 두지 않습니다.</li>
+</ul>
+<p>또한 서문은 관할 당국의 규제가 61511의 요건보다 우선한다고 명시합니다 <span class="src">[61511-PV]</span>.</p>
+</div>
+
+<h3><span class="sec">1.3</span>규제와 "인정된 엔지니어링 관행"</h3>
+<div class="prose">
+<p>IEC 61511 자체는 법이 아닙니다. 그러나 국가 규정, 감독기관, 보험사, 계약이 채택하면 사실상 의무가 됩니다. TR 61511-4 서문은 61511-1이 여러 나라에서 우수 엔지니어링 관행으로 인정되고, 규제 요건으로 채택하는 나라가 늘고 있다고 적고 있습니다 <span class="src">[TR61511-4]</span>.</p>
+<ul>
+<li><strong>영국</strong>: HSE는 공정 산업의 기능안전 관리 기준으로 BS EN 61511을 제시합니다 <span class="src">[HSE]</span>.</li>
+<li><strong>미국</strong>: OSHA PSM의 RAGAGEP 요건 속에서 ANSI/ISA-61511(IEC 61511 2판의 미국 채택판)이 기준 문서로 쓰입니다.</li>
+<li><strong>노르웨이 해양</strong>: Offshore Norge 070은 61508·61511 적용 방법과 대표 기능별 최소 SIL 권고를 담습니다 <span class="src">[NOG070]</span>.</li>
+<li><strong>한국</strong>: 산업안전보건법의 위험성평가(제36조)와 공정안전보고서(제44조)가 상위 근거이고, KOSHA GUIDE C-C-62-2026(LOPA 기법)과 D-69-2020(SIS를 이용한 화학설비 안전성 향상)이 기술 지침입니다 <span class="src">[KOSHA-LOPA] [KOSHA-SIS]</span>.</li>
+</ul>
+</div>
+<div class="box judg"><span class="lbl">실무 판단:</span><p>국내 PSM 심사에서 SIL 산정 근거를 요구받으면 KOSHA LOPA 지침과 IEC 61511-3을 함께 인용하는 것이 일반적입니다. 다만 KOSHA 지침은 LOPA 절차 중심이고, 검증(PFD 계산)·구조적 제약·FSA 같은 61511 전체 수명주기 요건은 IEC 61511을 직접 근거로 삼아야 합니다.</p></div>
+
+<h3><span class="sec">1.4</span>자주 혼동하는 용어</h3>
+<div class="tbl"><table>
+<thead><tr><th>짝</th><th>정확한 구분</th></tr></thead>
+<tbody>
+<tr><td>SIS / SIF / SIL</td><td>SIS는 하나 이상의 SIF를 구현하는 계장 시스템(센서–로직–최종요소)입니다. SIF는 특정 위험에 대해 안전 상태를 달성·유지하는 기능입니다. SIL은 SIF에 할당되는 무결성 등급입니다. "SIL 3 SIS"는 엄밀하지 않은 표현입니다.</td></tr>
+<tr><td>PFD(t) / PFD<sub>avg</sub> / RRF</td><td>PFD(t)는 시각 t에서 요구가 오면 실패할 확률로, 증명시험 사이에 톱니 모양으로 변합니다. PFD<sub>avg</sub>는 그 시간 평균이고, RRF = 1/PFD<sub>avg</sub>입니다.</td></tr>
+<tr><td>저빈도 / 고빈도 / 연속 모드</td><td>61508-4: 요구 빈도 연 1회 이하가 저빈도(low demand), 연 1회 초과가 고빈도(high demand), 정상 운전의 일부로 EUC를 안전 상태로 유지하는 것이 연속(continuous) 모드입니다. 61511 2판은 저빈도·고빈도를 묶어 "demand mode SIF", 연속을 "continuous mode SIF"로 부릅니다 <span class="src">[BRATT]</span>. 저빈도는 PFD<sub>avg</sub>(61511-1 표 4), 고빈도·연속은 PFH(표 5)로 판정합니다.</td></tr>
+<tr><td>위험 고장 / 안전 고장</td><td>위험 고장은 SIF가 요구 시 동작하지 못하게 하거나 동작 확률을 낮추는 고장이고, 안전 고장은 그렇지 않은 고장(대개 오동작 트립 쪽)입니다. 어느 쪽인지는 SRS가 정한 <strong>안전 상태</strong>에 따라 달라집니다. 같은 "출력 하한 고착"도 저수위 트립에서는 안전 쪽, 고수위 트립에서는 위험 쪽입니다.</td></tr>
+<tr><td>무작위 하드웨어 고장 / 체계적 고장</td><td>무작위 고장은 하드웨어의 물리적 열화로 예측 가능한 비율로 발생하며 확률로 정량화합니다. 체계적 고장은 명세·설계·제조·설치·운전의 오류에 결정론적으로 연관되며, 설계나 절차를 바꿔야만 제거됩니다. 소프트웨어 고장은 모두 체계적 고장입니다.</td></tr>
+<tr><td>공통원인고장(CCF) / 공통모드고장</td><td>CCF는 하나의 원인으로 여러 장치가 고장 나는 것이고, 공통모드고장은 그중 여러 장치가 같은 방식으로 고장 나는 경우입니다. 61511 2판에서 두 정의를 분명히 구분했습니다 <span class="src">[BRATT]</span>.</td></tr>
+<tr><td>HFT / 중복</td><td>HFT N은 N개의 결함까지는 기능을 유지하고 N+1개에서 상실된다는 뜻입니다. 1oo2·2oo3은 HFT 1, 2oo2는 HFT 0(중복이지만 결함 허용은 없음), 1oo3은 HFT 2입니다.</td></tr>
+<tr><td>증명시험 / 진단시험 / 점검</td><td>증명시험(proof test)은 주기적으로 미검출 위험 고장을 드러내는 시험입니다. 진단시험은 자동·온라인으로 결함을 검출하는 기능입니다. 점검(inspection)은 육안 등으로 상태를 확인하는 활동이며 61511 2판은 §16.3.2에서 별도로 다룹니다 <span class="src">[61511-PV]</span>.</td></tr>
+<tr><td>Prior use / Proven in use</td><td>Prior use는 61511의 장치 선정 근거(§11.5.3, 사용자가 운전 경험 증거를 모음)이고, proven in use는 61508의 체계적 능력 입증 경로(Route 2S)입니다. 8.5절에서 비교합니다.</td></tr>
+<tr><td>MTTR / MRT</td><td>MTTR(mean time to restoration)은 고장 발생부터 복귀까지의 시간으로 검출 시간을 포함합니다. MRT(mean repair time)는 수리를 시작해서 끝낼 때까지의 시간입니다. 61508-6 계산식에서 위험·검출 고장에는 MTTR, 증명시험으로 발견된 고장에는 MRT를 씁니다.</td></tr>
+<tr><td>공정안전시간 / SIS 응답시간</td><td>공정안전시간(PST)은 공정이나 BPCS의 고장이 일어난 뒤 SIF가 동작하지 않으면 위험사건이 일어나기까지의 시간이며 61511 2판에서 정의가 추가되었습니다 <span class="src">[BRATT]</span>. SIS 응답시간은 이 시간 안에 공정을 안전 상태로 만들어야 합니다(5.3절).</td></tr>
+</tbody></table></div>
+<div class="box trap"><span class="lbl">함정:</span><p>"2oo2는 중복이므로 신뢰도가 높다"는 반만 맞습니다. 2oo2는 오동작 트립을 줄이지만 PFD는 1oo1의 약 두 배입니다(위험 고장 하나로 기능을 잃으므로 HFT 0). 안전 측 중복은 1oo2·2oo3입니다.</p></div>
+<div class="box exam"><span class="lbl">시험 포인트:</span><ul>
+<li>61508 1–4부가 규범, 5–7부가 참고. 61511은 1부만 규범.</li>
+<li>61511은 SIL 1 미만에 적용되지 않으며, 장치 제조사의 적합성 주장에는 61508을 씁니다.</li>
+<li>FVL 응용 프로그램과 임베디드 소프트웨어 개발은 61508-3, LVL/FPL 응용 프로그램은 61511.</li>
+<li>저빈도/고빈도 경계는 요구 빈도 연 1회입니다.</li>
+</ul></div>
+</section>
+<!-- ===================== CH 2 ===================== -->
+<section class="chapter" id="ch2">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>02</span></div><div><p class="eyebrow">IEC 61511-1 §5–7, §19 · IEC 61508-1</p><h2>안전 수명주기와 기능안전 관리</h2></div></div>
+
+<h3><span class="sec">2.1</span>IEC 61508의 전체 안전 수명주기</h3>
+<div class="prose"><p>IEC 61508-1은 개념부터 폐기까지 16단계의 전체 안전 수명주기(overall safety lifecycle)를 정의합니다. 6–8단계는 계획 단계로, 9–11단계의 구현과 병행합니다. 10단계(E/E/PE 구현)는 61508-2의 하드웨어 수명주기와 61508-3의 소프트웨어 수명주기(V 모델)로 다시 세분됩니다.</p></div>
+<div class="tbl compact"><table>
+<thead><tr><th class="c">단계</th><th>내용</th><th class="c">단계</th><th>내용</th></tr></thead>
+<tbody>
+<tr><td class="c">1</td><td>개념(concept)</td><td class="c">9</td><td>E/E/PE 안전관련계 안전 요구사항 명세</td></tr>
+<tr><td class="c">2</td><td>전체 범위 정의</td><td class="c">10</td><td>E/E/PE 안전관련계 구현(realisation)</td></tr>
+<tr><td class="c">3</td><td>위험원 및 위험 분석</td><td class="c">11</td><td>기타 위험저감 수단(명세·구현)</td></tr>
+<tr><td class="c">4</td><td>전체 안전 요구사항</td><td class="c">12</td><td>전체 설치·시운전</td></tr>
+<tr><td class="c">5</td><td>전체 안전 요구사항 할당</td><td class="c">13</td><td>전체 안전 확인(validation)</td></tr>
+<tr><td class="c">6</td><td>전체 운전·유지보수 계획</td><td class="c">14</td><td>전체 운전·유지보수·수리</td></tr>
+<tr><td class="c">7</td><td>전체 안전 확인 계획</td><td class="c">15</td><td>전체 변경·개조</td></tr>
+<tr><td class="c">8</td><td>전체 설치·시운전 계획</td><td class="c">16</td><td>폐기</td></tr>
+</tbody></table></div>
+
+<h3><span class="sec">2.2</span>IEC 61511의 SIS 안전 수명주기</h3>
+<figure>
+<div class="fig">
+<svg viewBox="0 0 760 520" role="img" aria-labelledby="lcT lcD" style="min-width:620px">
+<title id="lcT">IEC 61511 SIS 안전 수명주기와 FSA 단계</title>
+<desc id="lcD">8개 수명주기 단계를 위에서 아래로 배치하고, 왼쪽에 기능안전 관리, 오른쪽에 검증과 계획을 병행 활동으로, 그 사이에 FSA 1~5단계 시점을 표시한 그림</desc>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="svg-ink2"/></marker></defs>
+<rect x="16" y="20" width="54" height="480" rx="6" class="svg-box2"/>
+<text transform="translate(48,260) rotate(-90)" text-anchor="middle" class="svg-ink2" font-size="13" font-weight="600">기능안전 관리 · FSA · 감사 (§5)</text>
+<rect x="690" y="20" width="54" height="480" rx="6" class="svg-box2"/>
+<text transform="translate(722,260) rotate(-90)" text-anchor="middle" class="svg-ink2" font-size="13" font-weight="600">검증 (§7) · 수명주기 구조와 계획 (§6.2)</text>
+<g font-size="13.5">
+<rect x="96" y="20" width="372" height="46" rx="5" class="svg-acc"/><text x="112" y="40" class="svg-ink" font-weight="700">① 공정 위험성 평가(H&amp;RA)</text><text x="112" y="57" class="svg-ink3" font-size="11.5">§8 · 보안 위험성 평가 포함(§8.2.4)</text>
+<rect x="96" y="82" width="372" height="46" rx="5" class="svg-acc"/><text x="112" y="102" class="svg-ink" font-weight="700">② 보호계층에 안전기능 할당</text><text x="112" y="119" class="svg-ink3" font-size="11.5">§9 · SIL·목표 실패척도 결정</text>
+<rect x="96" y="144" width="372" height="46" rx="5" class="svg-acc"/><text x="112" y="164" class="svg-ink" font-weight="700">③ SIS 안전 요구사항 명세(SRS)</text><text x="112" y="181" class="svg-ink3" font-size="11.5">§10 · 응용 프로그램 SRS 포함(§10.3)</text>
+<rect x="96" y="206" width="372" height="46" rx="5" class="svg-box"/><text x="112" y="226" class="svg-ink" font-weight="700">④ SIS 설계·엔지니어링</text><text x="112" y="243" class="svg-ink3" font-size="11.5">§11 하드웨어 · §12 응용 프로그램 · §13 FAT</text>
+<rect x="96" y="268" width="372" height="46" rx="5" class="svg-box"/><text x="112" y="288" class="svg-ink" font-weight="700">⑤ 설치·시운전·안전 확인(validation)</text><text x="112" y="305" class="svg-ink3" font-size="11.5">§14 · §15</text>
+<rect x="96" y="330" width="372" height="46" rx="5" class="svg-box"/><text x="112" y="350" class="svg-ink" font-weight="700">⑥ 운전·유지보수</text><text x="112" y="367" class="svg-ink3" font-size="11.5">§16 · 증명시험·점검(§16.3), bypass 관리</text>
+<rect x="96" y="392" width="372" height="46" rx="5" class="svg-amb"/><text x="112" y="412" class="svg-ink" font-weight="700">⑦ 변경(modification)</text><text x="112" y="429" class="svg-ink3" font-size="11.5">§17 · 영향 분석 후 해당 단계로 복귀</text>
+<rect x="96" y="454" width="372" height="46" rx="5" class="svg-box"/><text x="112" y="474" class="svg-ink" font-weight="700">⑧ 폐기(decommissioning)</text><text x="112" y="491" class="svg-ink3" font-size="11.5">§18</text>
+</g>
+<g class="svg-stroke" stroke-width="1.6" fill="none">
+<line x1="282" y1="66" x2="282" y2="80" marker-end="url(#ah)"/><line x1="282" y1="128" x2="282" y2="142" marker-end="url(#ah)"/><line x1="282" y1="190" x2="282" y2="204" marker-end="url(#ah)"/><line x1="282" y1="252" x2="282" y2="266" marker-end="url(#ah)"/><line x1="282" y1="314" x2="282" y2="328" marker-end="url(#ah)"/><line x1="282" y1="376" x2="282" y2="390" marker-end="url(#ah)"/><line x1="282" y1="438" x2="282" y2="452" marker-end="url(#ah)"/>
+<path d="M96,415 C70,415 82,43 94,43" marker-end="url(#ah)" stroke-width="1.2"/>
+</g>
+<g font-size="12">
+<g><line x1="468" y1="198" x2="508" y2="198" class="svg-line"/><rect x="511" y="191" width="14" height="14" transform="rotate(45 518 198)" class="svg-red"/><text x="536" y="202" class="svg-ink" font-weight="700">FSA 1</text><text x="580" y="202" class="svg-ink3">SRS 완료 후</text></g>
+<g><line x1="468" y1="260" x2="508" y2="260" class="svg-line"/><rect x="511" y="253" width="14" height="14" transform="rotate(45 518 260)" class="svg-red"/><text x="536" y="264" class="svg-ink" font-weight="700">FSA 2</text><text x="580" y="264" class="svg-ink3">설계 완료 후</text></g>
+<g><line x1="468" y1="322" x2="508" y2="322" class="svg-line"/><rect x="511" y="315" width="14" height="14" transform="rotate(45 518 322)" class="svg-red"/><text x="536" y="326" class="svg-ink" font-weight="700">FSA 3</text><text x="580" y="326" class="svg-ink3">위험 존재 전(필수)</text></g>
+<g><line x1="468" y1="353" x2="508" y2="353" class="svg-line"/><rect x="511" y="346" width="14" height="14" transform="rotate(45 518 353)" class="svg-red"/><text x="536" y="357" class="svg-ink" font-weight="700">FSA 4</text><text x="580" y="357" class="svg-ink3">운전 중 주기적</text></g>
+<g><line x1="468" y1="446" x2="508" y2="446" class="svg-line"/><rect x="511" y="439" width="14" height="14" transform="rotate(45 518 446)" class="svg-red"/><text x="536" y="450" class="svg-ink" font-weight="700">FSA 5</text><text x="580" y="450" class="svg-ink3">변경 후·폐기 전</text></g>
+</g>
+</svg>
+</div>
+<figcaption>그림 2.1 IEC 61511 SIS 안전 수명주기와 FSA 단계. 단계 구성은 61511-1 그림 7과 표 2의 요지를 다시 그린 것입니다 <span class="src">[61511-PV] [BRATT]</span>. 왼쪽 곡선은 변경이 영향 분석 결과에 따라 앞 단계로 되돌아감을 뜻합니다.</figcaption>
+</figure>
+<div class="prose">
+<p>2판에서는 수명주기 그림이 6장으로 옮겨졌고, 응용 프로그램 안전 수명주기도 §6.3으로 이동했습니다. 1판의 "safety plan"은 "SIS safety life-cycle plan"으로 이름이 바뀌었습니다 <span class="src">[BRATT] [61511-PV]</span>.</p>
+<p>수명주기에서 각 단계는 <strong>입력·출력·검증</strong>으로 정의됩니다. 61511-1 표 2는 단계별 목표, 요건 조항, 입력, 출력을 정리한 표입니다 <span class="src">[61511-PV]</span>. 실무에서 "단계를 마쳤다"는 말은 그 단계의 출력 문서가 검증을 통과했다는 뜻이어야 합니다.</p>
+</div>
+
+<h3><span class="sec">2.3</span>기능안전 관리(FSM, §5)</h3>
+<div class="prose"><p>61511-1 §5.2는 일곱 개의 하위 조항으로 이루어집니다 <span class="src">[61511-PV]</span>.</p></div>
+<div class="tbl"><table>
+<thead><tr><th>조항</th><th>제목</th><th>핵심 요구(요지)</th></tr></thead>
+<tbody>
+<tr><td class="mono">5.2.1</td><td>일반</td><td>기능안전 정책·전략과 이를 달성하는 수단을 정하고, FSM 활동을 수명주기 전체에 걸쳐 수행합니다.</td></tr>
+<tr><td class="mono">5.2.2</td><td>조직과 자원</td><td>각 활동의 책임자(사람·부서·조직)를 지정하고 알립니다. 수행자는 역량을 갖춰야 합니다. 2판은 역량 지식 영역 목록을 "shall"로 바꾸고, 역량 관리 절차와 주기적 역량 평가를 요구합니다 <span class="src">[BRATT]</span>.</td></tr>
+<tr><td class="mono">5.2.3</td><td>위험 평가와 위험 관리</td><td>위험원을 식별하고 위험을 평가하여 필요한 위험저감을 정하는 체계를 갖춥니다.</td></tr>
+<tr><td class="mono">5.2.4</td><td>안전 계획</td><td>SIS 안전 수명주기 계획을 세우고, 수명주기 활동·책임·일정·검증·FSA 계획을 정합니다.</td></tr>
+<tr><td class="mono">5.2.5</td><td>실행과 감시</td><td>H&amp;RA·FSA·감사·검증·확인에서 나온 권고를 신속히 추적·해결하는 절차, 공급자 관리, SIS 성능(고장·요구) 감시를 둡니다.</td></tr>
+<tr><td class="mono">5.2.6</td><td>평가·감사·개정</td><td>FSA(§5.2.6.1)와 기능안전 감사(§5.2.6.2)를 계획하고 수행합니다.</td></tr>
+<tr><td class="mono">5.2.7</td><td>SIS 형상 관리</td><td>하드웨어·응용 프로그램·문서의 형상을 식별하고 변경을 통제합니다.</td></tr>
+</tbody></table></div>
+<h4>역량(competence)에서 고려할 항목</h4>
+<div class="prose"><p>역량은 자격증 보유가 아니라 맡은 역할에 대한 적합성입니다. 61511은 다음 성격의 항목을 고려하도록 요구합니다(요지): 공정 응용에 맞는 공학 지식·훈련·경험, 사용 기술(전기·전자·PE)에 대한 지식, 센서·최종요소에 대한 지식, 안전공학 지식(공정안전 분석 등), 법규·규제 요건 지식, 역할에 맞는 관리·리더십 능력, 사고 결과에 대한 이해, SIF의 SIL, 응용과 기술의 새로움·복잡성.</p></div>
+<div class="box judg"><span class="lbl">실무 판단:</span><p>TÜV FS Engineer 인증은 역량의 증거 중 하나일 뿐입니다. 61511이 요구하는 것은 역량 관리 <strong>절차</strong>(역할별 요구 역량 정의 → 평가 → 기록 → 주기적 재평가)입니다. 감사에서는 인증서 사본보다 이 절차와 기록을 봅니다.</p></div>
+
+<h3><span class="sec">2.4</span>검증·확인·FSA·감사의 구분</h3>
+<div class="prose"><p>네 활동은 시험에 거의 반드시 나옵니다. "무엇을 기준으로, 언제, 누가" 하는지로 구분하면 헷갈리지 않습니다.</p></div>
+<div class="tbl"><table>
+<thead><tr><th>활동</th><th>질문</th><th>기준</th><th>시점</th><th>수행자</th></tr></thead>
+<tbody>
+<tr><td><strong>검증</strong><br>(verification, §7)</td><td>이 단계의 출력이 이 단계의 입력·요건을 만족하는가?</td><td>각 단계의 목표와 요건</td><td>모든 단계마다</td><td>적절한 역량자. 독립성은 계획에서 정함</td></tr>
+<tr><td><strong>확인</strong><br>(validation, §15)</td><td>설치된 SIS가 SRS를 만족하는가?</td><td>SRS</td><td>설치·시운전 후, 운전 개시 전</td><td>확인 계획에 따른 수행 조직</td></tr>
+<tr><td><strong>FSA</strong><br>(§5.2.6.1)</td><td>SIS와 보호계층이 달성한 기능안전이 충분한가?</td><td>기능안전 달성에 대한 판단(증거 기반)</td><td>단계 1–5</td><td>프로젝트 설계팀에 속하지 않은 선임 역량자를 1명 이상 포함한 팀</td></tr>
+<tr><td><strong>감사</strong><br>(audit, §5.2.6.2)</td><td>정해진 절차가 실제로 지켜지고 효과적인가?</td><td>FSM 절차·계획</td><td>계획에 따라 주기적</td><td>독립적 감사자</td></tr>
+</tbody></table></div>
+<div class="prose"><p>2판은 §7에 시험(testing)을 다루는 조항(§7.2.2)을 새로 두어 하드웨어와 응용 프로그램 시험을 검증의 틀 안에서 함께 요구합니다 <span class="src">[BRATT]</span>.</p></div>
+<div class="box trap"><span class="lbl">함정:</span><p>"FAT는 확인(validation)이다"는 틀립니다. FAT는 설계 단계의 <strong>검증</strong> 활동입니다(61511-1 §13, 2판에서 FAT 조항은 권고 "recommendations"로 되어 있습니다 <span class="src">[61511-PV]</span>). 확인은 설치된 SIS 전체를 SRS에 대조하는 §15 활동입니다.</p></div>
+
+<h3><span class="sec">2.5</span>FSA의 단계와 독립성</h3>
+<div class="tbl"><table>
+<thead><tr><th>단계</th><th>시점</th><th>주요 확인 대상</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>H&amp;RA를 수행하고 필요한 보호계층을 식별하고 SRS를 작성한 후</td><td>위험 분석의 적정성, SIL 할당 근거, SRS 완결성</td></tr>
+<tr><td>2</td><td>SIS 설계 후</td><td>설계가 SRS를 만족하는가(PFD·HFT·SC, 응용 프로그램 설계)</td></tr>
+<tr><td>3</td><td>설치·사전 시운전·최종 확인을 마치고 운전·유지보수 절차를 갖춘 후, <strong>위험이 존재하기 전</strong></td><td>확인 결과, 절차, 교육, 미결 사항. 최소한 수행해야 하는 단계입니다</td></tr>
+<tr><td>4</td><td>운전·유지보수 경험을 쌓은 후(주기적)</td><td>실제 요구율·고장률이 가정과 맞는가, 절차 준수</td></tr>
+<tr><td>5</td><td>변경 후, 폐기 전</td><td>영향 분석과 변경 수행의 적정성</td></tr>
+</tbody></table></div>
+<div class="prose"><p>1판은 "최소 한 번, 늦어도 단계 3"을 요구했습니다. 2판은 여기에 두 가지를 더했습니다. 변경에 대한 FSA는 영향 분석을 고려해야 하고(§5.2.6.1.9), 운전·유지보수 중에 FSA를 주기적으로 수행해야 합니다(§5.2.6.1.10) <span class="src">[BRATT]</span>.</p></div>
+<h4>IEC 61508-1의 독립성 등급</h4>
+<div class="prose"><p>61508-1은 FSA 수행자의 최소 독립성을 표로 정합니다. E/E/PE·소프트웨어 수명주기의 FSA(표 5)의 요지는 다음과 같습니다. 61511은 이 표를 쓰지 않고 "프로젝트 설계팀에 속하지 않은 선임 역량자 1명 이상"이라는 요건을 둡니다.</p></div>
+<div class="tbl compact"><table>
+<thead><tr><th>최소 독립성</th><th class="c">SIL 1</th><th class="c">SIL 2</th><th class="c">SIL 3</th><th class="c">SIL 4</th></tr></thead>
+<tbody>
+<tr><td>독립된 사람(independent person)</td><td class="c">HR</td><td class="c">HR*</td><td class="c">NR</td><td class="c">NR</td></tr>
+<tr><td>독립된 부서(independent department)</td><td class="c">—</td><td class="c">HR*</td><td class="c">HR**</td><td class="c">NR</td></tr>
+<tr><td>독립된 조직(independent organization)</td><td class="c">—</td><td class="c">—</td><td class="c">HR**</td><td class="c">HR</td></tr>
+</tbody></table></div>
+<p class="small">HR = 강력 권고, NR = 불충분(권고하지 않음). * 사람 또는 부서, ** 부서 또는 조직 중 어느 쪽인지는 유사 설계 경험 부족, 복잡성, 설계·기술의 새로움, 표준화 부족 정도에 따라 정합니다. 요지이므로 세부는 61508-1 원문을 확인하십시오 <span class="src">[61508-1]</span>.</p>
+<div class="box exam"><span class="lbl">시험 포인트:</span><ul>
+<li>FSA 단계 3은 위험이 존재하기 전(공정 물질 투입 전)에 반드시 수행합니다.</li>
+<li>FSA 팀에는 프로젝트 설계팀이 아닌 선임 역량자가 최소 1명 있어야 합니다.</li>
+<li>2판 신설: 변경 FSA는 영향 분석을 고려, 운전 중 주기적 FSA.</li>
+<li>감사는 "절차 준수 여부", FSA는 "기능안전 달성 여부"를 판단합니다.</li>
+</ul></div>
+
+<h3><span class="sec">2.6</span>문서와 형상 관리</h3>
+<div class="prose">
+<p>§19는 수명주기 각 단계의 정보가 정확하고, 최신이며, 필요한 사람이 쓸 수 있고, 변경이 통제되도록 요구합니다. §5.2.7 형상 관리는 SIS의 하드웨어 버전, 응용 프로그램 리비전, 설정값(트립 설정점, 지연 시간), 문서 리비전을 한 묶음으로 관리하라는 요구입니다.</p>
+</div>
+<div class="box judg"><span class="lbl">실무 판단:</span><p>운전 중 FSA 단계 4에서 자주 지적되는 것은 "SRS의 트립 설정점과 실제 로직 설정값 불일치", "PFD 계산의 증명시험 주기와 실제 정비 계획 불일치", "bypass 기록 누락"입니다. 이 세 가지는 형상 관리가 수명주기를 가로질러 연결되어 있지 않을 때 생깁니다.</p></div>
+</section>
+
+<!-- ===================== CH 3 ===================== -->
+<section class="chapter" id="ch3">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>03</span></div><div><p class="eyebrow">IEC 61511-1 §8 · IEC 61508-5 · 신뢰성 이론</p><h2>위험성 평가·허용위험·요구율</h2></div></div>
+
+<h3><span class="sec">3.1</span>공정 H&amp;RA의 요구사항(§8)</h3>
+<div class="prose">
+<p>61511은 특정 기법(HAZOP, What-if 등)을 지정하지 않습니다. 요구하는 것은 결과물입니다. H&amp;RA는 위험사건과 그 원인이 되는 사건의 연쇄, 결과와 발생 가능성, 시운전·정상 운전·정지·정비·비정상 운전 등 모든 운전 모드, 필요한 위험저감과 그것을 달성할 안전기능을 밝혀야 합니다.</p>
+<p>2판은 §8.2.4에 <strong>보안 위험성 평가</strong>를 새로 요구합니다. SIS와 관련 장치에 대해, 취약점을 악용해 보안 사건을 일으킬 수 있는 위협을 식별하고, 설계·구현·시운전·운전·유지보수 각 단계에서 이를 고려해야 합니다. 세부 지침으로 ISA TR84.00.09, ISO/IEC 27001, IEC 62443이 언급됩니다 <span class="src">[BRATT]</span>.</p>
+</div>
+
+<h3><span class="sec">3.2</span>위험, 허용위험, ALARP</h3>
+<div class="prose">
+<p>위험(risk)은 위해의 발생 확률과 심각도의 조합이고, 허용위험(tolerable risk)은 현재 사회의 가치에 비추어 주어진 상황에서 받아들여지는 위험입니다(ISO/IEC Guide 51의 개념). 영국 HSE의 ALARP 틀은 위험을 세 영역으로 나눕니다. 받아들일 수 없는 영역, 합리적으로 실행 가능한 범위까지 낮췄을 때만 허용되는 영역(ALARP), 일반적으로 받아들여지는 영역입니다.</p>
+<p>SIL 결정에서 문제는 회사·국가의 <strong>전체</strong> 위험 기준(개인위험, 사회위험 F-N 곡선)을 <strong>시나리오 하나</strong>의 목표 빈도로 바꾸는 과정입니다. 한 사람이 여러 시나리오에 노출되면 각 시나리오의 기여가 더해지므로, 시나리오별 목표는 전체 기준보다 엄격해야 합니다.</p>
+</div>
+<div class="box trap"><span class="lbl">함정:</span><p>전체 개인위험 기준(예: 작업자 사망 10<sup>−4</sup>/yr, 예시값)을 시나리오별 목표 빈도로 그대로 쓰면, 같은 작업자에게 영향을 주는 시나리오가 10개일 때 실제 개인위험은 기준의 최대 10배가 됩니다. 회사 기준이 시나리오별 목표를 따로 정하고 있는지 먼저 확인하십시오.</p></div>
+
+<h3><span class="sec">3.3</span>필요한 위험저감</h3>
+<div class="prose"><p>보호 수단이 없을 때의 위험사건 빈도를 F<sub>np</sub>, 허용 빈도를 F<sub>t</sub>라 하면 필요한 위험저감은 그 비율입니다. 독립적인 다른 보호계층들이 이미 일부를 맡는다면 SIF가 맡을 몫은 나머지입니다.</p></div>
+<div class="eq">\[ \Delta R = \frac{F_{np}}{F_t}, \qquad \mathrm{PFD}_{SIF} \le \frac{F_t}{F_{np}\,\prod_j \mathrm{PFD}_{IPL,j}} \tag{3.1} \]</div>
+<div class="prose"><p>식 (3.1)은 보호계층들이 서로 <strong>독립</strong>이라는 가정에서만 성립합니다. 공통 센서, 공통 로직, 공통 정비 오류가 있으면 곱셈으로 줄어드는 만큼의 위험저감을 얻지 못합니다(9장).</p></div>
+
+<h3><span class="sec">3.4</span>요구율과 위험사건 빈도: 저빈도·고빈도 경계의 근거</h3>
+<div class="prose">
+<p>LOPA에서는 "위험사건 빈도 = 요구율 × PFD<sub>avg</sub>"를 당연하게 씁니다. 이 식이 언제 성립하고 언제 깨지는지 유도해 보겠습니다. 이 유도는 저빈도·고빈도 모드 경계가 왜 그 자리에 있는지도 설명합니다.</p>
+</div>
+<div class="box deep"><span class="lbl">심화: 단일 채널 SIF의 위험사건 빈도</span>
+<p>가정 <span class="src">[유도]</span>: 1oo1 SIF, 위험·미검출 고장률 λ(검출 고장은 무시), 주기 T의 완전한 증명시험으로 매번 신품 상태가 됨, 요구는 SIF와 독립인 포아송 과정(율 D), SIF가 고장난 상태에서 요구가 오면 위험사건이 발생. 한 시험 주기 안에서 시각 t에 고장이 나고, 남은 시간 T−t 동안 요구가 한 번이라도 오면 위험사건입니다.</p>
+<div class="eq">\[ N(T) = \int_0^T \lambda e^{-\lambda t}\left(1-e^{-D(T-t)}\right)dt = \left(1-e^{-\lambda T}\right) - \frac{\lambda\left(e^{-DT}-e^{-\lambda T}\right)}{\lambda - D} \tag{3.2} \]</div>
+<div class="eq">\[ H(D) = \frac{N(T)}{T} \tag{3.3} \]</div>
+<p>두 극한을 보면 구조가 드러납니다.</p>
+<div class="eq">\[ DT \ll 1:\quad 1-e^{-D(T-t)} \approx D(T-t) \;\Rightarrow\; H \approx D\,\frac{\lambda T}{2} = D\cdot \mathrm{PFD}_{avg} \tag{3.4} \]</div>
+<div class="eq">\[ DT \gg 1:\quad H \approx \frac{1-e^{-\lambda T}}{T} \approx \lambda = \mathrm{PFH}_{1oo1} \tag{3.5} \]</div>
+<p>요구가 드물면 위험사건 빈도는 요구율에 비례하고(저빈도 모드, PFD<sub>avg</sub>가 척도), 요구가 잦으면 위험사건 빈도는 요구율과 무관하게 고장률 자체가 됩니다(고빈도 모드, PFH가 척도). 두 근사가 만나는 지점은</p>
+<div class="eq">\[ D\,\frac{\lambda T}{2} = \lambda \;\Rightarrow\; D = \frac{2}{T} \tag{3.6} \]</div>
+<p>입니다. IEC 61508 1판은 저빈도 모드를 "요구 빈도가 연 1회 이하이고 증명시험 빈도의 2배 이하"로 정의했는데, 뒤쪽 조건이 바로 식 (3.6)입니다. 2판은 경계를 연 1회로 단순화했습니다.</p>
+</div>
+
+<div class="tool" id="toolHz">
+<div class="tool-head"><h4>도구 1 · 요구율–위험사건 빈도 관계</h4><span class="src">식 (3.2)–(3.6) [유도]</span></div>
+<div class="tool-body">
+<div class="fields">
+<div class="field"><label for="hzLam">λ<sub>DU</sub> [1/h]</label><input id="hzLam" type="text" inputmode="decimal" value="2e-6"><span class="hint">예시값</span></div>
+<div class="field"><label for="hzT">증명시험 주기 T<sub>1</sub> [yr]</label><input id="hzT" type="text" inputmode="decimal" value="1"><span class="hint">예시값</span></div>
+</div>
+<div class="chart-wrap" id="hzWrap">
+<div class="legend" id="hzLegend"></div>
+<div id="hzChart"></div>
+<div class="tip" id="hzTip" hidden></div>
+</div>
+<div class="results" id="hzOut"></div>
+<p class="note">곡선 위에 포인터를 올리면 해당 요구율에서 세 값을 비교합니다. 세로선은 2판 경계(연 1회)와 1판 경계(2/T<sub>1</sub>)입니다.</p>
+</div>
+</div>
+
+<div class="box judg"><span class="lbl">실무 판단:</span><p>요구율이 연 0.1회 이하이면 D·PFD<sub>avg</sub> 근사는 정확해(식 3.3)와 몇 % 이내로 맞습니다. 요구율이 연 1회에 가까워지면 근사는 위험사건 빈도를 과대평가합니다(T<sub>1</sub> = 1년, λ<sub>DU</sub> = 2×10<sup>−6</sup>/h 예시값에서 약 37% 과대). 보수적이므로 LOPA 결과가 틀어지지는 않지만, 요구율이 연 1회를 넘는 SIF를 PFD<sub>avg</sub>로 평가하고 SIL을 매기는 것은 61511 표 4·5의 구분에 맞지 않습니다. 이런 SIF는 PFH 목표로 다시 평가해야 합니다(4.4절).</p></div>
+<div class="box exam"><span class="lbl">시험 포인트:</span><ul>
+<li>저빈도: 위험사건 빈도 ≈ 요구율 × PFD<sub>avg</sub>. 고빈도·연속: 위험사건 빈도 ≈ PFH.</li>
+<li>2판 경계는 연 1회. 1판의 "증명시험 빈도의 2배" 조건은 삭제되었습니다.</li>
+</ul></div>
+</section>
+<!-- ===================== CH 4 ===================== -->
+<section class="chapter" id="ch4">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>04</span></div><div><p class="eyebrow">IEC 61511-1 §9 · IEC 61511-3 · CCPS LOPA</p><h2>보호계층 할당과 SIL 결정</h2></div></div>
+
+<h3><span class="sec">4.1</span>할당 과정과 SIL 표(§9.2)</h3>
+<div class="prose"><p>할당 단계의 출력은 SIF마다 기능 설명, 목표 SIL, 운전 모드(요구·연속), 목표 실패척도입니다. 61511-1 표 4는 요구 모드 SIF의 PFD<sub>avg</sub>, 표 5는 SIF의 평균 위험 고장 빈도(PFH)를 SIL별로 정합니다 <span class="src">[61511-PV] [61508A] [PRE]</span>.</p></div>
+<div class="tbl"><table>
+<thead><tr><th class="c">SIL</th><th>PFD<sub>avg</sub> (저빈도 요구)</th><th>필요 위험저감 RRF</th><th>PFH [1/h] (고빈도 요구·연속)</th></tr></thead>
+<tbody>
+<tr><td class="c"><b>4</b></td><td class="num">≥ 10⁻⁵ ~ &lt; 10⁻⁴</td><td class="num">&gt; 10 000 ~ ≤ 100 000</td><td class="num">≥ 10⁻⁹ ~ &lt; 10⁻⁸</td></tr>
+<tr><td class="c"><b>3</b></td><td class="num">≥ 10⁻⁴ ~ &lt; 10⁻³</td><td class="num">&gt; 1 000 ~ ≤ 10 000</td><td class="num">≥ 10⁻⁸ ~ &lt; 10⁻⁷</td></tr>
+<tr><td class="c"><b>2</b></td><td class="num">≥ 10⁻³ ~ &lt; 10⁻²</td><td class="num">&gt; 100 ~ ≤ 1 000</td><td class="num">≥ 10⁻⁷ ~ &lt; 10⁻⁶</td></tr>
+<tr><td class="c"><b>1</b></td><td class="num">≥ 10⁻² ~ &lt; 10⁻¹</td><td class="num">&gt; 10 ~ ≤ 100</td><td class="num">≥ 10⁻⁶ ~ &lt; 10⁻⁵</td></tr>
+</tbody></table></div>
+<div class="box trap"><span class="lbl">함정:</span><p>경계값을 주의하십시오. PFD<sub>avg</sub> = 0.1(RRF = 10)은 SIL 1이 아닙니다. SIL 1은 RRF가 10을 <strong>초과</strong>할 때부터입니다. PFD<sub>avg</sub> = 1.0×10<sup>−3</sup>은 SIL 2 범위의 하한이 아니라 SIL 2 범위(≥10<sup>−3</sup>)에 속합니다. 즉 RRF 정확히 1000은 SIL 2입니다.</p></div>
+<div class="prose"><p>2판에서 §9에 생긴 주요 변화는 두 가지입니다. BPCS 보호계층에 대한 제한이 구체화되었고, <strong>계장 방호 수단(instrumented safeguards) 전체로 RRF 10 000 초과를 주장할 때의 요건</strong>이 새로 생겼습니다 <span class="src">[TR61511-4]</span>. 후자는 BPCS 보호계층과 SIF를 합쳐 네 자릿수 이상의 위험저감을 계장에 맡기는 경우, 공통원인·공통모드·종속 고장(§9.4)을 더 엄격히 따지도록 하는 장치입니다.</p></div>
+
+<h3><span class="sec">4.2</span>BPCS를 보호계층으로 쓸 때(§9.3)</h3>
+<div class="prose"><p>§9.3의 요건을 Kenexis 해설의 낭독과 해석으로 정리하면 다음과 같습니다 <span class="src">[KNX]</span>.</p></div>
+<div class="tbl"><table>
+<thead><tr><th>조항</th><th>요지</th></tr></thead>
+<tbody>
+<tr><td class="mono">9.3.1</td><td>BPCS는 보호계층으로 주장할 수 있습니다(그림 9의 보호계층 구성).</td></tr>
+<tr><td class="mono">9.3.2</td><td>BPCS 보호계층 하나에 주장하는 위험저감은 10 이하입니다(PFD ≥ 0.1). BPCS는 동시에 보호계층에 요구를 일으키는 원인(initiating source)이 될 수 있습니다.</td></tr>
+<tr><td class="mono">9.3.4</td><td>BPCS가 시나리오의 원인일 때는 BPCS 보호계층을 최대 1개, 원인이 BPCS 고장과 무관할 때는 최대 2개까지 주장합니다.</td></tr>
+<tr><td class="mono">9.3.5</td><td>각 BPCS 보호계층은 원인과도, 서로 간에도, 주장하는 위험저감이 훼손되지 않을 만큼 독립·분리되어야 합니다. CPU, 입출력 모듈, 릴레이, 필드 장치, 네트워크, 데이터베이스, 엔지니어링 도구, HMI, bypass 도구 등이 공통 요소가 될 수 있습니다. Hot backup 컨트롤러는 주 컨트롤러와 공통원인고장을 겪으므로 독립으로 보지 않습니다.</td></tr>
+</tbody></table></div>
+<div class="box deep"><span class="lbl">심화: 왜 BPCS는 RRF 10이 한계인가</span>
+<p>BPCS는 61511의 FSM·검증·변경 관리 아래 설계·운영되지 않는 것이 보통입니다. 운전원이 설정값과 모드를 바꾸고, 엔지니어가 온라인으로 로직을 수정하며, 증명시험 계획도 없습니다. 이런 체계적 요인이 무작위 고장률보다 성능을 지배하므로, 하드웨어 고장률로 계산한 PFD가 아무리 낮아도 0.1보다 낫게 주장하지 못하게 한 것입니다. Kenexis 해설은 CPU만 공유하는 두 BPCS 계층을 결함수로 분석하면 RRF 100까지는 가능하지만 1000에는 이르지 못한다고 설명합니다 <span class="src">[KNX]</span>. 공유 CPU와 공유 엔지니어링 오류가 상한을 만듭니다.</p>
+<p>또한 61511은 61511을 따르지 않는 BPCS의 고장을 원인으로 삼을 때 그 위험 고장률을 10<sup>−5</sup>/h보다 낮게 가정하지 않도록 합니다(연간 약 0.09회, LOPA에서 흔히 0.1/yr로 반올림) <span class="src">[61511-1 §8.2]</span>.</p>
+</div>
+
+<h3><span class="sec">4.3</span>위험 그래프(Risk graph)</h3>
+<div class="prose">
+<p>위험 그래프는 결과(C), 노출(F), 회피 가능성(P), 요구율(W) 네 매개변수의 조합으로 필요한 SIL을 읽는 반정량 기법입니다. 결과 칸에 "a"(특별한 안전 요구 없음)부터 SIL 1–4, "b"(단일 SIF로 불충분)까지가 나옵니다. 61511-3과 61508-5에 예가 있습니다.</p>
+<p>위험 그래프는 사실상 <strong>미리 보정해 둔 LOPA</strong>입니다. 각 매개변수 단계가 대략 한 자릿수(10배)의 위험 차이를 갖도록 설계되어 있으므로, 그래프의 한 칸은 다음 식의 결과를 SIL 대역으로 반올림한 것입니다.</p>
+</div>
+<div class="eq">\[ \mathrm{RRF}_{req} \approx \frac{W_{\max}\cdot F\cdot P\cdot V(C)}{F_t(C)} \tag{4.1} \]</div>
+<div class="prose"><p>여기서 W<sub>max</sub>는 해당 W 등급의 상한 요구율, F와 P는 노출·회피 확률, V(C)는 결과 등급의 사망 확률 등입니다. 예를 들어 단일 사망 등급의 허용 빈도를 10<sup>−5</sup>/yr, W를 0.1/yr(등급 상한), 노출 0.1, 회피 불가(1.0)로 두면 RRF ≈ 0.1×0.1×1/10<sup>−5</sup> = 1000으로 SIL 2의 상한입니다(모두 예시값). 이렇게 보정 근거를 써 두어야 그래프를 감사에서 방어할 수 있습니다.</p></div>
+<div class="box trap"><span class="lbl">함정:</span><ul>
+<li><strong>이중 계산</strong>: W(요구율)에 이미 운전원 경보 대응을 반영했는데 P(회피 가능성)에서도 같은 경보를 근거로 낮은 등급을 고르는 경우.</li>
+<li><strong>보정하지 않은 그래프</strong>: 표준의 예시 그래프를 회사 허용위험 기준과 대조하지 않고 쓰는 경우. 61511-3의 그래프는 예시입니다.</li>
+<li><strong>노출(F) 과소 평가</strong>: 연속 공정에서 사람의 체류 시간이 짧다고 F를 낮췄지만, 요구가 사람의 체류 중에 집중되는 경우(예: 시운전 작업 중 이상).</li>
+</ul></div>
+
+<h3><span class="sec">4.4</span>LOPA 심화</h3>
+<h4><span class="sec">4.4.1</span>구조와 식</h4>
+<div class="prose"><p>LOPA는 HAZOP 등에서 나온 원인–결과 쌍(시나리오) 하나에 대해, 원인 빈도에서 출발하여 독립 보호계층(IPL)의 PFD와 조건부 수정계수를 곱해 결과 빈도를 구하고 허용 빈도와 비교하는 방법입니다 <span class="src">[CCPS] [KOSHA-LOPA]</span>.</p></div>
+<div class="eq">\[ f^{C} = \sum_i f^{I}_i \cdot EC_i \cdot \prod_j \mathrm{PFD}_{ij} \cdot \prod_k CM_k, \qquad \mathrm{RRF}_{SIF} = \frac{f^{C}_{\text{without SIF}}}{F_t} \tag{4.2} \]</div>
+<h4><span class="sec">4.4.2</span>IPL의 요건</h4>
+<div class="prose">
+<p>CCPS의 핵심 기준은 네 가지입니다. <strong>독립성</strong>(원인과 다른 IPL로부터 독립), <strong>유효성·특정성</strong>(감지–판단–동작을 시간 안에 수행해 그 결과를 실제로 막을 수 있음), <strong>신뢰성·무결성</strong>(주장한 PFD에 근거가 있음), <strong>감사 가능성</strong>(시험·점검으로 성능을 확인할 수 있음)입니다. CCPS 후속 지침서는 접근 보안과 변경 관리까지 핵심 속성으로 넓혀 설명합니다 <span class="src">[CCPS]</span>.</p>
+</div>
+<h4><span class="sec">4.4.3</span>조건(EC)과 조건부 수정계수(CM)</h4>
+<div class="prose">
+<p><strong>조건(enabling condition)</strong>은 원인이 결과로 진행하려면 존재해야 하는 상태로, 고장도 보호도 아닙니다(예: 해당 운전 모드에 있는 시간 비율). <strong>조건부 수정계수(conditional modifier)</strong>는 결과의 정의에 따라 붙는 확률입니다(점화 확률, 사람의 존재 확률, 치명상 확률).</p>
+</div>
+<div class="box trap"><span class="lbl">함정:</span><ul>
+<li>CM을 여러 개 곱하다 보면 근거 없이 두세 자릿수가 사라집니다. 결과 등급이 이미 "사망"이 아닌 "누출"로 정의되어 있으면 사망 확률 CM을 곱하면 안 됩니다.</li>
+<li>연속 공정의 위험에 "위험 시간 비율(time at risk)"을 EC로 곱하는 것은 대개 잘못입니다. 위험한 상태가 시간 비율로 존재하는 배치 공정 등에만 의미가 있습니다.</li>
+</ul></div>
+<h4><span class="sec">4.4.4</span>운전원 대응을 IPL로 쓸 때</h4>
+<div class="prose"><p>경보와 운전원 대응을 IPL로 주장하려면 경보가 원인 및 다른 IPL과 독립이어야 하고(같은 송신기·같은 컨트롤러 금지), 명확한 대응 절차와 훈련이 있어야 하며, 감지·진단·조치에 필요한 시간이 공정 응답시간 안에 충분히 들어와야 합니다. 운전원이 같은 시점에 여러 경보에 대응해야 하는 상황(경보 범람)이라면 주장할 수 없습니다.</p></div>
+
+<h4><span class="sec">4.4.5</span>SIF 요구율: 순서가 중요한 유일한 곳</h4>
+<div class="prose">
+<p>LOPA의 최종 결과 빈도는 곱셈이므로 IPL의 순서와 무관합니다. 그러나 <strong>SIF에 걸리는 요구율</strong>은 순서에 따라 달라집니다. SIF보다 <strong>먼저</strong> 작동하는 IPL(예: 독립 경보 + 운전원 대응)만 SIF 요구율을 줄입니다. SIF가 실패한 뒤에 작동하는 IPL(PSV, 방유제)과 CM(점화, 재실, 치명상)은 결과 빈도는 줄이지만 SIF 요구율은 줄이지 않습니다 <span class="src">[유도]</span>.</p>
+</div>
+<div class="eq">\[ D_{SIF} = \sum_i f^{I}_i\, EC_i \prod_{j\,\in\,\text{SIF 이전}} \mathrm{PFD}_{ij} \tag{4.3} \]</div>
+<div class="prose"><p>D<sub>SIF</sub>가 연 1회를 넘으면 고빈도 모드입니다. 이때 목표는 PFH이며, SIF 이후 계층과 CM만으로 나머지를 나눕니다.</p></div>
+<div class="eq">\[ \mathrm{PFH}_{target} = \frac{F_t}{8760\cdot \prod_{j\,\in\,\text{SIF 이후}} \mathrm{PFD}_j \cdot \prod_k CM_k} \quad [1/h] \tag{4.4} \]</div>
+<div class="box deep"><span class="lbl">심화: 같은 하드웨어, 다른 SIL 이름</span>
+<p>예시값으로 F<sub>t</sub> = 10<sup>−5</sup>/yr, 원인 2/yr(SIF 이전 IPL 없음), SIF 이후 PSV PFD 0.01, CM 1이라고 하겠습니다. D<sub>SIF</sub> = 2/yr이므로 고빈도 모드이고, 식 (4.4)로 PFH ≤ 10<sup>−5</sup>/(8760×0.01) = 1.14×10<sup>−7</sup>/h, 즉 SIL 2입니다. 같은 문제를 저빈도 식으로 잘못 풀면 PFD ≤ 10<sup>−5</sup>/(2×0.01) = 5×10<sup>−4</sup>, 즉 SIL 3이 나옵니다.</p>
+<p>T<sub>1</sub> = 1년이면 PFD<sub>avg</sub> = 5×10<sup>−4</sup>에 해당하는 λ<sub>DU</sub>는 10<sup>−3</sup>/yr = 1.14×10<sup>−7</sup>/h로 PFH 목표와 똑같습니다. D = 2/T<sub>1</sub>은 식 (3.6)의 교차점이므로 두 방법의 위험사건 빈도가 일치하는 것입니다. 하드웨어 요구는 같은데 SIL 이름이 한 단계 다르게 붙는 이유는 표 4와 표 5의 대역이 다르기 때문입니다. 모드를 먼저 정확히 판정하고 그 모드의 표로 SIL을 매겨야 하는 이유가 여기에 있습니다 <span class="src">[유도]</span>.</p>
+</div>
+
+<div class="tool" id="toolLopa">
+<div class="tool-head"><h4>도구 2 · LOPA 계산기(모드 판정 포함)</h4><span class="src">식 (4.2)–(4.4) · 기본 입력은 모두 예시값</span></div>
+<div class="tool-body">
+<div class="fields">
+<div class="field"><label for="lpFt">허용 빈도 F<sub>t</sub> [1/yr]</label><input id="lpFt" type="text" inputmode="decimal" value="1e-5"></div>
+<div class="field"><label for="lpIe1">원인 1 빈도 [1/yr]</label><input id="lpIe1" type="text" inputmode="decimal" value="0.1"><span class="hint">예: 액위 제어(BPCS) 고장</span></div>
+<div class="field"><label for="lpEc1">원인 1 조건(EC)</label><input id="lpEc1" type="text" inputmode="decimal" value="1"></div>
+<div class="field"><label for="lpIe2">원인 2 빈도 [1/yr]</label><input id="lpIe2" type="text" inputmode="decimal" value="0.05"><span class="hint">예: 상류 이상 유입</span></div>
+<div class="field"><label for="lpEc2">원인 2 조건(EC)</label><input id="lpEc2" type="text" inputmode="decimal" value="1"></div>
+<div class="field"><label for="lpB1">SIF 이전 IPL 1 PFD</label><input id="lpB1" type="text" inputmode="decimal" value="0.1"><span class="hint">예: 독립 경보 + 운전원</span></div>
+<div class="field"><label for="lpB2">SIF 이전 IPL 2 PFD</label><input id="lpB2" type="text" inputmode="decimal" value="1"><span class="hint">없으면 1</span></div>
+<div class="field"><label for="lpA1">SIF 이후 IPL PFD</label><input id="lpA1" type="text" inputmode="decimal" value="1"><span class="hint">예: PSV, 방유제. 없으면 1</span></div>
+<div class="field"><label for="lpCm1">CM: 점화 확률</label><input id="lpCm1" type="text" inputmode="decimal" value="0.3"></div>
+<div class="field"><label for="lpCm2">CM: 재실 확률</label><input id="lpCm2" type="text" inputmode="decimal" value="0.5"></div>
+<div class="field"><label for="lpCm3">CM: 치명상 확률</label><input id="lpCm3" type="text" inputmode="decimal" value="0.5"></div>
+</div>
+<div class="results" id="lpOut"></div>
+<p class="note" id="lpMsg"></p>
+</div>
+</div>
+
+<h4><span class="sec">4.4.6</span>경험자도 자주 놓치는 LOPA 오류</h4>
+<div class="prose"><ul>
+<li><strong>원인과 IPL이 같은 BPCS를 공유</strong>: 액위 제어 고장이 원인인데, 같은 컨트롤러의 고수위 경보를 IPL로 주장. §9.3.5 위반입니다.</li>
+<li><strong>효과 없는 PSV 주장</strong>: 2상 유동, 막힘 우려, 반응 폭주처럼 PSV 용량 산정 기준을 벗어나는 시나리오에 PSV를 IPL로 넣는 경우.</li>
+<li><strong>SIF 요구율 미확인</strong>: 원인 빈도가 높고 SIF 이전 IPL이 없어 고빈도 모드인데 PFD<sub>avg</sub>로 평가.</li>
+<li><strong>결과 정의 혼재</strong>: 화재와 독성 결과를 한 시나리오에서 섞어 CM을 적용.</li>
+<li><strong>여러 SIF의 단순 곱</strong>: 같은 위험에 SIF 두 개를 두고 PFD를 곱했지만 송신기 탭·로직 솔버·전원을 공유.</li>
+</ul></div>
+
+<h3><span class="sec">4.5</span>위험 행렬·안전층 행렬·정량 분석</h3>
+<div class="prose">
+<p>위험 행렬은 결과 등급과 빈도 등급으로 필요한 위험저감 자릿수를 읽습니다. 안전층 행렬(safety layer matrix)은 여기에 다른 보호계층의 수를 함께 고려합니다. 고SIL(SIL 3 이상), 여러 원인이 얽힌 시나리오, 공통 요소가 많은 보호 체계는 결함수(FTA)·사건수(ETA) 같은 정량 분석이 더 적합합니다. 61511-3 2판은 정량 분석 고려 사항을 다루는 부속서를 추가했습니다.</p>
+</div>
+
+<h3><span class="sec">4.6</span>특수한 경우</h3>
+<div class="tbl"><table>
+<thead><tr><th>상황</th><th>다루는 법</th></tr></thead>
+<tbody>
+<tr><td>필요 RRF ≤ 10</td><td>61511이 적용되는 SIF가 아닙니다(SIL 1 미만). BPCS 기능이나 기타 계장 방호로 관리하되, 그 성능과 관리 근거는 남겨야 합니다.</td></tr>
+<tr><td>SIL 4가 필요</td><td>61511은 SIL 4에 추가 요건을 두며, 공정 분야에서는 드뭅니다. 공정 설계 변경, 비계장 보호계층 추가, 결과 완화로 요구를 낮추는 것이 먼저입니다.</td></tr>
+<tr><td>계장 방호 합계 RRF &gt; 10 000</td><td>2판 신설 요건 대상. BPCS 계층과 SIF 사이, SIF들 사이의 공통원인·공통모드·종속 고장을 평가해야 합니다 <span class="src">[TR61511-4]</span>.</td></tr>
+<tr><td>환경·자산 결과</td><td>결과 종류별로 따로 SIL을 정하고 가장 엄격한 값을 택합니다. 자산 보호 SIF도 61511을 적용할 수 있습니다.</td></tr>
+</tbody></table></div>
+<div class="box exam"><span class="lbl">시험 포인트:</span><ul>
+<li>BPCS 보호계층 RRF ≤ 10, BPCS가 원인이면 BPCS 보호계층 최대 1개, 아니면 최대 2개.</li>
+<li>Hot backup 컨트롤러는 독립이 아닙니다.</li>
+<li>비준수 BPCS를 원인으로 쓸 때 위험 고장률은 10<sup>−5</sup>/h보다 낮게 잡지 않습니다.</li>
+<li>위험 그래프 매개변수: C, F, P, W. 결과 "a"와 "b"의 의미.</li>
+<li>LOPA IPL 기준: 독립성, 유효성, 신뢰성(무결성), 감사 가능성.</li>
+</ul></div>
+</section>
+
+<!-- ===================== CH 5 ===================== -->
+<section class="chapter" id="ch5">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>05</span></div><div><p class="eyebrow">IEC 61511-1 §10</p><h2>안전 요구사항 명세(SRS)</h2></div></div>
+
+<h3><span class="sec">5.1</span>§10의 구조와 2판 변경</h3>
+<div class="prose">
+<p>§10은 목적(10.1), 일반 요건(10.2), SIS 안전 요구사항(10.3)으로 이루어집니다 <span class="src">[61511-PV]</span>. 1판의 SRS 필수 항목 27개는 2판에서 29개가 되었습니다. 새로 더해진 대표 항목은 "각 SIF에 관련된 현장 입출력 장치 목록(태그 리스트)"과 "증명시험 이행에 관한 요구사항"입니다. 1판 §12.2.2에 있던 소프트웨어 안전 요구사항 명세는 "응용 프로그램 안전 요구사항 명세"라는 이름으로 §10.3.3–10.3.6으로 옮겨졌습니다 <span class="src">[BRATT]</span>.</p>
+<p>SRS는 한 문서일 필요가 없습니다. 실무에서는 SIS 공통 요구(일반 SRS), SIF별 데이터시트, C&amp;E 매트릭스, 로직 서술서, 응용 프로그램 SRS로 나누는 경우가 많습니다. 중요한 것은 29개 항목이 어딘가에 빠짐없이, 서로 모순 없이 들어 있는 것입니다.</p>
+</div>
+
+<h3><span class="sec">5.2</span>SRS 항목의 묶음별 해설</h3>
+<div class="prose"><p>항목 번호(a, b, c…)는 판에 따라 다르므로 외우지 말고 묶음으로 이해하십시오. 아래는 61511-1 §10.3의 항목들을 성격별로 다시 묶은 것입니다(요지).</p></div>
+<div class="tbl"><table>
+<thead><tr><th>묶음</th><th>포함되는 요구사항(요지)</th><th>자주 빠지는 것</th></tr></thead>
+<tbody>
+<tr><td><strong>무엇을</strong></td><td>필요한 모든 SIF의 설명, SIF별 안전 상태 정의, 공정 측정값·트립 설정점·출력 동작, 입력–출력의 기능 관계(로직, 연산, 허가 조건), 각 SIF 관련 현장 장치 목록</td><td>안전 상태의 범위(밸브만 닫으면 되는지, 펌프 정지·감압까지인지)</td></tr>
+<tr><td><strong>얼마나 잘</strong></td><td>SIF별 SIL과 운전 모드, 공통원인고장을 식별·고려하는 요구, 요구의 원인과 요구율</td><td>요구율 근거(4.4.5의 D<sub>SIF</sub>)</td></tr>
+<tr><td><strong>얼마나 빨리</strong></td><td>공정안전시간 안에 안전 상태로 가기 위한 SIF별 응답시간</td><td>공정안전시간 산정 근거</td></tr>
+<tr><td><strong>동시에 생기면 위험한 상태</strong></td><td>각각은 안전하지만 동시에 일어나면 별도 위험이 되는 상태(예: 비상 저장 과부하, 다수 계통의 동시 플레어 방출), 피해야 할 출력 조합</td><td>전체 ESD 시 플레어 부하</td></tr>
+<tr><td><strong>사람과의 접점</strong></td><td>수동 정지, 각 SIF의 리셋, bypass·override·inhibit 요구와 해제 방법, 운전원·BPCS 등 다른 시스템과의 인터페이스</td><td>bypass 중 보상 조치와 최대 허용 시간</td></tr>
+<tr><td><strong>결함 시 거동</strong></td><td>SIS 고장 모드별 원하는 대응(경보, 자동 정지), SIS에서 결함이 검출됐을 때 안전 상태를 달성·유지하는 조치(사람 요인 고려), 실현 가능한 MTTR(이동 시간, 위치, 예비품, 서비스 계약, 환경 제약 반영)</td><td>진단 경보에 대한 운전원 조치와 시간 제한</td></tr>
+<tr><td><strong>시험과 유지보수</strong></td><td>증명시험 주기, 증명시험 이행 요구, 시운전·재기동 절차 관련 요구</td><td>PFD 계산의 PTC를 실제로 달성할 시험 방법</td></tr>
+<tr><td><strong>운전 모드와 환경</strong></td><td>공장 운전 모드별 SIF 동작, 정상·비정상 모드(시운전, 정비, 교정), 운송·보관·설치·운전 중 극한 환경 조건, 주요 사고 중에도 살아남아야 하는 SIF의 요구(예: 화재 중 밸브 동작 유지 시간)</td><td>화재 시 ESD 밸브·케이블의 내화 시간</td></tr>
+<tr><td><strong>신뢰성 외 요구</strong></td><td>트립 동작이 통전(energize)인지 무통전(de-energize)인지, 최대 허용 오동작 트립률</td><td>오동작 트립 목표값(10.7절)</td></tr>
+<tr><td><strong>응용 프로그램</strong></td><td>응용 프로그램 안전 요구사항(§10.3.3–10.3.6)</td><td>스캔 시간과 공정안전시간의 연결</td></tr>
+</tbody></table></div>
+
+<h3><span class="sec">5.3</span>공정안전시간과 응답시간 예산</h3>
+<div class="prose">
+<p>공정안전시간(PST)은 원인 고장이 발생한 순간부터 SIF가 동작하지 않을 때 위험사건이 일어나는 순간까지의 시간입니다. SIF는 감지 → 판단 → 동작 → 공정 응답까지를 이 시간 안에 끝내야 합니다.</p>
+</div>
+<div class="eq">\[ t_{\text{trip point}} + t_{\text{sensor}} + t_{\text{logic}} + t_{\text{output}} + t_{\text{final element}} + t_{\text{process}} \;\lt\; \mathrm{PST} \tag{5.1} \]</div>
+<div class="prose"><p>t<sub>trip point</sub>는 원인 발생부터 공정 변수가 트립 설정점에 도달하기까지의 시간이고, t<sub>process</sub>는 최종요소가 동작한 뒤 공정이 실제로 안전 방향으로 돌아서기까지의 지연입니다. 2판 §12.2.7은 응용 프로그램의 모든 부분이 매 스캔마다 실행되도록 설계하고(안전 매뉴얼이 다른 방식을 허용하는 경우 제외), 스캔 요구를 정할 때 공정안전시간을 고려하도록 요구합니다 <span class="src">[BRATT]</span>.</p></div>
+<div class="box judg"><span class="lbl">실무 판단:</span><p>업계에서는 SIS 응답시간을 공정안전시간의 절반 이하로 잡는 관행이 흔합니다. 표준의 수치 요건이 아니라 설정점 여유, 공정 동특성의 불확실성, 밸브 행정 시간의 경년 증가를 흡수하려는 설계 여유입니다. 트립 설정점을 운전 한계에 너무 가깝게 두면 오동작 트립이 늘고, 너무 멀리 두면 t<sub>trip point</sub>가 줄어 응답시간 예산이 부족해집니다. 설정점은 측정 불확도와 공정 변화율을 함께 보고 정합니다.</p></div>
+
+<h3><span class="sec">5.4</span>SRS와 검증 계산의 일관성</h3>
+<div class="prose"><p>SRS는 PFD 계산의 가정을 "요구사항"으로 고정하는 문서입니다. 아래 대응이 하나라도 어긋나면 계산 결과는 실제 설비를 대변하지 못합니다.</p></div>
+<div class="tbl"><table>
+<thead><tr><th>PFD 계산 입력</th><th>SRS·운전 문서에 있어야 할 것</th></tr></thead>
+<tbody>
+<tr><td>T<sub>1</sub>(증명시험 주기)</td><td>증명시험 주기 요구, 정비 계획(CMMS)에 반영된 실제 주기</td></tr>
+<tr><td>PTC, T<sub>2</sub></td><td>증명시험 이행 요구(어떤 단계로 어떤 고장 모드를 드러내는가), 정비·교체 주기</td></tr>
+<tr><td>MTTR</td><td>실현 가능한 MTTR(예비품, 접근성, 정비 인력), 결함 검출 시 보상 조치와 허용 시간</td></tr>
+<tr><td>β</td><td>CCF 방지 요구(분리 탭, 전원 분리, 다양성), 시차 시험 여부</td></tr>
+<tr><td>구조(MooN), 열화 모드 로직</td><td>투표 로직, 1채널 고장 시 2oo3→1oo2 전환 여부</td></tr>
+<tr><td>시험 중 bypass</td><td>bypass 요구와 시험 중 보상 조치</td></tr>
+<tr><td>오동작 트립률</td><td>최대 허용 오동작 트립률</td></tr>
+</tbody></table></div>
+<div class="box trap"><span class="lbl">함정:</span><p>"안전 상태 = 밸브 닫힘"으로만 적고 누설 등급을 정하지 않으면, 내부 누설이 커서 결과를 막지 못하는 밸브도 "정상 동작"으로 판정됩니다. 결과를 막는 데 기밀 차단이 필요하다면 누설 기준을 안전 상태 정의에 포함하고, 증명시험에 누설 시험을 넣어야 합니다. 그렇지 않으면 내부 누설 고장 모드는 PTC에서 빠집니다(13장).</p></div>
+<div class="box exam"><span class="lbl">시험 포인트:</span><ul>
+<li>2판 SRS 항목은 29개. 신설 예: 현장 장치(태그) 목록, 증명시험 이행 요구.</li>
+<li>응용 프로그램 SRS는 §10.3.3–10.3.6에 있습니다.</li>
+<li>SRS에는 최대 허용 오동작 트립률, 통전/무통전 트립, 리셋, 수동 정지, bypass, MTTR이 들어갑니다.</li>
+</ul></div>
+</section>
+<!-- ===================== CH 6 ===================== -->
+<section class="chapter" id="ch6">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>06</span></div><div><p class="eyebrow">IEC 61508-6 부속서 B·C · IEC 61511-1 §11.9 · 신뢰성 공학</p><h2>신뢰성 이론 기초</h2></div></div>
+
+<h3><span class="sec">6.1</span>고장 시간의 확률 모델</h3>
+<div class="prose"><p>장치의 고장까지 시간 T를 확률변수로 봅니다. 신뢰도 R(t)는 t까지 고장 나지 않을 확률, 불신뢰도 F(t) = 1 − R(t), 확률밀도 f(t) = dF/dt, 고장률(위험률) h(t) = f(t)/R(t)입니다. 고장률이 상수 λ이면 지수분포가 됩니다.</p></div>
+<div class="eq">\[ R(t) = \exp\!\left(-\int_0^t h(u)\,du\right) \;\xrightarrow{\;h=\lambda\;}\; e^{-\lambda t}, \qquad \mathrm{MTTF} = \int_0^\infty R(t)\,dt = \frac{1}{\lambda} \tag{6.1} \]</div>
+<div class="prose">
+<p>IEC 61508-6의 계산식은 모두 이 상수 고장률 가정 위에 서 있습니다. 상수 고장률은 욕조 곡선의 "유효 수명" 구간에서만 타당합니다. 그래서 인증서와 안전 매뉴얼은 <strong>유효 수명(useful lifetime)</strong>을 명시하고, 그 이후에는 교체나 재평가를 요구합니다.</p>
+<p>1 FIT은 10<sup>9</sup>시간당 1회 고장(10<sup>−9</sup>/h)입니다. λ = 100 FIT이면 MTTF = 10<sup>7</sup> h ≈ 1 141년입니다. MTTF가 1 141년이라는 말은 장치 하나가 1 141년을 버틴다는 뜻이 아니라, 많은 장치를 운전할 때 연간 약 0.09%가 고장 난다는 뜻입니다.</p>
+</div>
+<div class="box judg"><span class="lbl">실무 판단:</span><p>밸브의 고착(sticking)이나 패킹 마찰 증가처럼 시간이 지날수록 고장 확률이 커지는 마모형 고장은 상수 고장률 모델로 잘 표현되지 않습니다. 이 영향은 계산식 안에서는 T<sub>2</sub>(신품 상태 복원 주기)와 PTC로, 계산식 밖에서는 정비 주기와 교체 기준으로 관리합니다.</p></div>
+
+<h3><span class="sec">6.2</span>고장의 분류: SFF와 DC</h3>
+<div class="prose"><p>IEC 61508 2판은 장치의 고장률을 안전(S)·위험(D), 검출(D)·미검출(U)로 나눕니다. "영향 없음(no effect)" 고장과 "부품 없음(no part)" 고장은 SFF 계산에서 제외합니다.</p></div>
+<figure>
+<div class="fig">
+<svg viewBox="0 0 700 230" role="img" aria-labelledby="ftT ftD" style="min-width:560px">
+<title id="ftT">IEC 61508 고장률 분류</title>
+<desc id="ftD">전체 고장률이 안전 고장률과 위험 고장률로 나뉘고, 각각이 검출과 미검출로 나뉘는 트리. 위험 미검출만 강조</desc>
+<g font-size="13">
+<rect x="290" y="12" width="120" height="38" rx="5" class="svg-box2"/><text x="350" y="36" text-anchor="middle" class="svg-ink" font-weight="700">λ (전체)</text>
+<rect x="120" y="86" width="140" height="38" rx="5" class="svg-box"/><text x="190" y="110" text-anchor="middle" class="svg-ink" font-weight="600">λ<tspan font-size="10" dy="3">S</tspan><tspan dy="-3"> 안전</tspan></text>
+<rect x="440" y="86" width="140" height="38" rx="5" class="svg-box"/><text x="510" y="110" text-anchor="middle" class="svg-ink" font-weight="600">λ<tspan font-size="10" dy="3">D</tspan><tspan dy="-3"> 위험</tspan></text>
+<rect x="40" y="170" width="120" height="44" rx="5" class="svg-box"/><text x="100" y="190" text-anchor="middle" class="svg-ink">λ<tspan font-size="10" dy="3">SD</tspan></text><text x="100" y="206" text-anchor="middle" class="svg-ink3" font-size="11">안전·검출</text>
+<rect x="200" y="170" width="120" height="44" rx="5" class="svg-box"/><text x="260" y="190" text-anchor="middle" class="svg-ink">λ<tspan font-size="10" dy="3">SU</tspan></text><text x="260" y="206" text-anchor="middle" class="svg-ink3" font-size="11">안전·미검출</text>
+<rect x="380" y="170" width="120" height="44" rx="5" class="svg-acc"/><text x="440" y="190" text-anchor="middle" class="svg-ink">λ<tspan font-size="10" dy="3">DD</tspan></text><text x="440" y="206" text-anchor="middle" class="svg-ink3" font-size="11">위험·검출(진단)</text>
+<rect x="540" y="170" width="120" height="44" rx="5" class="svg-red"/><text x="600" y="190" text-anchor="middle" class="svg-ink" font-weight="700">λ<tspan font-size="10" dy="3">DU</tspan></text><text x="600" y="206" text-anchor="middle" class="svg-ink3" font-size="11">위험·미검출</text>
+</g>
+<g class="svg-stroke" stroke-width="1.4" fill="none">
+<path d="M350,50 L350,68 L190,68 L190,86"/><path d="M350,68 L510,68 L510,86"/>
+<path d="M190,124 L190,148 L100,148 L100,170"/><path d="M190,148 L260,148 L260,170"/>
+<path d="M510,124 L510,148 L440,148 L440,170"/><path d="M510,148 L600,148 L600,170"/>
+</g>
+</svg>
+</div>
+<figcaption>그림 6.1 고장률 분류. 증명시험이 필요한 이유는 λ<sub>DU</sub> 때문이고, PFD의 거의 전부를 λ<sub>DU</sub>가 만듭니다.</figcaption>
+</figure>
+<div class="eq">\[ \lambda_D = \lambda_{DD} + \lambda_{DU}, \quad DC = \frac{\lambda_{DD}}{\lambda_D}, \quad SFF = \frac{\lambda_S + \lambda_{DD}}{\lambda_S + \lambda_D} = 1 - \frac{\lambda_{DU}}{\lambda_S + \lambda_D} \tag{6.2} \]</div>
+<div class="prose"><p>예시값으로 λ<sub>S</sub> = 400 FIT, λ<sub>DD</sub> = 450 FIT, λ<sub>DU</sub> = 50 FIT인 송신기라면 DC = 450/500 = 90%, SFF = (400+450)/900 = 94.4%입니다. SFF는 Route 1H에서 허용 HFT를 정하는 데 쓰이고(8장), DC는 β<sub>D</sub>와 진단의 효과를 따질 때 씁니다.</p></div>
+<div class="box trap"><span class="lbl">함정:</span><p>SFF는 안전 고장을 늘리면 좋아집니다. 위험 고장을 줄이지 않고 안전 고장률을 부풀린 장치는 SFF가 높게 나옵니다. 2판이 "영향 없음" 고장을 SFF에서 뺀 것도 이런 왜곡을 막기 위해서입니다. 61511 2판이 SFF를 HFT 판정에서 없앤 배경 중 하나이기도 합니다(8.4절).</p></div>
+
+<h3><span class="sec">6.3</span>주기 시험되는 단일 장치의 PFD</h3>
+<div class="prose"><p>위험·미검출 고장은 증명시험 전까지 드러나지 않습니다. 완전한 증명시험이 주기 T마다 장치를 신품 상태로 되돌린다면, 시험 후 경과 시간 t에서의 순간 PFD는 그때까지 고장 났을 확률입니다.</p></div>
+<div class="eq">\[ \mathrm{PFD}(t) = 1 - e^{-\lambda_{DU} t} \approx \lambda_{DU}\,t, \qquad 0 \le t \lt T \tag{6.3} \]</div>
+<div class="eq">\[ \mathrm{PFD}_{avg} = \frac{1}{T}\int_0^T \left(1-e^{-\lambda_{DU} t}\right)dt = 1 - \frac{1-e^{-\lambda_{DU} T}}{\lambda_{DU} T} = \frac{\lambda_{DU}T}{2} - \frac{(\lambda_{DU}T)^2}{6} + \cdots \tag{6.4} \]</div>
+<div class="prose"><p>λ<sub>DU</sub>T가 0.1이면 근사 λ<sub>DU</sub>T/2의 상대 오차는 약 3%입니다(근사가 약간 보수적). IEC 61508-6 부속서 B의 단순식은 PFD<sub>avg</sub>가 0.1보다 작은 범위에서 쓰도록 되어 있는데, 이 오차 구조 때문입니다.</p></div>
+
+<h3><span class="sec">6.4</span>중복 시스템: 평균의 곱은 곱의 평균이 아니다</h3>
+<div class="prose"><p>같은 시각에 함께 시험되는 독립 채널 두 개로 된 1oo2를 생각합니다. 두 채널이 모두 고장 나야 시스템이 실패하므로 순간 PFD는 채널 PFD의 곱입니다. 평균을 구할 때 곱한 뒤 평균을 내야 합니다.</p></div>
+<div class="eq">\[ \mathrm{PFD}_{avg}^{1oo2} = \frac{1}{T}\int_0^T (\lambda t)^2\,dt = \frac{(\lambda T)^2}{3} \quad\neq\quad \left(\frac{\lambda T}{2}\right)^2 = \frac{(\lambda T)^2}{4} \tag{6.5} \]</div>
+<div class="prose"><p>채널별 평균 PFD를 곱하면 25% 과소평가합니다. 1oo3에서는 (λT)<sup>3</sup>/4 대신 (λT)<sup>3</sup>/8이 되어 50% 과소평가합니다. 일반적으로 1ooN은</p></div>
+<div class="eq">\[ \mathrm{PFD}_{avg}^{1ooN} \approx \frac{(\lambda T)^N}{N+1}, \qquad \mathrm{PFD}_{avg}^{KooN} \approx \binom{N}{N-K+1}\frac{(\lambda T)^{N-K+1}}{N-K+2} \tag{6.6} \]</div>
+<div class="prose"><p>입니다. 2oo3은 3·(λT)<sup>2</sup>/3 = (λT)<sup>2</sup>, 2oo4는 4·(λT)<sup>3</sup>/4 = (λT)<sup>3</sup>가 됩니다 <span class="src">[유도] [RAU]</span>. 이 결과는 7장의 IEC 61508-6 식에서 MRT·MTTR·CCF를 0으로 두었을 때와 정확히 같습니다.</p></div>
+<div class="box trap"><span class="lbl">함정: 결함수(FTA)에서의 평균화</span><p>결함수의 기본 사상(basic event)에 "평균 PFD"를 넣고 AND 게이트로 곱하면 식 (6.5)의 오류가 그대로 생깁니다. IEC 61508-6은 결함수를 쓸 때 시간에 따른 순간 확률을 계산한 뒤 평균하는 원리를 설명합니다(그림 B.19–B.20) <span class="src">[61508-6PV]</span>. 상용 FTA 도구에서 "fault exposure time"이나 "test interval" 모델을 쓰는 이유입니다.</p></div>
+
+<h3><span class="sec">6.5</span>Markov 모델</h3>
+<div class="prose"><p>Markov 모델은 시스템을 상태와 상태 간 전이율로 표현합니다. 상태 확률 벡터 <b>P</b>(t)는 전이율 행렬 <b>Q</b>에 대해 Kolmogorov 방정식을 따릅니다.</p></div>
+<div class="eq">\[ \frac{d\mathbf{P}(t)}{dt} = \mathbf{P}(t)\,\mathbf{Q} \tag{6.7} \]</div>
+<div class="prose"><p>단일 채널을 세 상태(0: 정상, 1: 위험·검출 고장 후 수리 중, 2: 위험·미검출 고장)로 두면, 0→1은 λ<sub>DD</sub>, 1→0은 μ = 1/MTTR, 0→2는 λ<sub>DU</sub>이고, 2에서는 증명시험 시점에만 0으로 돌아옵니다.</p></div>
+<figure>
+<div class="fig">
+<svg viewBox="0 0 640 200" role="img" aria-labelledby="mkT mkD" style="min-width:520px">
+<title id="mkT">1oo1 채널의 3상태 Markov 모델</title>
+<desc id="mkD">정상 상태에서 검출 고장 상태로 λDD, 수리로 μ가 돌아오고, 미검출 고장 상태로 λDU, 증명시험에서만 정상으로 복귀</desc>
+<defs><marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="svg-ink2"/></marker></defs>
+<g font-size="13">
+<circle cx="320" cy="100" r="40" class="svg-box2"/><text x="320" y="96" text-anchor="middle" class="svg-ink" font-weight="700">0</text><text x="320" y="113" text-anchor="middle" class="svg-ink3" font-size="11">정상</text>
+<circle cx="110" cy="100" r="40" class="svg-acc"/><text x="110" y="96" text-anchor="middle" class="svg-ink" font-weight="700">1</text><text x="110" y="113" text-anchor="middle" class="svg-ink3" font-size="11">DD 수리 중</text>
+<circle cx="530" cy="100" r="40" class="svg-red"/><text x="530" y="96" text-anchor="middle" class="svg-ink" font-weight="700">2</text><text x="530" y="113" text-anchor="middle" class="svg-ink3" font-size="11">DU 잠재</text>
+</g>
+<g class="svg-stroke" stroke-width="1.5" fill="none">
+<path d="M282,86 C230,60 200,60 150,84" marker-end="url(#ah2)"/>
+<path d="M150,116 C200,140 230,140 282,114" marker-end="url(#ah2)"/>
+<path d="M358,86 C410,60 440,60 490,84" marker-end="url(#ah2)"/>
+<path d="M490,116 C440,140 410,140 358,114" marker-end="url(#ah2)" stroke-dasharray="5 4"/>
+</g>
+<g font-size="12.5" class="svg-ink">
+<text x="216" y="52" text-anchor="middle">λ<tspan font-size="9.5" dy="3">DD</tspan></text>
+<text x="216" y="158" text-anchor="middle">μ = 1/MTTR</text>
+<text x="424" y="52" text-anchor="middle">λ<tspan font-size="9.5" dy="3">DU</tspan></text>
+<text x="424" y="158" text-anchor="middle">증명시험 시점(T₁마다)</text>
+</g>
+</svg>
+</div>
+<figcaption>그림 6.2 1oo1 채널의 3상태 모델. 점선은 연속 전이가 아니라 시험 시점의 상태 재설정입니다. IEC 61508-6은 이런 구조를 다상(multiphase) Markov 모델로 다룹니다(그림 B.24–B.25) <span class="src">[61508-6PV]</span>.</figcaption>
+</figure>
+<div class="prose"><p>상태 1의 정상상태 확률은 λ<sub>DD</sub>/(λ<sub>DD</sub>+μ) ≈ λ<sub>DD</sub>·MTTR이고, 상태 2의 시간 평균은 λ<sub>DU</sub>T<sub>1</sub>/2입니다. 발견된 DU 고장의 수리 시간(MRT)까지 더하면</p></div>
+<div class="eq">\[ \mathrm{PFD}_{avg}^{1oo1} \approx \lambda_{DU}\left(\frac{T_1}{2} + MRT\right) + \lambda_{DD}\,MTTR \tag{6.8} \]</div>
+<div class="prose"><p>가 되어 7장의 IEC 61508-6 1oo1 식과 같아집니다. Markov 모델은 수리 정책(한 채널 고장 시 2oo3을 1oo2로 전환), 시험 중 bypass, 요구 자체로 생기는 고장처럼 단순식이 다루지 못하는 효과를 넣을 수 있습니다. IEC 61508-6 부속서 B는 이런 확장(그림 B.27–B.30)과 Petri net, 불확실성 전파까지 설명합니다 <span class="src">[61508-6PV]</span>.</p></div>
+
+<h3><span class="sec">6.6</span>고장률 데이터와 불확실성</h3>
+<div class="prose">
+<p>61511 2판 §11.9는 무작위 고장 정량화에 쓰는 신뢰성 데이터가 <strong>신뢰할 만하고(credible), 추적 가능하고(traceable), 문서화되고(documented), 정당화되어야(justified)</strong> 하며, 유사한 운전 환경에서 쓰인 유사 장치의 현장 피드백에 근거해야 하고, 데이터의 불확실성을 평가해야 한다고 요구합니다 <span class="src">[BRATT]</span>. 데이터 출처로는 제조사 FMEDA(인증서·안전 매뉴얼), OREDA, SINTEF PDS Data Handbook, exida SERH, 사용자 자체 prior use 데이터가 쓰입니다.</p>
+<p>현장 데이터에서 고장률을 추정할 때는 점추정만 쓰지 않습니다. 누적 운전시간 τ 동안 고장 n건을 관측했다면, 포아송 모델에서 점추정과 단측 상한은 다음과 같습니다.</p>
+</div>
+<div class="eq">\[ \hat\lambda = \frac{n}{\tau}, \qquad \lambda_{U,\,CL} = \frac{\chi^2_{CL}(2n+2)}{2\tau}, \qquad n=0:\; \lambda_{U} = \frac{-\ln(1-CL)}{\tau} \tag{6.9} \]</div>
+<div class="prose"><p>여기서 χ²<sub>CL</sub>(ν)는 자유도 ν인 카이제곱 분포의 CL 분위수입니다. IEC 61508과 61511에는 고장률을 정할 때 70% 단측 신뢰한계를 언급하는 대목들이 있고 <span class="src">[KNX]</span>, 61508-2 Route 2H는 데이터 불확실성을 반영해 목표 실패척도 달성에 90%를 넘는 신뢰를 요구합니다(8.4절).</p></div>
+<div class="box deep"><span class="lbl">심화: 왜 2n+2인가</span><p>포아송 과정에서 "τ 동안 n건 이하가 관측될 확률"은 감마 분포와 연결됩니다. P(N ≤ n; λτ) = 1 − CL을 만족하는 λ가 상한이며, 이는 자유도 2(n+1)인 카이제곱 분포의 CL 분위수를 2τ로 나눈 값과 같습니다. 고장이 하나도 없어도(n = 0) 상한은 0이 아니라 −ln(1−CL)/τ입니다. 70%에서는 1.204/τ, 90%에서는 2.303/τ입니다 <span class="src">[유도]</span>.</p></div>
+
+<div class="tool" id="toolChi">
+<div class="tool-head"><h4>도구 3 · 현장 데이터 고장률 신뢰상한</h4><span class="src">식 (6.9) [유도]</span></div>
+<div class="tool-body">
+<div class="fields">
+<div class="field"><label for="chN">관측 고장 수 n</label><input id="chN" type="text" inputmode="numeric" value="1"></div>
+<div class="field"><label for="chTau">누적 운전시간 τ [장치·시간]</label><input id="chTau" type="text" inputmode="decimal" value="2e6"><span class="hint">예시값: 장치 50대 × 약 4.6년</span></div>
+<div class="field"><label for="chCl">신뢰수준 CL</label><select id="chCl"><option value="0.7" selected>70% (단측)</option><option value="0.9">90% (단측)</option><option value="0.95">95% (단측)</option></select></div>
+</div>
+<div class="results" id="chOut"></div>
+<p class="note">예시값 n = 1, τ = 2×10<sup>6</sup> h에서 점추정은 5.0×10<sup>−7</sup>/h, 70% 상한은 χ²<sub>0.7</sub>(4) = 4.878로 1.22×10<sup>−6</sup>/h입니다. 관측 고장이 적을수록 상한과 점추정의 차이가 커집니다.</p>
+</div>
+</div>
+
+<h3><span class="sec">6.7</span>현장 조건이 고장률에 주는 영향</h3>
+<div class="prose"><p>같은 모델의 장치라도 현장마다 실제 고장률이 다릅니다. exida의 Site Safety Index(SSI)는 현장의 정비·수리 수행 품질을 등급으로 매겨 고장률과 시험·수리 효과에 반영하는 개념이며, exSILentia에서는 센서·로직·최종요소별로 SSI를 선택하고, 고장률 반영과 시험·수리 반영을 따로 지정할 수 있습니다. exida는 전형적인 공정 공장을 SSI 2 수준으로 봅니다 <span class="src">[EXIDA]</span>. SSI는 IEC 표준의 변수가 아니라 exida 방법론의 요소입니다.</p></div>
+<div class="box exam"><span class="lbl">시험 포인트:</span><ul>
+<li>SFF = (λ<sub>S</sub> + λ<sub>DD</sub>)/λ<sub>total</sub>, DC = λ<sub>DD</sub>/λ<sub>D</sub>. 계산 문제로 자주 나옵니다.</li>
+<li>1oo1 PFD<sub>avg</sub> ≈ λ<sub>DU</sub>T/2, 1oo2 ≈ (λ<sub>DU</sub>T)<sup>2</sup>/3, 2oo3 ≈ (λ<sub>DU</sub>T)<sup>2</sup> (CCF 제외).</li>
+<li>11.9 신뢰성 데이터: credible, traceable, documented, justified + 현장 피드백 + 불확실성 평가.</li>
+</ul></div>
+</section>
+<!-- ===================== CH 7 ===================== -->
+<section class="chapter" id="ch7">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>07</span></div><div><p class="eyebrow">IEC 61508-6 부속서 B·D · IEC 61511-1 §11.9</p><h2>PFDavg·PFH 계산 이론</h2></div></div>
+
+<h3><span class="sec">7.1</span>부속서 B의 접근과 가정</h3>
+<div class="prose">
+<p>IEC 61508-6 부속서 B는 신뢰성 블록도(RBD) 기반의 단순식, 결함수, 상태 전이(Markov, Petri net) 방법을 예로 듭니다 <span class="src">[61508-6PV] [61508A]</span>. 단순식 방법의 절차는 SIF를 센서·로직·최종요소 서브시스템으로 나누고, 각 서브시스템의 투표 구조에 맞는 식으로 PFD<sub>avg</sub>를 구한 뒤 더하는 것입니다 <span class="src">[61508A]</span>.</p>
+</div>
+<div class="eq">\[ \mathrm{PFD}_{SYS} = \mathrm{PFD}_{S} + \mathrm{PFD}_{L} + \mathrm{PFD}_{FE} \tag{7.1} \]</div>
+<div class="prose"><p>단순식의 주요 가정(요지)은 다음과 같습니다. 고장률은 상수이고, 한 투표 그룹의 채널은 같은 고장률과 진단 커버리지를 가지며, 센서 서브시스템은 신호가 처음 결합(투표)되는 지점 앞까지를 포함합니다. 증명시험은 완전하며(불완전 시험은 B.3.2.5에서 따로 다룸), MTTR·MRT는 시험 주기보다 훨씬 짧고, 결과 PFD<sub>avg</sub>는 0.1보다 작습니다. 서브시스템 합산 식 (7.1)은 각 항이 작다는 희소 사건 근사입니다.</p></div>
+
+<h3><span class="sec">7.2</span>등가 평균 정지시간 t<sub>CE</sub>, t<sub>GE</sub>의 의미</h3>
+<div class="prose">
+<p>부속서 B 식을 외우지 않고 재구성하는 열쇠는 "그룹 고장 빈도 × 그룹 등가 정지시간"이라는 구조입니다 <span class="src">[RAU]</span>.</p>
+</div>
+<div class="eq">\[ \mathrm{PFD}_{avg} \approx \lambda_{D,G}\cdot t_{GE} \tag{7.2} \]</div>
+<div class="prose"><p>채널 하나가 위험 고장을 일으켰을 때 평균적으로 얼마나 오래 "기능 상실 상태"에 머무는지가 채널 등가 평균 정지시간 t<sub>CE</sub>입니다. DU 고장은 시험 주기 안의 임의 시점에 생기므로 평균 T<sub>1</sub>/2 동안 숨어 있다가 시험에서 발견되어 MRT 동안 수리되고, DD 고장은 MTTR 동안 정지합니다. 두 경우를 고장률 비율로 가중 평균합니다.</p></div>
+<div class="eq">\[ t_{CE} = \frac{\lambda_{DU}}{\lambda_D}\left(\frac{T_1}{2} + MRT\right) + \frac{\lambda_{DD}}{\lambda_D}MTTR \tag{7.3} \]</div>
+<div class="eq">\[ t_{GE} = \frac{\lambda_{DU}}{\lambda_D}\left(\frac{T_1}{3} + MRT\right) + \frac{\lambda_{DD}}{\lambda_D}MTTR, \qquad t_{G2E} = \frac{\lambda_{DU}}{\lambda_D}\left(\frac{T_1}{4} + MRT\right) + \frac{\lambda_{DD}}{\lambda_D}MTTR \tag{7.4} \]</div>
+<div class="box deep"><span class="lbl">심화: T<sub>1</sub>/2, T<sub>1</sub>/3, T<sub>1</sub>/4는 어디서 오는가</span>
+<p>한 시험 주기 안에서 독립적으로 고장 난 DU 채널 k개를 생각합니다. 시험 시점에서 거꾸로 본 "가장 늦게 고장 난 채널의 고장 이후 경과 시간"의 기댓값은 T<sub>1</sub>/(k+1)입니다(균등분포 k개의 최댓값의 기댓값이 kT<sub>1</sub>/(k+1)이므로). 첫 번째 고장은 평균 T<sub>1</sub>/2, 두 번째 고장이 겹친 상태는 평균 T<sub>1</sub>/3, 세 번째는 T<sub>1</sub>/4 동안 지속됩니다 <span class="src">[RAU]</span>. 그래서 1oo2와 2oo3의 그룹 정지시간은 T<sub>1</sub>/3, 1oo3은 T<sub>1</sub>/4가 됩니다.</p>
+<p>그룹 고장 빈도는 "첫 고장이 n개 중 아무 채널에서나 생기고(율 nλ<sub>D</sub>), 그 채널이 정지한 동안(t<sub>CE</sub>) 다음 고장이 남은 채널에서 생기고…" 하는 연쇄로 만들어집니다. KooN에서 마지막(n−k+1번째) 고장이 날 때 남은 채널은 k개이므로</p>
+<div class="eq">\[ \lambda_{D,G}^{KooN} \approx \frac{N!}{(K-1)!}\,\lambda_D^{\,N-K+1}\prod_{j=1}^{N-K} t_{GjE}, \qquad t_{G1E}\equiv t_{CE} \tag{7.5} \]</div>
+<p>입니다 <span class="src">[RAU] [유도]</span>. 1oo2는 2λ<sub>D</sub><sup>2</sup>t<sub>CE</sub>, 2oo3은 6λ<sub>D</sub><sup>2</sup>t<sub>CE</sub>, 1oo3은 6λ<sub>D</sub><sup>3</sup>t<sub>CE</sub>t<sub>G2E</sub>, 2oo4는 24λ<sub>D</sub><sup>3</sup>t<sub>CE</sub>t<sub>G2E</sub>가 됩니다. 여기에 식 (7.2)의 t<sub>GE</sub>를 곱하면 아래 식들이 나옵니다.</p>
+</div>
+
+<h3><span class="sec">7.3</span>저빈도 모드 PFD<sub>avg</sub> 식</h3>
+<div class="prose"><p>IEC 61508-6 B.3.2의 식입니다 <span class="src">[61508-6 B.3.2] [61508A] [RAU]</span>. 독립 고장 부분에는 (1−β), (1−β<sub>D</sub>)를 곱하고, CCF 부분은 1oo1처럼 동작하는 가상 블록으로 더합니다.</p></div>
+<div class="eq">\[ \mathrm{PFD}_{1oo1} = (\lambda_{DU}+\lambda_{DD})\,t_{CE} = \lambda_{DU}\left(\frac{T_1}{2}+MRT\right)+\lambda_{DD}MTTR \tag{7.6} \]</div>
+<div class="eq">\[ \mathrm{PFD}_{1oo2} = 2\big[(1-\beta_D)\lambda_{DD}+(1-\beta)\lambda_{DU}\big]^2 t_{CE}\,t_{GE} + \beta_D\lambda_{DD}MTTR + \beta\lambda_{DU}\left(\frac{T_1}{2}+MRT\right) \tag{7.7} \]</div>
+<div class="eq">\[ \mathrm{PFD}_{2oo2} = 2\lambda_D\,t_{CE} \tag{7.8} \]</div>
+<div class="eq">\[ \mathrm{PFD}_{2oo3} = 6\big[(1-\beta_D)\lambda_{DD}+(1-\beta)\lambda_{DU}\big]^2 t_{CE}\,t_{GE} + \beta_D\lambda_{DD}MTTR + \beta\lambda_{DU}\left(\frac{T_1}{2}+MRT\right) \tag{7.9} \]</div>
+<div class="eq">\[ \mathrm{PFD}_{1oo3} = 6\big[(1-\beta_D)\lambda_{DD}+(1-\beta)\lambda_{DU}\big]^3 t_{CE}\,t_{GE}\,t_{G2E} + \beta_D\lambda_{DD}MTTR + \beta\lambda_{DU}\left(\frac{T_1}{2}+MRT\right) \tag{7.10} \]</div>
+<div class="eq">\[ \begin{aligned} \mathrm{PFD}_{1oo2D} &= 2(1-\beta)\lambda_{DU}\big[(1-\beta)\lambda_{DU}+(1-\beta_D)\lambda_{DD}+\lambda_{SD}\big]\,t'_{CE}\,t'_{GE} + \beta_D\lambda_{DD}MTTR + \beta\lambda_{DU}\left(\frac{T_1}{2}+MRT\right) \\ t'_{CE} &= \frac{\lambda_{DU}\left(\frac{T_1}{2}+MRT\right) + (\lambda_{DD}+\lambda_{SD})MTTR}{\lambda_{DU}+\lambda_{DD}+\lambda_{SD}}, \qquad t'_{GE} = \frac{T_1}{3}+MRT \end{aligned} \tag{7.11} \]</div>
+<div class="prose"><p>1oo2D는 두 채널 사이의 진단으로 검출된 고장 채널을 끊어 내는 구조(주로 로직 솔버)입니다. 독립 고장 항에 DU만 남는 이유는 검출된 고장(DD, SD)이 생긴 채널은 진단으로 분리되어 남은 채널이 1oo1로 동작하기 때문입니다. 1oo3의 t<sub>GE</sub>·t<sub>G2E</sub> 이름은 자료에 따라 서로 바뀌어 쓰이기도 하지만 곱 T<sub>1</sub>/2 · T<sub>1</sub>/3 · T<sub>1</sub>/4의 구조는 같습니다.</p></div>
+<div class="box exam"><span class="lbl">시험 포인트: 손계산 순서</span><ol>
+<li>λ<sub>D</sub> = λ<sub>DU</sub> + λ<sub>DD</sub>, 비율 λ<sub>DU</sub>/λ<sub>D</sub>, λ<sub>DD</sub>/λ<sub>D</sub>를 먼저 구합니다.</li>
+<li>t<sub>CE</sub>(T<sub>1</sub>/2), t<sub>GE</sub>(T<sub>1</sub>/3)를 구합니다. 단위를 시간으로 통일합니다(1년 = 8 760 h).</li>
+<li>독립 항과 CCF 항(β<sub>D</sub>λ<sub>DD</sub>MTTR, βλ<sub>DU</sub>(T<sub>1</sub>/2+MRT))을 따로 구해 더합니다.</li>
+<li>대개 CCF의 DU 항이 지배합니다. 이것이 맞는지 마지막에 확인합니다.</li>
+</ol></div>
+
+<h3><span class="sec">7.4</span>고빈도·연속 모드 PFH 식</h3>
+<div class="eq">\[ \mathrm{PFH}_{1oo1} = \lambda_{DU}, \qquad \mathrm{PFH}_{2oo2} = 2\lambda_{DU} \tag{7.12} \]</div>
+<div class="eq">\[ \mathrm{PFH}_{1oo2} = 2\big[(1-\beta_D)\lambda_{DD}+(1-\beta)\lambda_{DU}\big](1-\beta)\lambda_{DU}\,t_{CE} + \beta\lambda_{DU} \tag{7.13} \]</div>
+<div class="eq">\[ \mathrm{PFH}_{2oo3} = 6\big[(1-\beta_D)\lambda_{DD}+(1-\beta)\lambda_{DU}\big](1-\beta)\lambda_{DU}\,t_{CE} + \beta\lambda_{DU} \tag{7.14} \]</div>
+<div class="eq">\[ \mathrm{PFH}_{1oo3} = 6\big[(1-\beta_D)\lambda_{DD}+(1-\beta)\lambda_{DU}\big]^2(1-\beta)\lambda_{DU}\,t_{CE}\,t_{GE} + \beta\lambda_{DU} \tag{7.15} \]</div>
+<div class="eq">\[ \mathrm{PFH}_{1oo2D} = 2(1-\beta)\lambda_{DU}\big[(1-\beta)\lambda_{DU}+(1-\beta_D)\lambda_{DD}+\lambda_{SD}\big]\,t'_{CE} + \beta\lambda_{DU} \tag{7.16} \]</div>
+<div class="prose"><p>PFH 식은 "시스템이 위험 고장 상태로 들어가는 빈도"입니다. 마지막 고장이 DU인 경우만 세는 이유는, 고빈도 모드에서는 검출된 고장이 다음 요구 전에 안전 동작이나 조치로 이어진다고 보기 때문입니다. 그러려면 진단이 요구 간격보다 충분히 빨라야 합니다. PFH 식에는 T<sub>1</sub>/2가 t<sub>CE</sub> 안에만 들어 있으므로, 증명시험 주기의 영향이 PFD보다 훨씬 작습니다. 고빈도 모드에서는 요구가 잦아 숨은 고장이 곧 위험사건으로 드러나기 때문입니다(식 3.5).</p></div>
+
+<h3><span class="sec">7.5</span>공통원인고장 항과 MooN 보정</h3>
+<div class="prose"><p>위 식의 β는 1oo2 기준값입니다. IEC 61508-6 부속서 D는 1oo2보다 중복도가 높은 구조에서 β에 곱할 배율을 표 D.5로 줍니다. 61508 Association 자료는 2oo3에 1.5배를 적용한 예를 보여 줍니다 <span class="src">[61508-6 표 D.5] [61508A]</span>. SINTEF PDS 방법은 같은 목적의 C<sub>MooN</sub> 계수를 쓰며 값이 조금 다릅니다 <span class="src">[PDS] [RAU]</span>.</p></div>
+<div class="tbl compact"><table>
+<caption>β 배율: IEC 61508-6 표 D.5 / PDS C<sub>MooN</sub></caption>
+<thead><tr><th>구조</th><th class="c">1oo2</th><th class="c">1oo3</th><th class="c">2oo3</th><th class="c">1oo4</th><th class="c">2oo4</th><th class="c">3oo4</th><th class="c">1oo5</th><th class="c">2oo5</th><th class="c">3oo5</th><th class="c">4oo5</th></tr></thead>
+<tbody>
+<tr><td>IEC 표 D.5</td><td class="num">1.0</td><td class="num">0.5</td><td class="num">1.5</td><td class="num">0.3</td><td class="num">0.6</td><td class="num">1.75</td><td class="num">0.2</td><td class="num">0.4</td><td class="num">0.8</td><td class="num">2.0</td></tr>
+<tr><td>PDS C<sub>MooN</sub></td><td class="num">1.0</td><td class="num">0.5</td><td class="num">2.0</td><td class="num">0.3</td><td class="num">1.1</td><td class="num">2.8</td><td class="num">0.2</td><td class="num">0.8</td><td class="num">1.6</td><td class="num">3.6</td></tr>
+</tbody></table></div>
+<div class="prose"><p>직관은 이렇습니다. 2oo3은 세 채널 중 <strong>둘</strong>만 함께 고장 나도 기능을 잃으므로 1oo2보다 CCF에 취약합니다(배율 &gt; 1). 1oo3은 셋이 <strong>모두</strong> 함께 고장 나야 하므로 덜 취약합니다(배율 &lt; 1).</p></div>
+
+<h3><span class="sec">7.6</span>불완전 증명시험: PTC와 T<sub>2</sub></h3>
+<div class="prose"><p>실제 증명시험은 모든 DU 고장을 드러내지 못합니다. 시험이 드러내는 비율이 PTC이고, 드러나지 않은 고장은 장치가 신품 상태로 복원되는 주기 T<sub>2</sub>(전면 정비·교체, 대개 mission time)까지 남습니다. IEC 61508-6 B.3.2.5의 접근을 61508 Association 자료가 정리한 형태로 쓰면 다음과 같습니다 <span class="src">[61508A]</span>.</p></div>
+<div class="eq">\[ t_{CE} = \frac{\lambda_{DU}}{\lambda_D}\left[PTC\left(\frac{T_1}{2}+MRT\right)+(1-PTC)\left(\frac{T_2}{2}+MRT\right)\right] + \frac{\lambda_{DD}}{\lambda_D}MTTR \tag{7.17} \]</div>
+<div class="eq">\[ t_{GE} = \frac{\lambda_{DU}}{\lambda_D}\left[PTC\left(\frac{T_1}{3}+MRT\right)+(1-PTC)\left(\frac{T_2}{3}+MRT\right)\right] + \frac{\lambda_{DD}}{\lambda_D}MTTR \tag{7.18} \]</div>
+<div class="eq">\[ \text{CCF 항} = \beta\lambda_{DU}\left[PTC\left(\frac{T_1}{2}+MRT\right)+(1-PTC)\left(\frac{T_2}{2}+MRT\right)\right] + \beta_D\lambda_{DD}MTTR \tag{7.19} \]</div>
+<div class="prose"><p>1oo1에서 MRT를 무시하면 PR electronics 포스터의 식과 같아집니다 <span class="src">[PRE]</span>.</p></div>
+<div class="eq">\[ \mathrm{PFD}_{1oo1} \approx \lambda_{DD}MTTR + PTC\cdot\lambda_{DU}\frac{T_1}{2} + (1-PTC)\,\lambda_{DU}\frac{T_2}{2} \tag{7.20} \]</div>
+<div class="box deep"><span class="lbl">심화: mission time이 갑자기 중요해지는 이유</span>
+<p>PTC = 100%이면 T<sub>2</sub>는 식에서 사라집니다. PTC가 90%만 되어도 미검출 10%가 T<sub>2</sub>/2 동안 쌓이므로, T<sub>2</sub>가 T<sub>1</sub>의 10배이면 그 10%가 나머지 90%와 비슷한 크기의 기여를 합니다. 예시값 λ<sub>DU</sub> = 100 FIT, T<sub>1</sub> = 1년, T<sub>2</sub> = 10년, PTC = 90%이면 PFD = 3.94×10<sup>−4</sup> + 4.38×10<sup>−4</sup> = 8.3×10<sup>−4</sup>로, 완전 시험(4.38×10<sup>−4</sup>)의 약 1.9배입니다.</p>
+<p>exida 블로그의 예(100 FIT, 증명시험 주기 10 000 h, mission time 200 000 h, 커버리지 80%)를 식 (7.20)으로 계산하면 완전 시험 5.0×10<sup>−4</sup>(SIL 3 범위)에서 2.4×10<sup>−3</sup>(SIL 2 범위)로 떨어집니다. 블로그는 불완전 시험을 가정하지 않으면 SIF의 위험저감을 크게 과대평가하게 된다고 지적합니다 <span class="src">[EXIDA] [유도]</span>.</p>
+</div>
+
+<h4><span class="sec">7.6.1</span>부분 행정 시험(PVST)을 포함하는 3단계 시험</h4>
+<div class="prose"><p>최종요소에 PVST(주기 T<sub>P</sub>)를 추가하면 DU 고장은 세 묶음으로 나뉩니다. PVST가 드러내는 몫(커버리지 c<sub>P</sub>), PVST로는 못 보지만 전체 증명시험이 드러내는 몫(PTC − c<sub>P</sub>), 증명시험으로도 드러나지 않는 몫(1 − PTC)입니다 <span class="src">[유도]</span>.</p></div>
+<div class="eq">\[ \mathrm{PFD} \approx c_P\lambda_{DU}\frac{T_P}{2} + (PTC-c_P)\lambda_{DU}\frac{T_1}{2} + (1-PTC)\lambda_{DU}\frac{T_2}{2} + \lambda_{DD}MTTR \tag{7.21} \]</div>
+<div class="box judg"><span class="lbl">실무 판단:</span><p>PVST 결과를 "진단 커버리지(DC)"로 처리할지 "부분 증명시험"으로 처리할지는 시험 빈도에 달려 있습니다. 저빈도 SIF에서 수개월 주기의 PVST는 부분 증명시험으로 보는 것이 보수적입니다. PVST로 전체 증명시험 주기를 늘리려면, PVST가 실제로 어떤 고장 모드(고착, 행정 지연)를 드러내고 어떤 모드(시트 누설, 완전 닫힘 불가)를 못 드러내는지를 FMEDA 수준으로 따져야 합니다.</p></div>
+
+<h3><span class="sec">7.7</span>단순식이 빠뜨리는 기여</h3>
+<div class="tbl"><table>
+<thead><tr><th>기여</th><th>근사식·효과</th><th>비고</th></tr></thead>
+<tbody>
+<tr><td>시험 중 bypass</td><td>1oo1에서 시험 시간 τ 동안 SIF가 무력화되면 ΔPFD ≈ τ/T<sub>1</sub></td><td>예시값 τ = 8 h, T<sub>1</sub> = 8 760 h이면 9.1×10<sup>−4</sup>. SIL 3 목표 전체보다 클 수 있습니다. 61508-6 그림 B.28이 시험 시간의 영향을 다룹니다 <span class="src">[61508-6PV] [유도]</span></td></tr>
+<tr><td>시차 시험(staggered)</td><td>1oo2 채널을 T<sub>1</sub>/2 간격으로 번갈아 시험하면 독립 항이 (λT<sub>1</sub>)<sup>2</sup>/3에서 5(λT<sub>1</sub>)<sup>2</sup>/24로 줄어듦</td><td>61508-6 그림 B.21 "시험 시차의 효과" <span class="src">[61508-6PV] [유도]</span>. CCF 중 시험으로 드러나는 몫도 더 일찍 발견됩니다</td></tr>
+<tr><td>수리 정책</td><td>2oo3에서 한 채널 고장 시 1oo2로 전환하면 수리 중 기여가 사라짐</td><td>그림 B.30 <span class="src">[61508-6PV]</span>, PDS의 DTU 시나리오 <span class="src">[RAU]</span></td></tr>
+<tr><td>시험과 무관한 고장(PTIF)</td><td>PDS는 CSU = PFD<sub>avg</sub> + DTU + PTIF로 정의해 시험으로 드러나지 않는 고장 확률을 따로 더함</td><td><span class="src">[PDS] [RAU]</span></td></tr>
+<tr><td>요구 자체로 생기는 고장</td><td>동작 요구 순간의 스트레스로 생기는 고장</td><td>그림 B.27 <span class="src">[61508-6PV]</span></td></tr>
+</tbody></table></div>
+<div class="box deep"><span class="lbl">심화: 시차 시험의 5/24</span><p>채널 A는 0, T, 2T…에, 채널 B는 T/2, 3T/2…에 시험한다고 하면, [0, T) 구간에서 q<sub>A</sub> = λt, q<sub>B</sub>는 t &lt; T/2에서 λ(t+T/2), t ≥ T/2에서 λ(t−T/2)입니다. 두 구간 적분은 각각 5T<sup>3</sup>/48이고, 합을 T로 나누면 PFD<sub>avg</sub> = 5(λT)<sup>2</sup>/24 ≈ 0.208(λT)<sup>2</sup>입니다. 동시 시험의 1/3 ≈ 0.333보다 약 38% 작습니다 <span class="src">[유도]</span>.</p></div>
+
+<h3><span class="sec">7.8</span>계산 예: 61508 Association 예제 재현</h3>
+<div class="prose"><p>61508 Association 워크숍 자료의 HIPPS형 SIF를 재현합니다. 2oo3 압력 송신기, 2oo3 AI·1oo2 CPU·1oo2 DO 로직 솔버, 1oo2 밸브 조립체(SOV + 액추에이터 + 밸브)이고, T<sub>1</sub> = 1년입니다. 고장률은 자료가 SINTEF PDS와 인증서에서 인용한 값입니다 <span class="src">[61508A]</span>.</p></div>
+<div class="tbl compact"><table>
+<caption>입력 데이터 [61508A]</caption>
+<thead><tr><th>서브시스템</th><th>구조</th><th class="num">λ<sub>DD</sub> [1/h]</th><th class="num">λ<sub>DU</sub> [1/h]</th><th class="num">MTTR=MRT</th><th class="num">β / β<sub>D</sub></th></tr></thead>
+<tbody>
+<tr><td>압력 송신기</td><td>2oo3</td><td class="num">8.00E-07</td><td class="num">5.00E-07</td><td class="num">8 h</td><td class="num">10% / 10%</td></tr>
+<tr><td>AI 모듈</td><td>2oo3</td><td class="num">8.86E-07</td><td class="num">7.06E-09</td><td class="num">8 h</td><td class="num">2% / 1%</td></tr>
+<tr><td>CPU</td><td>1oo2</td><td class="num">1.28E-06</td><td class="num">4.90E-09</td><td class="num">8 h</td><td class="num">2% / 1%</td></tr>
+<tr><td>DO 모듈</td><td>1oo2</td><td class="num">8.61E-07</td><td class="num">6.81E-09</td><td class="num">8 h</td><td class="num">2% / 1%</td></tr>
+<tr><td>밸브 조립체(SOV+밸브)</td><td>1oo2</td><td class="num">4.00E-07</td><td class="num">2.10E-06</td><td class="num">120 h</td><td class="num">10% / 10%</td></tr>
+</tbody></table></div>
+<div class="prose"><p><strong>2oo3 송신기 손계산.</strong> λ<sub>D</sub> = 1.3×10<sup>−6</sup>, λ<sub>DU</sub>/λ<sub>D</sub> = 0.3846, λ<sub>DD</sub>/λ<sub>D</sub> = 0.6154.</p></div>
+<div class="eq">\[ \begin{aligned} t_{CE} &= 0.3846\,(4380+8) + 0.6154\times 8 = 1692.6\ \mathrm{h},\qquad t_{GE} = 0.3846\,(2920+8) + 4.92 = 1131.1\ \mathrm{h} \\ \text{독립 항} &= 6\,(0.9\times 8.0\times10^{-7} + 0.9\times 5.0\times10^{-7})^2 \times 1692.6 \times 1131.1 = 1.57\times10^{-5} \\ \text{CCF 항} &= 0.1\times 8.0\times10^{-7}\times 8 + 0.1\times 5.0\times10^{-7}\times 4388 = 6.4\times10^{-7} + 2.19\times10^{-4} \\ \mathrm{PFD}_{S} &= 2.36\times10^{-4} \end{aligned} \]</div>
+<div class="prose"><p>CCF의 DU 항이 전체의 93%를 차지합니다. 같은 방법으로 밸브 조립체는 t<sub>CE</sub> = 3 799 h, t<sub>GE</sub> = 2 573 h, 독립 항 9.9×10<sup>−5</sup>, CCF 항 4.8×10<sup>−6</sup> + 9.45×10<sup>−4</sup>로 1.05×10<sup>−3</sup>입니다 <span class="src">[유도]</span>.</p></div>
+<div class="tbl"><table>
+<caption>결과 비교 [61508A]. 본 교재 계산기(도구 4)로도 같은 값이 나옵니다</caption>
+<thead><tr><th>경우</th><th class="num">센서</th><th class="num">로직</th><th class="num">최종요소</th><th class="num">합계 PFD<sub>avg</sub></th><th class="num">RRF</th></tr></thead>
+<tbody>
+<tr><td>A. 기본(완전 시험, β 그대로)</td><td class="num">2.36E-04</td><td class="num">1.90E-06</td><td class="num">1.05E-03</td><td class="num">1.29E-03</td><td class="num">777</td></tr>
+<tr><td>B. A + 2oo3에 표 D.5 배율 1.5</td><td class="num">3.44E-04</td><td class="num">2.24E-06</td><td class="num">1.05E-03</td><td class="num">1.40E-03</td><td class="num">717</td></tr>
+<tr><td>C. B + PTC(송신기 90%, 로직 98%, 밸브 85%)</td><td class="num">6.76E-04</td><td class="num">2.60E-06</td><td class="num">2.71E-03</td><td class="num">3.39E-03</td><td class="num">295</td></tr>
+</tbody></table></div>
+<p class="small">경우 C의 T<sub>2</sub>는 자료에 명시되어 있지 않아, 본 교재가 결과값으로 역산했습니다. T<sub>2</sub> = 10년일 때 모든 서브시스템 값이 자료와 일치합니다 <span class="src">[유도]</span>. 밸브 PTC 85%는 자료가 OREDA ESDV 고장 모드 분포(지연 동작 11%, 닫힘 실패 32%, 내부 누설 15%, 구조 결함 24%, 기타 18%)에서 누설 시험이 없는 경우로 구한 값입니다 <span class="src">[61508A]</span>.</p>
+<div class="box judg"><span class="lbl">실무 판단:</span><p>같은 하드웨어의 RRF가 777에서 295로 떨어졌습니다. 경우 A로 SIL 2 상단(예: 요구 RRF 500)을 주장했다면, 현실적인 PTC와 mission time을 넣는 순간 목표를 만족하지 못합니다. 최종요소가 전체의 80%를 차지하므로 개선도 밸브에서 해야 합니다. 누설 시험을 증명시험에 넣어 PTC를 높이거나, T<sub>2</sub>(전면 정비 주기)를 줄이거나, PVST를 더하는 방안을 13장에서 비교합니다.</p></div>
+
+<h3><span class="sec">7.9</span>exSILentia 입력과 IEC 변수의 대응</h3>
+<div class="tbl"><table>
+<thead><tr><th>도구 입력(일반적 명칭)</th><th>IEC 61508-6 변수·개념</th><th>주의</th></tr></thead>
+<tbody>
+<tr><td>Proof test interval</td><td>T<sub>1</sub></td><td>서브시스템마다 다를 수 있음</td></tr>
+<tr><td>Proof test coverage</td><td>PTC</td><td>장치 안전 매뉴얼의 시험 절차를 실제로 수행할 때만 그 값을 주장할 수 있음</td></tr>
+<tr><td>Mission time</td><td>T<sub>2</sub>에 해당</td><td>PTC &lt; 100%일 때 결과를 크게 좌우</td></tr>
+<tr><td>MTTR</td><td>MTTR(DD), MRT(시험 발견 DU)</td><td>도구는 하나로 묶는 경우가 많음</td></tr>
+<tr><td>β-factor</td><td>β, β<sub>D</sub>, 표 D.5 배율</td><td>구조별 배율 적용 여부 확인</td></tr>
+<tr><td>Site Safety Index</td><td>IEC 대응 없음(exida 방법론)</td><td>고장률·시험·수리 효과에 반영 <span class="src">[EXIDA]</span></td></tr>
+<tr><td>Architecture / HFT 판정</td><td>MooN, Route 1H·2H</td><td>8장</td></tr>
+<tr><td>Systematic capability</td><td>SC</td><td>SIF의 SC는 서브시스템 중 가장 낮은 값</td></tr>
+</tbody></table></div>
+<div class="prose"><p>도구 결과와 단순식이 다를 때는 대부분 PTC·mission time·SSI 입력, β 배율 적용 여부, MRT 처리, 데이터 출처(FMEDA 대 일반 DB) 차이에서 원인을 찾을 수 있습니다. 상용 도구는 단순식 대신 상태 기반 모델이나 수치 해석을 쓰는 경우도 많으므로, 같은 입력에서도 몇 % 차이는 정상입니다.</p></div>
+
+<div class="tool" id="toolPfd">
+<div class="tool-head"><h4>도구 4 · PFDavg / PFH 계산기와 PFD(t) 곡선</h4><span class="src">식 (7.3)–(7.19), 기본값 = 7.8절 2oo3 송신기 [61508A]</span></div>
+<div class="tool-body">
+<div class="fields">
+<div class="field"><label for="pfArch">구조</label><select id="pfArch"><option>1oo1</option><option>1oo2</option><option>2oo2</option><option>1oo2D</option><option selected>2oo3</option><option>1oo3</option></select></div>
+<div class="field"><label for="pfLdu">λ<sub>DU</sub> [1/h]</label><input id="pfLdu" type="text" inputmode="decimal" value="5e-7"></div>
+<div class="field"><label for="pfLdd">λ<sub>DD</sub> [1/h]</label><input id="pfLdd" type="text" inputmode="decimal" value="8e-7"></div>
+<div class="field"><label for="pfLsd">λ<sub>SD</sub> [1/h] (1oo2D용)</label><input id="pfLsd" type="text" inputmode="decimal" value="0"></div>
+<div class="field"><label for="pfT1">T<sub>1</sub> [h]</label><input id="pfT1" type="text" inputmode="decimal" value="8760"><span class="hint">1년 = 8760 h</span></div>
+<div class="field"><label for="pfMttr">MTTR [h]</label><input id="pfMttr" type="text" inputmode="decimal" value="8"></div>
+<div class="field"><label for="pfMrt">MRT [h]</label><input id="pfMrt" type="text" inputmode="decimal" value="8"></div>
+<div class="field"><label for="pfB">β</label><input id="pfB" type="text" inputmode="decimal" value="0.10"></div>
+<div class="field"><label for="pfBd">β<sub>D</sub></label><input id="pfBd" type="text" inputmode="decimal" value="0.10"></div>
+<div class="field"><label for="pfPtc">PTC (0–1)</label><input id="pfPtc" type="text" inputmode="decimal" value="1"></div>
+<div class="field"><label for="pfT2">T<sub>2</sub> [h]</label><input id="pfT2" type="text" inputmode="decimal" value="87600"><span class="hint">PTC&lt;1일 때 사용</span></div>
+</div>
+<label class="check"><input type="checkbox" id="pfD5"> 표 D.5 β 배율 적용(1oo3 ×0.5, 2oo3 ×1.5)</label>
+<div class="btnrow"><button type="button" class="ghost" id="pfEx1">7.8 경우 A: 송신기</button><button type="button" class="ghost" id="pfEx2">7.8 경우 A: 밸브</button><button type="button" class="ghost" id="pfEx3">7.8 경우 C: 밸브</button></div>
+<div class="results" id="pfOut"></div>
+<div class="chart-wrap" id="pfWrap">
+<div class="legend" id="pfLegend"></div>
+<div id="pfChart"></div>
+<div class="tip" id="pfTip" hidden></div>
+</div>
+<p class="note">곡선은 순간 PFD(t)를 지수식으로 직접 계산한 것이고(DD는 정상상태 근사), 결과 칸의 "수치 평균"은 그 곡선의 시간 평균입니다. 단순식(IEC)과 수치 평균의 차이는 단순식의 근사 오차와 MRT 처리 차이에서 옵니다. 1oo2D는 수치 곡선을 1oo2로 근사합니다. 가로 회색선은 SIL 대역 경계(10<sup>−1</sup>, 10<sup>−2</sup>, …)이고 진한 선은 수치 평균입니다.</p>
+</div>
+</div>
+<div class="box exam"><span class="lbl">시험 포인트:</span><ul>
+<li>t<sub>CE</sub>는 T<sub>1</sub>/2, t<sub>GE</sub>는 T<sub>1</sub>/3. CCF 항은 1oo1과 같은 꼴.</li>
+<li>중복 구조에서는 대개 βλ<sub>DU</sub>T<sub>1</sub>/2가 지배합니다. β를 줄이는 것이 채널을 더 늘리는 것보다 효과적인 경우가 많습니다.</li>
+<li>PFH<sub>1oo1</sub> = λ<sub>DU</sub>, PFH<sub>2oo2</sub> = 2λ<sub>DU</sub>.</li>
+<li>PTC &lt; 100%이면 T<sub>2</sub>(mission time)가 결과를 좌우합니다.</li>
+</ul></div>
+</section>
+<!-- ===================== CH 8 ===================== -->
+<section class="chapter" id="ch8">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>08</span></div><div><p class="eyebrow">IEC 61508-2 §7.4.2–7.4.4 · IEC 61511-1 §11.4–11.5</p><h2>구조적 제약과 체계적 능력</h2></div></div>
+
+<h3><span class="sec">8.1</span>왜 PFD만으로는 부족한가</h3>
+<div class="prose">
+<p>PFD 계산은 입력 고장률이 맞다는 전제 위에 있습니다. 그러나 고장률에는 불확실성이 있고, 모르는 고장 모드도 있습니다. 구조적 제약(architectural constraints)은 계산이 틀렸을 때를 대비하는 최소 결함 허용 요건입니다. 그래서 PFD가 아무리 좋아도 HFT 요건을 만족하지 못하면 해당 SIL을 주장할 수 없습니다.</p>
+<p>IEC 61508-2는 두 경로를 제시합니다. <strong>Route 1H</strong>는 장치 유형(A/B)과 SFF로 허용 SIL을 정하고, <strong>Route 2H</strong>는 현장 피드백 기반의 신뢰성 데이터를 조건으로 SIL별 최소 HFT를 정합니다. IEC 61511 2판은 Route 2H와 정렬되어 SFF를 없앤 새 HFT 표를 §11.4.5에 두었습니다 <span class="src">[BRATT] [PRE]</span>.</p>
+</div>
+
+<h3><span class="sec">8.2</span>Type A와 Type B</h3>
+<div class="tbl"><table>
+<thead><tr><th>Type A (모두 만족)</th><th>Type B</th></tr></thead>
+<tbody>
+<tr><td>① 구성 부품의 모든 고장 모드가 잘 정의됨<br>② 결함 상태에서 요소의 거동을 완전히 결정할 수 있음<br>③ 검출·미검출 위험 고장률 주장을 뒷받침할 충분한 신뢰 고장 데이터가 있음</td><td>Type A 조건 중 하나 이상을 만족하지 못함. 마이크로프로세서·ASIC 등 복잡한 부품을 포함한 스마트 장치가 대표적입니다 <span class="src">[PRE]</span></td></tr>
+<tr><td>예: 밸브, 액추에이터, 솔레노이드, 릴레이, 단순 스위치</td><td>예: 스마트 송신기, 안전 PLC, 스마트 포지셔너</td></tr>
+</tbody></table></div>
+
+<h3><span class="sec">8.3</span>Route 1H</h3>
+<div class="grid2">
+<div class="tbl compact" style="margin:0"><table>
+<caption>Type A 요소의 최대 SIL</caption>
+<thead><tr><th>SFF</th><th class="c">HFT 0</th><th class="c">HFT 1</th><th class="c">HFT 2</th></tr></thead>
+<tbody>
+<tr><td>&lt; 60%</td><td class="c">SIL 1</td><td class="c">SIL 2</td><td class="c">SIL 3</td></tr>
+<tr><td>60% – &lt; 90%</td><td class="c">SIL 2</td><td class="c">SIL 3</td><td class="c">SIL 4</td></tr>
+<tr><td>90% – &lt; 99%</td><td class="c">SIL 3</td><td class="c">SIL 4</td><td class="c">SIL 4</td></tr>
+<tr><td>≥ 99%</td><td class="c">SIL 3</td><td class="c">SIL 4</td><td class="c">SIL 4</td></tr>
+</tbody></table></div>
+<div class="tbl compact" style="margin:0"><table>
+<caption>Type B 요소의 최대 SIL</caption>
+<thead><tr><th>SFF</th><th class="c">HFT 0</th><th class="c">HFT 1</th><th class="c">HFT 2</th></tr></thead>
+<tbody>
+<tr><td>&lt; 60%</td><td class="c">불허</td><td class="c">SIL 1</td><td class="c">SIL 2</td></tr>
+<tr><td>60% – &lt; 90%</td><td class="c">SIL 1</td><td class="c">SIL 2</td><td class="c">SIL 3</td></tr>
+<tr><td>90% – &lt; 99%</td><td class="c">SIL 2</td><td class="c">SIL 3</td><td class="c">SIL 4</td></tr>
+<tr><td>≥ 99%</td><td class="c">SIL 3</td><td class="c">SIL 4</td><td class="c">SIL 4</td></tr>
+</tbody></table></div>
+</div>
+<p class="small">IEC 61508-2 표 2·3의 값 <span class="src">[61508-2] [PRE]</span>.</p>
+<div class="prose">
+<p>요소를 결합할 때의 규칙(요지)은 다음과 같습니다. 직렬로 연결된 요소들의 최대 SIL은 그중 가장 낮은 요소가 정합니다. 병렬(투표)로 결합된 요소들은 각 채널이 달성한 SIL 중 가장 높은 값에 결합의 HFT N을 더한 SIL까지 주장할 수 있습니다 <span class="src">[61508-2 §7.4.4.2]</span>. SFF는 투표 그룹 전체가 아니라 <strong>채널(요소) 단위</strong>로 구합니다.</p>
+<p>예: SFF 85%인 Type B 송신기는 HFT 0에서 SIL 1입니다. 두 대를 1oo2로 결합하면(HFT 1) 표에서 SIL 2, 결합 규칙으로도 SIL 1 + 1 = SIL 2입니다.</p>
+</div>
+
+<h3><span class="sec">8.4</span>Route 2H와 IEC 61511 표 6</h3>
+<div class="tbl"><table>
+<caption>최소 HFT (IEC 61508-2 Route 2H / IEC 61511-1 표 6) <span class="src">[PRE] [BRATT]</span></caption>
+<thead><tr><th class="c">SIL</th><th>운전 모드</th><th class="c">최소 HFT</th></tr></thead>
+<tbody>
+<tr><td class="c">1</td><td>모든 모드</td><td class="c">0</td></tr>
+<tr><td class="c">2</td><td>저빈도 요구</td><td class="c">0</td></tr>
+<tr><td class="c">2</td><td>고빈도 요구 또는 연속</td><td class="c">1</td></tr>
+<tr><td class="c">3</td><td>모든 모드</td><td class="c">1</td></tr>
+<tr><td class="c">4</td><td>모든 모드</td><td class="c">2</td></tr>
+</tbody></table></div>
+<div class="prose">
+<p>61511 §11.4.3은 HFT가 IEC 61508의 Route 1H, 또는 Route 2H / 61511 §11.4.5–11.4.9를 따르도록 요구합니다 <span class="src">[PRE]</span>. 61511 경로는 prior use 데이터와 §11.9의 신뢰성 데이터 요건(credible, traceable, documented, justified, 현장 피드백, 불확실성 평가)을 전제로 합니다 <span class="src">[PRE] [BRATT]</span>.</p>
+<p>IEC 61508-2의 Route 2H에는 표 외에도 조건이 붙습니다(요지). 고장률 데이터는 유사 용도·환경의 현장 피드백에 근거하고 국제 표준(IEC 60300-3-2, ISO 14224 등)에 따라 수집되어야 하며, 각 신뢰성 매개변수의 평균과 불확실성(예: 90% 신뢰구간)을 추정해야 합니다. 목표 실패척도는 데이터 불확실성을 반영해 90%를 넘는 신뢰로 달성되어야 하고, Route 2H에 쓰는 Type B 요소는 진단 커버리지가 60% 이상이어야 합니다. Type A 요소에 한해, 표의 HFT를 따르면 오히려 고장이 늘어 전체 안전이 떨어진다는 것을 입증하면 HFT를 줄일 수 있으며, 이때 고장 배제(fault exclusion)를 주장하는 직렬 요소들의 위험 고장 빈도 합이 목표 실패척도의 1%를 넘지 않아야 합니다 <span class="src">[61508-2 §7.4.4.3]</span>. 세부 문구는 원문으로 확인하십시오.</p>
+</div>
+<div class="box basis"><span class="lbl">근거: 푸시버튼 예</span><p>SFF 50%인 비상정지 푸시버튼(Type A)으로 SIL 2를 구현한다고 하겠습니다. Route 1H Type A 표로는 HFT 1(접점 두 개)이 필요합니다. 61511 2판의 표(§11.4.5)로는 저빈도 SIL 2에 HFT 0이면 됩니다. 접점이 하나인 푸시버튼은 기계적으로 더 신뢰할 수 있고, 증명시험이 단순하며, 덜 복잡합니다. 중복을 더하는 것이 항상 안전을 더하지는 않는다는 경험이 새 요건에 반영된 것입니다 <span class="src">[BRATT]</span>.</p></div>
+<div class="box trap"><span class="lbl">함정:</span><p>"61511 2판에서는 SIL 3에도 HFT 1이면 되니 SFF는 몰라도 된다"는 반쪽 이해입니다. 61511 경로를 쓰려면 prior use와 §11.9 데이터 요건을 충족해야 합니다. 이를 입증할 수 없으면 Route 1H로 돌아가 SFF와 Type을 따져야 하고, Type B·SFF 60–90%이면 SIL 3에 HFT 2가 필요합니다.</p></div>
+
+<h3><span class="sec">8.5</span>체계적 능력(SC)과 장치 선정</h3>
+<div class="prose">
+<p>체계적 능력(SC 1–4)은 요소의 체계적 고장에 대한 방어 수준입니다. SIF의 SC는 서브시스템들의 SC 중 가장 낮은 값으로 제한됩니다 <span class="src">[PRE]</span>. 61508은 세 가지 입증 경로를 둡니다. Route 1S는 61508-2·3의 기법과 조치를 따른 적합 개발, Route 2S는 proven in use, Route 3S는 기존 소프트웨어 요소에 대한 61508-3의 적합성 평가입니다. 독립성이 충분한 두 요소를 결합하면 한 단계 높은 SC를 주장할 수 있는 규칙도 있습니다(요지) <span class="src">[61508-2 §7.4.3]</span>.</p>
+<p>61511 §11.5는 장치 선정 요건입니다. 장치는 IEC 61508-2·3에 따르거나, §11.5.3–11.5.6에 따라 선정해야 합니다 <span class="src">[PRE] [61511-PV]</span>. §11.5.3은 prior use 기반 선정, §11.5.4는 FPL 프로그래머블 장치(예: 필드 장치), §11.5.5는 prior use 기반 LVL 프로그래머블 장치, §11.5.6은 FVL 프로그래머블 장치를 다룹니다.</p>
+</div>
+<div class="tbl"><table>
+<caption>Prior use(61511)와 proven in use(61508) 비교</caption>
+<thead><tr><th>항목</th><th>Prior use (61511 §11.5.3)</th><th>Proven in use (61508 Route 2S)</th></tr></thead>
+<tbody>
+<tr><td>주체</td><td>사용자(운영사·통합자)가 운전 경험 증거를 모아 판단</td><td>주로 제조사가 요소의 SC를 주장</td></tr>
+<tr><td>목적</td><td>해당 용도에 장치를 써도 된다는 근거(체계적 결함이 충분히 줄었다는 증거)</td><td>개발 과정 대신 사용 실적으로 SC를 입증</td></tr>
+<tr><td>증거(요지)</td><td>제조사의 품질·관리·형상 관리, 장치의 명확한 식별·사양, 같거나 유사한 운전 환경에서의 성능, 운전 경험의 양, 하드웨어·소프트웨어 버전 관리, 고장 기록 절차, 고장 모드의 정기 검토 <span class="src">[PRE]</span></td><td>명확한 사양과 제한된 기능, 충분한 운전 시간과 고장 기록, 동일 사용 조건, 변경 관리</td></tr>
+<tr><td>결과</td><td>장치 선정 근거, 61511 HFT 경로(§11.4.5–11.4.9)의 전제</td><td>SC 등급</td></tr>
+</tbody></table></div>
+<div class="box judg"><span class="lbl">실무 판단:</span><p>Prior use의 핵심은 "얼마나 오래 썼는가"가 아니라 "고장을 기록하고 분석해 왔는가"입니다. 고장 보고 체계 없이 "20년간 문제없이 썼다"는 진술은 증거가 되지 못합니다. 같은 모델이라도 펌웨어 리비전이 바뀌면 prior use 근거를 다시 검토해야 합니다.</p></div>
+
+<h3><span class="sec">8.6</span>인증서와 안전 매뉴얼에서 읽어야 할 것</h3>
+<div class="prose"><ul>
+<li>평가 범위: 어떤 모델·옵션·펌웨어 리비전까지 포함되는가.</li>
+<li>SC 등급, Type(A/B), HFT, 평가 경로(1H/2H, 1S/2S).</li>
+<li>고장률(λ<sub>SD</sub>, λ<sub>SU</sub>, λ<sub>DD</sub>, λ<sub>DU</sub>), SFF, 데이터의 환경 가정(온도, 공정 매체).</li>
+<li>진단 응답 시간과 진단이 검출한 고장에 대한 출력 동작(예: NAMUR NE43 경보 전류).</li>
+<li>권장 증명시험 절차와 각 절차의 PTC, 유효 수명.</li>
+<li>사용 제한: 최대 요구율, 시험 주기 상한, 필수 설정(쓰기 보호 등).</li>
+</ul></div>
+<p class="small">2판은 "safety manual" 정의와 요건(§3.2.73, §11.2.13)을 새로 두어, 사용자 시설 차원의 안전 매뉴얼(운전, 유지보수, 결함 검출, 제약 사항)이 필요한지 검토하도록 했습니다. 제조사의 61508 안전 매뉴얼은 그 입력입니다 <span class="src">[BRATT]</span>.</p>
+
+<div class="tool" id="toolArch">
+<div class="tool-head"><h4>도구 5 · 구조적 제약 판정기</h4><span class="src">61508-2 표 2·3, 61511-1 표 6</span></div>
+<div class="tool-body">
+<div class="fields">
+<div class="field"><label for="acType">요소 유형</label><select id="acType"><option value="A">Type A</option><option value="B" selected>Type B</option></select></div>
+<div class="field"><label for="acSff">SFF [%]</label><input id="acSff" type="text" inputmode="decimal" value="72"><span class="hint">예: 7.8절 송신기 (0.5+0.8)/1.8</span></div>
+<div class="field"><label for="acHft">HFT</label><select id="acHft"><option>0</option><option selected>1</option><option>2</option></select></div>
+<div class="field"><label for="acSil">목표 SIL</label><select id="acSil"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></div>
+<div class="field"><label for="acMode">운전 모드</label><select id="acMode"><option value="low" selected>저빈도 요구</option><option value="high">고빈도 요구·연속</option></select></div>
+</div>
+<div class="results" id="acOut"></div>
+</div>
+</div>
+<div class="box exam"><span class="lbl">시험 포인트:</span><ul>
+<li>Type A/B 정의 세 조건. 스마트 장치는 대개 Type B.</li>
+<li>Type B, SFF &lt; 60%, HFT 0은 불허.</li>
+<li>61511 표 6: SIL 3은 HFT 1, SIL 4는 HFT 2, SIL 2는 저빈도 0·고빈도 1.</li>
+<li>SIF의 SC = 서브시스템 SC의 최솟값.</li>
+<li>Prior use는 61511, proven in use는 61508.</li>
+</ul></div>
+</section>
+
+<!-- ===================== CH 9 ===================== -->
+<section class="chapter" id="ch9">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>09</span></div><div><p class="eyebrow">IEC 61508-6 부속서 D · IEC 61511-1 §9.4</p><h2>공통원인고장과 독립성</h2></div></div>
+
+<h3><span class="sec">9.1</span>공통원인고장의 구조</h3>
+<div class="prose">
+<p>공통원인고장(CCF)은 하나의 원인으로 둘 이상의 채널이 고장 나는 것입니다. 분석할 때는 <strong>근본 원인</strong>(무엇이 고장을 일으켰나)과 <strong>결합 요인</strong>(왜 여러 채널에 동시에 영향을 줬나)을 나눠 봅니다. 공정 산업에서 흔한 결합 요인은 공통 공정 연결(같은 탭, 같은 임펄스 라인), 공통 전원·공기 공급, 같은 설계·같은 제조사, 같은 사람이 같은 절차로 같은 날 교정, 같은 환경(열, 진동, 부식), 공정 매체(하이드레이트, 왁스, 고형물)입니다.</p>
+<p>7장에서 본 것처럼 중복 구조의 PFD는 대개 βλ<sub>DU</sub>T<sub>1</sub>/2가 지배합니다. 채널을 늘려 독립 항을 아무리 줄여도 CCF 항은 그대로 남습니다.</p>
+</div>
+
+<h3><span class="sec">9.2</span>β 인자 모델과 한계</h3>
+<div class="eq">\[ \lambda_{DU}^{(c)} = \beta\,\lambda_{DU}, \quad \lambda_{DU}^{(i)} = (1-\beta)\lambda_{DU}, \qquad \lambda_{DD}^{(c)} = \beta_D\,\lambda_{DD}, \quad \lambda_{DD}^{(i)} = (1-\beta_D)\lambda_{DD} \tag{9.1} \]</div>
+<div class="prose"><p>β 인자 모델은 채널 고장률의 일정 비율이 "모든 채널이 함께 고장 나는" 사건이라고 가정합니다 <span class="src">[RAU]</span>. 간단하지만 2oo3에서 "셋 중 둘만 함께 고장"과 "셋 모두 고장"을 구분하지 못합니다. 표 D.5와 PDS C<sub>MooN</sub>(7.5절)은 이 한계를 보정하는 장치입니다. 더 정교한 모델로 MGL(multiple Greek letter), α 인자, BFR 모델이 있습니다.</p></div>
+
+<h3><span class="sec">9.3</span>IEC 61508-6 부속서 D의 β 산정</h3>
+<div class="prose">
+<p>부속서 D는 설계·운영의 CCF 방어 수준을 점수화해 β를 고르는 방법입니다 <span class="src">[61508-6PV] [61508A]</span>. 절차의 뼈대는 다음과 같습니다.</p>
+<ol>
+<li>표 D.1의 질문(로직 서브시스템용, 센서·최종요소용 각각)에 답해 점수 X, Y를 합산합니다. 질문은 분리·격리, 다양성·중복, 복잡성·설계·성숙도·경험, 평가·분석·데이터 피드백, 절차·인간 인터페이스, 역량·훈련·안전 문화, 환경 관리, 환경 시험 같은 범주로 묶여 있습니다.</li>
+<li>X는 진단이 있으면 효과가 커지는 조치의 점수, Y는 진단과 무관한 조치의 점수입니다.</li>
+<li>진단 커버리지와 진단 주기로 Z를 정합니다(표 D.2 프로그래머블 전자, 표 D.3 센서·최종요소).</li>
+<li>S = X + Y로 β<sub>int</sub>를, S<sub>D</sub> = X(Z+1) + Y로 β<sub>D,int</sub>를 표 D.4에서 읽습니다.</li>
+<li>1oo2보다 중복도가 높으면 표 D.5 배율을 곱합니다.</li>
+</ol>
+<p>표 D.4의 결과는 점수 구간에 따라 로직 서브시스템은 0.5%, 1%, 2%, 5%, 센서·최종요소는 1%, 2%, 5%, 10% 중 하나입니다. 즉 β<sub>int</sub>는 0.5%–10% 범위에서 정해집니다 <span class="src">[61508-6 표 D.4] [61508A]</span>.</p>
+</div>
+<div class="box judg"><span class="lbl">실무 판단:</span><p>61508 Association 자료는 제대로 평가하지 않고 가장 보수적인 β를 쓰는 경우가 흔하다고 지적합니다 <span class="src">[61508A]</span>. 반대로 근거 없이 1–2%를 쓰는 것도 흔합니다. 센서·최종요소에 β를 2% 이하로 주장하려면 부속서 D 점수표를 실제 설계(탭 분리, 케이블 경로 분리, 시차 시험, 다른 정비 인원)로 채워 증빙해야 합니다. SINTEF는 운전 경험에 기반한 장비별 β 값과 점검표를 보고서(A26922)로 공개했습니다 <span class="src">[PDS]</span>.</p></div>
+
+<h3><span class="sec">9.4</span>보호계층 사이의 독립성</h3>
+<div class="prose">
+<p>CCF는 한 SIF의 채널 사이에서만 생기지 않습니다. 원인과 IPL 사이, BPCS 보호계층과 SIF 사이, 같은 위험에 대한 여러 SIF 사이에서도 생깁니다. 61511 §9.4는 보호계층들 사이의 공통원인·공통모드·종속 고장을 방지하는 요건이고 <span class="src">[61511-PV]</span>, §9.3.5는 BPCS 보호계층의 독립·분리 요건입니다 <span class="src">[KNX]</span>.</p>
+<p>SIS는 BPCS와 분리하여 BPCS의 고장이 SIS의 기능을 훼손하지 않게 설계해야 합니다. BPCS와 SIS가 송신기·밸브·탭을 공유하면, 그 장치의 고장이 원인이면서 보호 실패가 되는 경로가 생깁니다. 공유하려면 그 결과를 분석하여 무결성이 훼손되지 않음을 보여야 합니다.</p>
+</div>
+<div class="box trap"><span class="lbl">함정:</span><p>"SIF 1(SIL 2)과 SIF 2(SIL 1)이 같은 위험을 막으므로 합쳐서 RRF 1000 이상"이라고 주장하면서 두 SIF가 같은 로직 솔버, 같은 압력 탭, 같은 정비 절차를 쓰는 경우. 곱셈이 성립하지 않습니다. 2판의 "계장 방호 합계 RRF 10 000 초과" 요건(4.6절)이 이런 경우를 겨냥합니다.</p></div>
+
+<h3><span class="sec">9.5</span>β를 줄이는 설계·운영 수단</h3>
+<div class="tbl"><table>
+<thead><tr><th>수단</th><th>막는 결합 요인</th></tr></thead>
+<tbody>
+<tr><td>공정 탭·임펄스 라인·케이블 경로의 물리적 분리</td><td>공통 막힘, 공통 화재·기계적 손상</td></tr>
+<tr><td>기술 다양성(예: 압력 + 온도, 다른 측정 원리)</td><td>설계 결함, 공정 매체 영향</td></tr>
+<tr><td>제조사·모델 다양성</td><td>공통 설계·제조 결함, 펌웨어 결함</td></tr>
+<tr><td>시차 시험, 다른 인원·다른 날의 교정</td><td>공통 정비 오류(같은 오차로 교정)</td></tr>
+<tr><td>진단과 편차 경보(채널 간 비교)</td><td>CCF가 동시에 오지 않을 때 첫 고장을 먼저 발견</td></tr>
+<tr><td>환경 관리(온도, 습도, 진동)와 환경 시험</td><td>환경 스트레스</td></tr>
+</tbody></table></div>
+<div class="box exam"><span class="lbl">시험 포인트:</span><ul>
+<li>β 인자 모델에서 CCF 항은 1oo1처럼 동작: βλ<sub>DU</sub>(T<sub>1</sub>/2 + MRT).</li>
+<li>부속서 D: S = X + Y → β, S<sub>D</sub> = X(Z+1) + Y → β<sub>D</sub>. β 범위 로직 0.5–5%, 센서·최종요소 1–10%.</li>
+<li>2oo3은 1oo2보다 CCF에 취약(표 D.5 ×1.5), 1oo3은 덜 취약(×0.5).</li>
+<li>다양성·분리·시차 시험이 β를 줄입니다.</li>
+</ul></div>
+</section>
+<!-- ===================== CH 10 ===================== -->
+<section class="chapter" id="ch10">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>10</span></div><div><p class="eyebrow">IEC 61511-1 §11 · §16.2</p><h2>SIS 설계·엔지니어링</h2></div></div>
+
+<h3><span class="sec">10.1</span>§11의 구성과 2판 변경</h3>
+<div class="prose">
+<p>§11은 일반 요건(11.2), 결함 검출 시 시스템 거동(11.3), HFT(11.4), 장치 선정(11.5), 필드 장치(11.6), 인터페이스(11.7: 운전원, 유지보수·엔지니어링, 통신), 유지보수·시험 설계(11.8), 무작위 고장 정량화(11.9)로 이루어집니다 <span class="src">[61511-PV]</span>. TR 61511-4는 2판에서 바뀐 설계 요건으로 HFT, 보안 위험 요건, 안전 매뉴얼, 결함 검출 시 시스템 거동, 필드 장치 통신 설계의 제한을 꼽습니다 <span class="src">[TR61511-4]</span>.</p>
+</div>
+
+<h3><span class="sec">10.2</span>결함이 검출되었을 때(§11.3)</h3>
+<div class="prose"><p>요지는 "검출된 위험 결함을 방치하지 말고, SRS에 정한 대로 대응하라"입니다. HFT가 있는 서브시스템에서 위험 결함이 검출되면 안전 상태로 가는 지정된 조치를 하거나, 고장 부분을 수리하는 동안 운전을 계속할 수 있습니다. 다만 PFD 계산에 가정한 MTTR 안에 수리를 마치지 못하면 안전 상태로 가는 조치를 해야 합니다. HFT가 0인 서브시스템에서는 안전 상태로 가는 것이 원칙이며, 운전을 계속하려면 수리 기간 동안 보상 조치가 있어야 합니다(요지). 이 대응은 SRS의 "결함 시 거동" 항목(5.2절)과 운전 절차에 함께 들어가야 합니다.</p></div>
+<div class="box basis"><span class="lbl">근거:</span><p>61508-6 식의 λ<sub>DD</sub>·MTTR 항은 "검출된 위험 고장이 MTTR 안에 복구된다"는 가정을 담고 있습니다. 실제 수리가 그보다 오래 걸리면 계산이 현실을 과소평가합니다. §11.3의 요건은 이 가정을 운전에서 지키게 만드는 장치입니다.</p></div>
+
+<h3><span class="sec">10.3</span>센서 서브시스템</h3>
+<div class="prose">
+<ul>
+<li><strong>스위치보다 송신기</strong>: 아날로그 송신기는 진단(범위 이탈, 채널 간 편차)이 가능해 DC를 높입니다. 스위치는 고착을 증명시험 전까지 알 수 없습니다.</li>
+<li><strong>NAMUR NE43</strong>: 측정 신호 3.8–20.5 mA, 고장 신호 ≤ 3.6 mA 또는 ≥ 21 mA. 로직은 고장 신호를 "불량 품질"로 받아 SRS에 정한 대로(트립 또는 투표 감등) 처리해야 합니다.</li>
+<li><strong>2oo3의 감등 로직</strong>: 한 채널이 불량이면 남은 둘을 1oo2(안전 우선)로 볼지 2oo2(가용성 우선)로 볼지는 SRS에서 정할 설계 선택입니다. PFD와 오동작 트립률이 모두 달라지므로 계산 가정과 일치해야 합니다.</li>
+<li><strong>편차 경보</strong>: 채널 간 비교는 드리프트, 임펄스 라인 막힘처럼 송신기 자체 진단으로 못 잡는 고장을 잡습니다. CCF가 동시에 오지 않는 경우 첫 고장을 먼저 드러내는 효과도 있습니다.</li>
+<li><strong>공정 연결 분리</strong>: 탭을 공유하면 막힘 하나가 세 채널을 동시에 무력화합니다. β를 낮게 주장한다면 탭 분리는 사실상 전제 조건입니다.</li>
+</ul>
+</div>
+
+<h3><span class="sec">10.4</span>로직 솔버</h3>
+<div class="prose">
+<p>안전 PLC는 내부 구조(1oo1D, 1oo2D, 2oo3 TMR, 2oo4D 등)와 진단으로 높은 DC와 낮은 λ<sub>DU</sub>를 얻습니다. 7.8절 예제에서 로직 솔버의 기여가 10<sup>−6</sup> 수준으로 작았던 이유입니다. 인증된 안전 PLC를 쓸 때는 안전 매뉴얼의 제약(쓰기 보호, 진단 응답 시간, 허용 통신 방식, 응용 프로그램 작성 규칙)을 지켜야 인증 근거가 유지됩니다.</p>
+<p>통신은 §11.7.4의 요건 대상입니다. BPCS와의 통신 고장이 SIF를 훼손하지 않아야 하고, BPCS에서 SIS로의 쓰기는 엄격히 제한해야 합니다. 안전 필드버스는 전송 매체를 신뢰하지 않고 안전 계층에서 오류를 검출하는 "블랙 채널" 원리를 씁니다.</p>
+</div>
+
+<h3><span class="sec">10.5</span>최종요소</h3>
+<div class="prose">
+<p>공정 SIF의 PFD는 대개 최종요소가 지배합니다(7.8절에서 약 80%). 최종요소는 솔레노이드 밸브(SOV), 액추에이터, 밸브 본체로 된 조립체이며, 셋 중 하나만 고장 나도 기능을 잃습니다.</p>
+<ul>
+<li><strong>무통전 트립 + 스프링 복귀</strong>가 기본입니다. 전원·계기 공기 상실이 곧 안전 동작입니다.</li>
+<li><strong>닫힘 시간</strong>은 공정안전시간 예산의 큰 부분이며(식 5.1), 경년에 따라 늘어납니다. 증명시험에서 행정 시간을 기록하고 추세를 봐야 합니다.</li>
+<li><strong>기밀 차단</strong>이 필요한 SIF는 누설 기준을 안전 상태에 포함하고 누설 시험을 증명시험에 넣습니다.</li>
+<li><strong>SOV 구성</strong>: 1oo2 SOV는 안전(PFD)을, 2oo2 SOV는 가용성(오동작 트립)을 개선합니다. 2oo2 SOV를 쓰면 PFD가 나빠지므로 계산에 반영해야 합니다.</li>
+<li><strong>전동기 정지</strong>: 차단기·접촉기 트립 회로도 최종요소입니다. 통전 트립 차단기를 쓰면 트립 회로 감시와 전원 무결성이 SIF의 일부가 됩니다.</li>
+</ul>
+</div>
+
+<h3><span class="sec">10.6</span>통전 트립과 무통전 트립</h3>
+<div class="prose"><p>무통전 트립(de-energize to trip)은 전원 상실, 배선 단선이 안전 쪽 고장이 되므로 기본 원칙입니다. 오동작 트립의 결과가 커서 통전 트립(energize to trip)을 택하는 경우(일부 화재 진압 설비 등)에는 배선 감시(line monitoring), 전원 공급의 무결성(UPS·배터리)과 그 감시가 SIF의 일부가 되며, 해당 전원 장치의 고장률도 PFD 계산에 들어가야 합니다. 어느 쪽인지는 SRS 항목입니다.</p></div>
+
+<h3><span class="sec">10.7</span>Bypass·override·리셋</h3>
+<div class="prose">
+<p>2판은 운전 중 SIS가 bypass(수리·시험)로 무력화되거나 성능이 떨어진 동안 지속적인 안전을 보장하는 보상 조치를 적용하도록 하고(§16.2.3), 모든 bypass의 상태를 bypass 기록에 남기며 모든 bypass에 승인과 표시를 요구합니다(§16.2.7) <span class="src">[BRATT]</span>. 설계 단계에서는 이를 가능하게 하는 수단을 만들어야 합니다.</p>
+<ul>
+<li>정비용 override 스위치(MOS)는 키 또는 권한 관리, HMI 표시, 경보, 사용 시간 제한을 갖춥니다.</li>
+<li>시운전 override(start-up bypass)는 타이머나 공정 조건으로 자동 해제되도록 합니다.</li>
+<li>트립 후에는 원인이 해소되었더라도 수동 리셋 전까지 재기동되지 않는 것이 원칙입니다. 자동 리셋이 필요하면 SRS에 근거와 함께 명시합니다.</li>
+<li>bypass 중의 PFD 증가는 7.7절의 시험 중 bypass와 같은 구조입니다. 장시간 bypass는 별도 위험 평가 대상입니다.</li>
+</ul>
+</div>
+
+<h3><span class="sec">10.8</span>오동작 트립률</h3>
+<div class="prose"><p>오동작 트립(spurious trip)은 생산 손실뿐 아니라 시운전·재기동이라는 위험한 과도 운전을 늘리고, 운전원이 SIF를 bypass하고 싶게 만듭니다. SRS에 최대 허용 오동작 트립률을 두는 이유입니다. 채널 안전 고장률을 λ<sub>S</sub>(검출 위험 고장이 트립을 일으키도록 설계했다면 λ<sub>DD</sub> 포함), 안전 고장 채널의 복구 시간을 MTTR<sub>S</sub>라 하면 근사식은 다음과 같습니다 <span class="src">[유도]</span>.</p></div>
+<div class="eq">\[ \begin{aligned} STR_{1oo1} &\approx \lambda_S, \qquad STR_{1oo2} \approx (2-\beta)\lambda_S, \qquad STR_{1oo3} \approx (3-2\beta)\lambda_S \\ STR_{2oo2} &\approx 2\big[(1-\beta)\lambda_S\big]^2 MTTR_S + \beta\lambda_S, \qquad STR_{2oo3} \approx 6\big[(1-\beta)\lambda_S\big]^2 MTTR_S + \beta\lambda_S \end{aligned} \tag{10.1} \]</div>
+<div class="prose"><p>1ooN은 채널 하나만 트립해도 시스템이 트립하므로 오동작이 N배로 늘고, 2oo2·2oo3은 두 채널이 함께 트립해야 하므로 공통원인 항 βλ<sub>S</sub>가 지배합니다. 7.8절 밸브 조립체의 λ<sub>S</sub> = 3.9×10<sup>−6</sup>/h <span class="src">[61508A]</span>로 계산하면, 1oo2는 오동작 평균 간격(MTTF<sub>S</sub>) 약 15년, 2oo2(β 10%, MTTR<sub>S</sub> 120 h)는 약 290년입니다. 안전(1oo2)과 가용성(2oo2)이 반대 방향으로 움직이고, 2oo3이 둘을 함께 만족시키는 이유가 여기에 있습니다.</p></div>
+
+<div class="tool" id="toolStr">
+<div class="tool-head"><h4>도구 6 · 오동작 트립률(STR) 근사</h4><span class="src">식 (10.1) [유도]</span></div>
+<div class="tool-body">
+<div class="fields">
+<div class="field"><label for="stArch">구조</label><select id="stArch"><option>1oo1</option><option selected>1oo2</option><option>2oo2</option><option>2oo3</option><option>1oo3</option></select></div>
+<div class="field"><label for="stLs">λ<sub>S</sub> [1/h]</label><input id="stLs" type="text" inputmode="decimal" value="3.9e-6"><span class="hint">7.8절 밸브 조립체 [61508A]</span></div>
+<div class="field"><label for="stLdd">λ<sub>DD</sub> [1/h]</label><input id="stLdd" type="text" inputmode="decimal" value="4e-7"></div>
+<div class="field"><label for="stB">β</label><input id="stB" type="text" inputmode="decimal" value="0.10"></div>
+<div class="field"><label for="stM">MTTR<sub>S</sub> [h]</label><input id="stM" type="text" inputmode="decimal" value="120"></div>
+</div>
+<label class="check"><input type="checkbox" id="stDd"> 검출된 위험 고장(λ<sub>DD</sub>)도 채널 트립을 일으킴</label>
+<div class="results" id="stOut"></div>
+</div>
+</div>
+
+<h3><span class="sec">10.9</span>보안, 인간 요인, 기타 SIS</h3>
+<div class="prose">
+<ul>
+<li><strong>보안</strong>: §8.2.4의 보안 위험성 평가 결과를 설계에 반영합니다. 엔지니어링 워크스테이션 접근 통제, 쓰기 보호, 원격 접근 통제, BPCS–SIS 통합 수준의 결정이 핵심입니다. 지침으로 IEC 62443, ISA TR84.00.09가 쓰입니다 <span class="src">[BRATT]</span>.</li>
+<li><strong>운전원 인터페이스(§11.7.2)</strong>: bypass 상태, SIF 트립·진단 경보가 운전원에게 분명히 보여야 합니다. 운전원 대응을 IPL로 주장한다면 경보 관리(ISA 18.2/IEC 62682) 체계와도 연결됩니다.</li>
+<li><strong>화재·가스 시스템</strong>: 61511 SIF로 관리할 때는 PFD 외에 검지기 커버리지와 완화 효과가 실제 성능을 지배합니다(ISA TR84.00.07이 다룸).</li>
+</ul>
+</div>
+<div class="box exam"><span class="lbl">시험 포인트:</span><ul>
+<li>무통전 트립이 기본. 통전 트립이면 배선 감시·전원 무결성이 SIF 일부.</li>
+<li>Bypass: 보상 조치(§16.2.3), 기록·승인·표시(§16.2.7).</li>
+<li>1oo2는 안전↑·오동작↑, 2oo2는 안전↓·오동작↓, 2oo3은 둘 다 양호.</li>
+<li>MTTR 안에 수리하지 못하면 안전 상태로 가는 조치(§11.3).</li>
+</ul></div>
+</section>
+
+<!-- ===================== CH 11 ===================== -->
+<section class="chapter" id="ch11">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>11</span></div><div><p class="eyebrow">IEC 61511-1 §6.3, §10.3, §12 · IEC 61508-3</p><h2>응용 프로그램과 IEC 61508-3</h2></div></div>
+
+<h3><span class="sec">11.1</span>언어 분류와 적용 표준</h3>
+<div class="tbl"><table>
+<thead><tr><th>분류</th><th>성격</th><th>예</th><th>적용</th></tr></thead>
+<tbody>
+<tr><td>FPL (fixed programming language)</td><td>사용자는 정해진 매개변수만 조정</td><td>스마트 송신기 설정, 가스 검지기 설정</td><td>IEC 61511</td></tr>
+<tr><td>LVL (limited variability language)</td><td>미리 정의된 응용 특화 기능(라이브러리)을 조합</td><td>IEC 61131-3의 LD, FBD, SFC로 작성한 안전 PLC 응용</td><td>IEC 61511</td></tr>
+<tr><td>FVL (full variability language)</td><td>범용 언어로 광범위한 기능 구현</td><td>C, C++, 어셈블러 등</td><td>IEC 61508-3</td></tr>
+</tbody></table></div>
+<div class="box judg"><span class="lbl">실무 판단:</span><p>구조화 텍스트(ST)처럼 경계에 있는 언어는 공급자의 안전 매뉴얼이 허용하는 부분집합과 제한 규칙에 따라 LVL로 취급할 수 있는지가 달라집니다. 분류 근거를 응용 프로그램 SRS나 설계 문서에 남겨 두십시오.</p></div>
+
+<h3><span class="sec">11.2</span>61511의 응용 프로그램 수명주기</h3>
+<div class="prose">
+<p>2판에서 응용 프로그램 안전 수명주기는 §6.3으로, 응용 프로그램 SRS는 §10.3.3–10.3.6으로 옮겨졌고, §12는 일반 요건(12.2), 설계(12.3), 구현(12.4), 검증(12.5: 검토와 시험), 방법론과 도구(12.6)로 재구성되었습니다 <span class="src">[BRATT] [61511-PV]</span>. 2판의 대표 조항은 다음과 같습니다 <span class="src">[BRATT]</span>.</p>
+<ul>
+<li><strong>§12.2.4</strong>: 응용 프로그램이 안전 기능과 비안전 기능을 함께 구현하면, 프로그램 전체를 SIS의 일부로 보고 61511을 따라야 하며, 평가와 시험으로 비안전 기능이 안전 기능을 방해할 수 없음을 보여야 합니다.</li>
+<li><strong>§12.2.7</strong>: 안전 매뉴얼이 다른 방식을 허용하지 않는 한 응용 프로그램의 모든 부분이 매 스캔마다 실행되도록 설계하고, 스캔 요구를 정할 때 공정안전시간을 고려합니다.</li>
+<li><strong>§12.4.2 f)</strong>: 응용 프로그램이나 관련 문서에 각 SIF와 그 SIL을 식별해 두어야 합니다.</li>
+<li><strong>§7.2.2</strong>: 응용 프로그램 시험도 검증의 틀 안에서 요구됩니다.</li>
+</ul>
+</div>
+
+<h3><span class="sec">11.3</span>응용 프로그램 설계 원칙</h3>
+<div class="prose"><ul>
+<li>SRS의 SIF 태그와 프로그램 모듈을 일대일로 추적할 수 있게 이름과 구조를 맞춥니다.</li>
+<li>인증된 안전 기능 블록 라이브러리를 쓰고, 사용자 정의 블록은 별도로 검증합니다.</li>
+<li>입력 불량 품질(NE43 고장 신호, 통신 상실)의 처리를 명시적으로 설계합니다.</li>
+<li>트립은 래치하고, 리셋은 운전원 동작과 조건 해소를 모두 요구합니다.</li>
+<li>시운전 override는 타이머로 자동 해제하고, 정비 override는 상태를 HMI에 표시합니다.</li>
+<li>비안전 기능(표시, 계산)은 가능한 한 분리하고, 같은 프로그램에 둔다면 §12.2.4의 비간섭을 입증합니다.</li>
+</ul></div>
+
+<h3><span class="sec">11.4</span>검증, 시험, 형상 관리</h3>
+<div class="prose"><p>응용 프로그램 검증은 SRS 대비 코드 검토, 오프라인 시뮬레이션 시험, FAT(§13), 현장 통합 시험, 확인(§15)으로 이어집니다. 변경 후에는 영향 분석에 따라 회귀 시험 범위를 정하고, 다운로드된 프로그램이 승인된 버전과 같은지(체크섬, 버전 비교)를 확인합니다. 이는 §5.2.7 형상 관리의 일부입니다.</p></div>
+
+<h3><span class="sec">11.5</span>IEC 61508-3 핵심</h3>
+<div class="prose">
+<p>FVL 응용 프로그램이나 임베디드 소프트웨어를 개발한다면 61508-3이 적용됩니다. 소프트웨어 안전 수명주기는 소프트웨어 안전 요구사항 명세 → 아키텍처 설계 → 상세 설계 → 코딩 → 모듈 시험 → 통합 시험 → 확인으로 이어지는 V 모델이고, 단계마다 검증이 붙습니다. 61508-3 부속서 A·B는 SIL별로 기법과 조치를 강력 권고(HR), 권고(R), 특별한 권고 없음(—), 권고하지 않음(NR)으로 평가한 표를 제공하며, 61508-6 부속서 E는 SIL 2·SIL 3 예시 적용 표(E.1–E.20)를 보여 줍니다 <span class="src">[61508-6PV]</span>.</p>
+</div>
+<div class="tbl"><table>
+<caption>소프트웨어 도구 분류 (61508-3)</caption>
+<thead><tr><th>등급</th><th>정의(요지)</th><th>예</th></tr></thead>
+<tbody>
+<tr><td>T1</td><td>실행 코드에 직접·간접으로 기여하는 출력을 만들지 않음</td><td>텍스트 편집기, 코드 생성 기능이 없는 요구사항 관리 도구</td></tr>
+<tr><td>T2</td><td>설계나 실행 코드의 시험·검증을 지원. 도구 오류가 결함을 놓칠 수는 있지만 실행 코드에 오류를 직접 만들지는 않음</td><td>시험 하니스, 정적 분석기, 커버리지 측정 도구</td></tr>
+<tr><td>T3</td><td>실행 코드에 직접·간접으로 기여하는 출력을 만듦</td><td>컴파일러, 코드 생성기, 안전 PLC 구성·다운로드 도구</td></tr>
+</tbody></table></div>
+<div class="box trap"><span class="lbl">함정:</span><p>"소프트웨어에도 고장률(λ)을 주고 PFD에 더한다"는 틀린 접근입니다. 소프트웨어 고장은 체계적 고장이므로 확률로 정량화하지 않고, 수명주기 기법·조치와 SC로 관리합니다.</p></div>
+<div class="box exam"><span class="lbl">시험 포인트:</span><ul>
+<li>FPL·LVL → 61511, FVL·임베디드 → 61508-3.</li>
+<li>안전·비안전 기능이 같은 프로그램이면 전체가 SIS(§12.2.4).</li>
+<li>도구 T1/T2/T3 구분. 컴파일러는 T3.</li>
+</ul></div>
+</section>
+
+<!-- ===================== CH 12 ===================== -->
+<section class="chapter" id="ch12">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>12</span></div><div><p class="eyebrow">IEC 61511-1 §13–18 · HSE CRR 428</p><h2>설치·검증·운전·변경·폐기</h2></div></div>
+
+<h3><span class="sec">12.1</span>FAT, 설치·시운전, 안전 확인</h3>
+<div class="prose">
+<p>FAT(§13)는 2판에서 권고(recommendations) 조항입니다 <span class="src">[61511-PV]</span>. 설치·시운전(§14)은 SIS가 설계대로 설치되고 동작 준비가 되었음을 확인합니다. 안전 확인(§15)은 설치된 SIS가 SRS를 만족하는지 확인 계획에 따라 시험하는 활동으로, 위험이 존재하기 전에 마쳐야 하며 그 뒤에 FSA 단계 3이 옵니다.</p>
+<p>확인 시험이 다룰 내용은 SRS의 모든 항목입니다. 트립 설정점과 동작, 투표와 감등 로직, 응답 시간, 진단과 결함 시 거동, bypass·override와 해제, 수동 정지, 리셋, 통신 상실과 전원 상실 시 거동, HMI 표시와 경보가 포함됩니다.</p>
+</div>
+
+<h3><span class="sec">12.2</span>운전·유지보수(§16)</h3>
+<div class="prose">
+<p>운전·유지보수 단계의 목표는 설계 때 정한 SIL을 수명 동안 유지하는 것입니다. 필요한 것은 운전 절차(경보·진단에 대한 대응, bypass), 유지보수 절차(증명시험, 수리, 교체), 교육, 그리고 SIS 성능 감시입니다. 2판은 bypass 중 보상 조치(§16.2.3)와 bypass 기록·승인·표시(§16.2.7)를 신설했고 <span class="src">[BRATT]</span>, TR 61511-4는 결함 검출·bypass·보상 조치, 수리·변경 후 증명시험을 주요 변경으로 꼽습니다 <span class="src">[TR61511-4]</span>.</p>
+<p>증명시험과 점검(§16.3)은 문서화된 절차로 수행하고, 결과를 기록하며(§16.3.3), 발견된 결함을 시정합니다 <span class="src">[61511-PV]</span>.</p>
+</div>
+
+<h3><span class="sec">12.3</span>증명시험 설계 이론</h3>
+<div class="prose">
+<p>증명시험 절차를 설계한다는 것은 PTC를 설계한다는 뜻입니다.</p>
+<ol>
+<li>장치의 위험·미검출 고장 모드를 나열합니다(FMEDA, OREDA 고장 모드 분포).</li>
+<li>절차의 각 단계가 어떤 고장 모드를 드러내는지 대응시킵니다.</li>
+<li>드러나는 고장 모드의 고장률 합을 λ<sub>DU</sub>로 나누면 PTC입니다.</li>
+</ol>
+</div>
+<div class="eq">\[ PTC = \frac{\sum_{i\,\in\,\text{시험으로 드러나는 모드}} \lambda_{DU,i}}{\lambda_{DU}} \tag{12.1} \]</div>
+<div class="tbl compact"><table>
+<caption>ESDV 고장 모드와 증명시험 대응(OREDA 분포 인용) [61508A]</caption>
+<thead><tr><th>고장 모드</th><th class="num">비율</th><th>시험 방법</th><th class="c">전체 시험에서 확인</th></tr></thead>
+<tbody>
+<tr><td>지연 동작</td><td class="num">11%</td><td>행정 시간 측정</td><td class="c">예</td></tr>
+<tr><td>닫힘 실패</td><td class="num">32%</td><td>행정 시험</td><td class="c">예</td></tr>
+<tr><td>내부 누설</td><td class="num">15%</td><td>누설 시험</td><td class="c">아니요</td></tr>
+<tr><td>구조 결함</td><td class="num">24%</td><td>육안 점검 + 행정 시험</td><td class="c">예</td></tr>
+<tr><td>기타</td><td class="num">18%</td><td>육안 점검으로 가정</td><td class="c">예</td></tr>
+<tr><td colspan="3"><b>증명시험 커버리지</b></td><td class="c"><b>85%</b></td></tr>
+</tbody></table></div>
+<div class="prose">
+<p>HSE의 CRR 428/2002는 증명시험 관행, 절차서의 내용과 형식, 계획과 일정, 시험 기록, 역량, 위험 인식, 변경 관리에 걸친 원칙을 제시합니다 <span class="src">[HSE]</span>. 공정 산업에서 반복 지적되는 결함은 다음과 같습니다.</p>
+<ul>
+<li>로직만 시험하고 센서의 공정 연결(탭, 임펄스 라인)은 시험하지 않음.</li>
+<li>교정(calibration)을 증명시험으로 간주. 교정은 정확도를, 증명시험은 기능을 확인합니다.</li>
+<li>최종요소를 실제 공정 조건에서 끝까지 행정하지 않음.</li>
+<li>as-found 상태를 기록하지 않고 바로 조정해 고장 데이터가 사라짐.</li>
+<li>시험 중 bypass에 보상 조치가 없음.</li>
+</ul>
+</div>
+
+<h3><span class="sec">12.4</span>운전 성능 감시와 고장률 갱신</h3>
+<div class="prose">
+<p>FSA 단계 4와 §16의 감시 요건은 "설계 가정이 현장에서 맞는가"를 묻습니다. 확인할 것은 실제 요구율(LOPA의 D<sub>SIF</sub>와 비교), 오동작 트립 횟수, 증명시험에서 발견된 위험 고장(as-found 불합격)입니다.</p>
+<p>예시값으로 송신기 40대를 4년 운전하며 증명시험에서 DU 고장 3건을 발견했다면 τ = 40 × 4 × 8 760 = 1.40×10<sup>6</sup> h, 점추정 λ̂ = 2.1×10<sup>−6</sup>/h, 70% 상한은 약 3.4×10<sup>−6</sup>/h입니다(도구 3). 설계 값이 5×10<sup>−7</sup>/h였다면 실제 성능이 4배 나쁜 것이므로 원인 분석, 시험 주기 단축, 설계 개선을 검토해야 합니다. SINTEF는 운전 단계 SIS 추적 관리 지침을 공개하고 있습니다 <span class="src">[PDS]</span>.</p>
+</div>
+
+<h3><span class="sec">12.5</span>변경 관리(§17)와 폐기(§18)</h3>
+<div class="prose">
+<ul>
+<li>모든 변경은 승인 전에 영향 분석을 하고, 영향을 받는 수명주기 단계로 되돌아가 그 단계의 요건을 다시 만족시킵니다.</li>
+<li>변경에 대한 FSA는 영향 분석을 고려해야 합니다(§5.2.6.1.9) <span class="src">[BRATT]</span>.</li>
+<li>수리·변경 후에는 영향받은 부분의 증명시험이 필요합니다 <span class="src">[TR61511-4]</span>.</li>
+<li>동일 사양 교체(replacement in kind)는 변경이 아니지만, 펌웨어 리비전·재질·사양이 다르면 변경입니다.</li>
+<li>폐기도 영향 분석과 변경 관리 대상이며, FSA 단계 5는 폐기 전에 수행합니다.</li>
+</ul>
+</div>
+<div class="box exam"><span class="lbl">시험 포인트:</span><ul>
+<li>확인(§15)은 위험이 존재하기 전에 완료, 이어서 FSA 단계 3.</li>
+<li>PTC는 시험 절차가 드러내는 DU 고장 모드의 비율.</li>
+<li>교정 ≠ 증명시험. as-found 기록이 고장 데이터의 원천.</li>
+<li>변경은 영향 분석 → 해당 단계 복귀 → 검증 → (필요 시) FSA.</li>
+</ul></div>
+</section>
+<!-- ===================== CH 13 ===================== -->
+<section class="chapter" id="ch13">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>13</span></div><div><p class="eyebrow">종합 사례 · 4장 → 5장 → 7장 → 8장 → 10장 → 12장</p><h2>종합 사례: HIPPS 검증</h2></div></div>
+
+<h3><span class="sec">13.1</span>문제 설정</h3>
+<div class="prose">
+<p>고압 상류 설비가 저압 하류 배관·설비를 과압시킬 수 있는 시나리오에 HIPPS를 둡니다. 하드웨어 구성과 고장률은 7.8절의 61508 Association 예제를 그대로 쓰고 <span class="src">[61508A]</span>, 요구 조건은 학습을 위해 정한 <strong>예시값</strong>입니다.</p>
+</div>
+<div class="tbl"><table>
+<thead><tr><th>항목</th><th>값</th><th>성격</th></tr></thead>
+<tbody>
+<tr><td>LOPA 결과 필요 RRF</td><td>500 (PFD<sub>avg</sub> ≤ 2.0×10<sup>−3</sup>, SIL 2)</td><td>예시값</td></tr>
+<tr><td>SIF 요구율 D<sub>SIF</sub></td><td>0.1/yr (저빈도 모드)</td><td>예시값</td></tr>
+<tr><td>공정안전시간</td><td>30 s</td><td>예시값</td></tr>
+<tr><td>최대 허용 오동작 트립률</td><td>10년에 1회 이하(1.14×10<sup>−5</sup>/h)</td><td>예시값</td></tr>
+<tr><td>구조</td><td>2oo3 PT – 안전 PLC(2oo3 AI, 1oo2 CPU, 1oo2 DO) – 1oo2 HIPPS 밸브 조립체</td><td>[61508A]</td></tr>
+</tbody></table></div>
+
+<h3><span class="sec">13.2</span>SRS에 고정할 항목</h3>
+<div class="tbl"><table>
+<thead><tr><th>SRS 항목</th><th>이 사례의 내용</th></tr></thead>
+<tbody>
+<tr><td>안전 상태</td><td>HIPPS 밸브 두 대 모두 닫힘, 지정 누설 기준 이내의 기밀 차단</td></tr>
+<tr><td>응답시간</td><td>트립 설정점 도달부터 밸브 완전 닫힘까지 15 s 이하(공정안전시간의 절반, 실무 여유 기준)</td></tr>
+<tr><td>투표·감등</td><td>PT 2oo3, 한 채널 불량 시 1oo2로 감등(안전 우선), 불량 경보</td></tr>
+<tr><td>트립 방식·리셋</td><td>무통전 트립, 스프링 복귀 액추에이터, 수동 리셋</td></tr>
+<tr><td>증명시험</td><td>주기 1년. 송신기는 안전 매뉴얼 절차(PTC 90%), 밸브는 전행정 + 행정 시간 + <strong>누설 시험</strong></td></tr>
+<tr><td>MTTR</td><td>전자 장치 8 h, 밸브 120 h <span class="src">[61508A]</span></td></tr>
+<tr><td>Bypass</td><td>시험 중 한 채널씩만 허용, bypass 기록·승인·표시, 보상 조치(현장 감시)</td></tr>
+<tr><td>오동작</td><td>최대 허용 오동작 트립률 10년에 1회</td></tr>
+</tbody></table></div>
+
+<h3><span class="sec">13.3</span>구조적 제약과 SC</h3>
+<div class="tbl"><table>
+<thead><tr><th>서브시스템</th><th>Type</th><th>SFF</th><th>HFT</th><th>Route 1H 최대 SIL</th><th>61511 표 6 (SIL 2 저빈도)</th></tr></thead>
+<tbody>
+<tr><td>PT 2oo3</td><td>B</td><td>(0.5+0.8)/1.8 = 72%</td><td>1</td><td>SIL 2</td><td>HFT 0 필요 → 만족</td></tr>
+<tr><td>밸브 조립체 1oo2</td><td>A</td><td>(3.9+0.4)/6.4 = 67%</td><td>1</td><td>SIL 3</td><td>만족</td></tr>
+<tr><td>안전 PLC</td><td>B</td><td>인증서 값</td><td>내부 구조</td><td>인증 SIL 3</td><td>만족</td></tr>
+</tbody></table></div>
+<p class="small">PT의 λ<sub>S</sub> = 5.0×10<sup>−7</sup>, 밸브 조립체의 λ<sub>S</sub> = 3.9×10<sup>−6</sup>/h는 [61508A] 표의 값입니다. 각 장치의 SC는 인증서로 확인해야 하며, SIF의 SC는 그중 가장 낮은 값입니다.</p>
+
+<h3><span class="sec">13.4</span>PFD 검증과 개선안</h3>
+<div class="prose"><p>7.8절에서 본 것처럼 완전 시험을 가정한 경우 A(RRF 777)는 목표를 만족하지만, 2oo3 β 배율과 현실적인 PTC·mission time(T<sub>2</sub> = 10년)을 넣은 경우 C(RRF 295)는 목표 500에 못 미칩니다. 최종요소가 80%를 차지하므로 밸브 쪽 개선안을 비교합니다. 송신기와 로직 솔버는 경우 C 값(합계 6.79×10<sup>−4</sup>)으로 고정했습니다 <span class="src">[유도]</span>.</p></div>
+<div class="tbl"><table>
+<caption>밸브 조립체 개선안 비교(본 교재 계산, 도구 4로 재현 가능)</caption>
+<thead><tr><th>안</th><th>밸브 조건</th><th class="num">밸브 PFD</th><th class="num">합계 PFD<sub>avg</sub></th><th class="num">RRF</th><th class="c">목표 500</th></tr></thead>
+<tbody>
+<tr><td>C (기준)</td><td>T<sub>1</sub> 1년, PTC 85%, T<sub>2</sub> 10년</td><td class="num">2.71E-03</td><td class="num">3.39E-03</td><td class="num">295</td><td class="c"><span class="pill ng">미달</span></td></tr>
+<tr><td>a</td><td>누설 시험 추가로 PTC 95%(예시값)</td><td class="num">1.57E-03</td><td class="num">2.25E-03</td><td class="num">445</td><td class="c"><span class="pill ng">미달</span></td></tr>
+<tr><td>b</td><td>전면 정비 주기 T<sub>2</sub> 5년</td><td class="num">1.75E-03</td><td class="num">2.43E-03</td><td class="num">412</td><td class="c"><span class="pill ng">미달</span></td></tr>
+<tr><td>c</td><td>증명시험 주기 T<sub>1</sub> 6개월</td><td class="num">2.15E-03</td><td class="num">2.83E-03</td><td class="num">353</td><td class="c"><span class="pill ng">미달</span></td></tr>
+<tr><td>d</td><td>a + c (PTC 95%, T<sub>1</sub> 6개월)</td><td class="num">1.02E-03</td><td class="num">1.70E-03</td><td class="num">588</td><td class="c"><span class="pill ok">만족</span></td></tr>
+<tr><td>e</td><td>a + b (PTC 95%, T<sub>2</sub> 5년)</td><td class="num">1.27E-03</td><td class="num">1.95E-03</td><td class="num">512</td><td class="c"><span class="pill ok">만족</span></td></tr>
+</tbody></table></div>
+<div class="box judg"><span class="lbl">실무 판단:</span><p>안 c(시험 주기 단축)만으로 효과가 작은 이유는, PTC 85%에서는 시험으로 드러나지 않는 15%가 T<sub>2</sub>/2 동안 쌓이는 항이 지배하기 때문입니다. 시험을 자주 해도 못 보는 고장은 그대로입니다. 그래서 시험의 <strong>질</strong>(PTC)을 먼저 올리고(안 a), 그 다음에 시험 주기나 정비 주기를 조정하는 것이 순서입니다. 안 e가 목표를 겨우 넘는다면 데이터 불확실성(6.6절)을 감안해 안 d를 택하는 것이 방어하기 쉽습니다. 어느 안이든 누설 시험이 증명시험 절차서와 정비 계획에 실제로 들어가야 PTC 95%를 주장할 수 있습니다.</p></div>
+
+<h3><span class="sec">13.5</span>오동작 트립 확인</h3>
+<div class="prose"><p>밸브 조립체 1oo2의 STR은 (2−β)λ<sub>S</sub> = 1.9 × 3.9×10<sup>−6</sup> = 7.4×10<sup>−6</sup>/h이고, PT 2oo3은 5.0×10<sup>−8</sup>/h로 CCF 항이 지배합니다 <span class="src">[유도]</span>. 로직 솔버의 기여(인증서 값)를 더해도 목표 1.14×10<sup>−5</sup>/h 이내인지 확인해야 합니다. 목표를 넘으면 2oo2 SOV 배치(오동작 감소, PFD 증가)를 검토하되 PFD를 다시 계산합니다.</p></div>
+
+<h3><span class="sec">13.6</span>수명주기 연결</h3>
+<div class="prose"><ul>
+<li><strong>FSA 단계 1</strong>: LOPA의 요구율 0.1/yr과 RRF 500의 근거, SRS의 누설 기준·응답시간 근거를 확인합니다.</li>
+<li><strong>FSA 단계 2</strong>: 안 d·e의 가정(PTC 95%, T<sub>1</sub>, T<sub>2</sub>)이 SRS와 정비 계획에 반영되었는지, β·표 D.5 적용이 맞는지 확인합니다.</li>
+<li><strong>확인(§15)과 단계 3</strong>: 응답시간 15 s 이내, 감등 로직, bypass 표시를 시험으로 확인합니다.</li>
+<li><strong>운전(§16)과 단계 4</strong>: 밸브 행정 시간 추세, as-found 누설 시험 결과, 실제 요구율을 감시하고 고장률을 갱신합니다(12.4절).</li>
+</ul></div>
+</section>
+
+<!-- ===================== CH 14 ===================== -->
+<section class="chapter" id="ch14">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>14</span></div><div><p class="eyebrow">Practice exam · 객관식 40 + 서술·계산 8</p><h2>모의시험</h2></div></div>
+<div class="prose">
+<p>실제 시험은 기관에 따라 객관식 60문항 + 사례 7개(Yokogawa), 객관식 130문항 + 계산 5문제(Schneider Electric) 같은 형식이고 합격선은 75%입니다(0.3절). 아래 객관식은 답을 고르면 바로 채점되고 해설이 열립니다. 선택한 답은 이 브라우저에만 저장됩니다.</p>
+</div>
+<div class="quiz-bar"><button type="button" id="qzReset" class="ghost">답안 지우기</button><span id="qzScore" class="mono">0 / 40 응답 · 정답 0</span></div>
+<div id="quiz"></div>
+
+<h3><span class="sec">14.2</span>서술·계산 문제</h3>
+<div class="prose"><p>계산기를 쓰되, 중간값(t<sub>CE</sub>, t<sub>GE</sub>, CCF 항)을 반드시 적으십시오. 실제 시험에서도 풀이 과정에 부분 점수가 있는 경우가 많습니다.</p></div>
+
+<details class="sol"><summary>문제 1 · 불완전 증명시험이 있는 1oo1</summary>
+<p>λ<sub>DU</sub> = 2×10<sup>−7</sup>/h, λ<sub>DD</sub> = 1×10<sup>−6</sup>/h, MTTR = 8 h, T<sub>1</sub> = 1년, PTC = 90%, T<sub>2</sub> = 15년(모두 예시값). MRT는 무시합니다. PFD<sub>avg</sub>와 SIL을 구하고, PTC = 100%일 때와 비교하십시오.</p>
+<p><b>풀이.</b> 식 (7.20): λ<sub>DD</sub>MTTR = 8.0×10<sup>−6</sup>, PTC·λ<sub>DU</sub>T<sub>1</sub>/2 = 0.9×2×10<sup>−7</sup>×4 380 = 7.88×10<sup>−4</sup>, (1−PTC)λ<sub>DU</sub>T<sub>2</sub>/2 = 0.1×2×10<sup>−7</sup>×65 700 = 1.31×10<sup>−3</sup>. 합계 2.11×10<sup>−3</sup>, RRF 474, <b>SIL 2</b>. PTC 100%이면 8.84×10<sup>−4</sup>(RRF 1 131, SIL 3). 시험의 질이 SIL 한 단계를 좌우합니다.</p>
+</details>
+
+<details class="sol"><summary>문제 2 · 1oo2 손계산</summary>
+<p>1oo2 송신기: λ<sub>DU</sub> = 1×10<sup>−6</sup>/h, λ<sub>DD</sub> = 4×10<sup>−6</sup>/h, β = 5%, β<sub>D</sub> = 2.5%, T<sub>1</sub> = 1년, MTTR = MRT = 8 h(예시값). t<sub>CE</sub>, t<sub>GE</sub>, PFD<sub>avg</sub>를 구하십시오.</p>
+<p><b>풀이.</b> λ<sub>D</sub> = 5×10<sup>−6</sup>, λ<sub>DU</sub>/λ<sub>D</sub> = 0.2, λ<sub>DD</sub>/λ<sub>D</sub> = 0.8. t<sub>CE</sub> = 0.2×4 388 + 0.8×8 = 884.0 h, t<sub>GE</sub> = 0.2×2 928 + 6.4 = 592.0 h. 독립 항 = 2×(0.975×4×10<sup>−6</sup> + 0.95×1×10<sup>−6</sup>)<sup>2</sup>×884.0×592.0 = 2.46×10<sup>−5</sup>. CCF: β<sub>D</sub>λ<sub>DD</sub>MTTR = 8.0×10<sup>−7</sup>, βλ<sub>DU</sub>(T<sub>1</sub>/2+MRT) = 2.19×10<sup>−4</sup>. 합계 <b>2.45×10<sup>−4</sup></b>(RRF 4 085, SIL 3 범위). CCF DU 항이 90%를 차지합니다.</p>
+</details>
+
+<details class="sol"><summary>문제 3 · 고빈도 모드 판정</summary>
+<p>원인 빈도 3/yr, SIF 이전 IPL 없음, SIF 이후 PSV(PFD 0.01), 재실 확률 0.5, 허용 빈도 10<sup>−5</sup>/yr(예시값). SIF의 모드와 목표 SIL은?</p>
+<p><b>풀이.</b> D<sub>SIF</sub> = 3/yr &gt; 1/yr이므로 고빈도 모드. 식 (4.4): PFH ≤ 10<sup>−5</sup>/(8 760×0.01×0.5) = 2.28×10<sup>−7</sup>/h, 표 5에서 <b>SIL 2</b>. 저빈도 식으로 풀면 PFD ≤ 10<sup>−5</sup>/(3×0.005) = 6.7×10<sup>−4</sup>(SIL 3)이 나오지만 모드 판정이 틀린 풀이입니다.</p>
+</details>
+
+<details class="sol"><summary>문제 4 · 구조적 제약</summary>
+<p>SIL 3 SIF에 Type B 스마트 송신기(SFF 92%, SC 3) 1대를 쓰려 합니다. PFD는 충분히 낮습니다. 허용됩니까?</p>
+<p><b>풀이.</b> 허용되지 않습니다. Route 1H Type B, SFF 90–99%, HFT 0은 최대 SIL 2입니다. 61511 표 6과 Route 2H도 SIL 3에 HFT 1을 요구합니다. 1oo2 또는 2oo3이 필요하며, 그때 CCF 항을 다시 계산해야 합니다. PFD 조건만으로는 SIL을 주장할 수 없다는 1.1절의 원칙입니다.</p>
+</details>
+
+<details class="sol"><summary>문제 5 · 현장 데이터의 신뢰상한</summary>
+<p>동일 모델 밸브의 누적 운전시간 5×10<sup>6</sup> h 동안 위험 고장이 한 건도 관측되지 않았습니다. 70%와 90% 단측 상한은?</p>
+<p><b>풀이.</b> n = 0이므로 λ<sub>U</sub> = −ln(1−CL)/τ. 70%: 1.204/5×10<sup>6</sup> = <b>2.41×10<sup>−7</sup>/h</b>, 90%: 2.303/5×10<sup>6</sup> = <b>4.61×10<sup>−7</sup>/h</b>. 고장이 없어도 0이 아닙니다.</p>
+</details>
+
+<details class="sol"><summary>문제 6 · 요구율과 위험사건 빈도</summary>
+<p>1oo1 SIF, λ<sub>DU</sub> = 1×10<sup>−6</sup>/h, T<sub>1</sub> = 1년, 요구율 0.5/yr(예시값). D·PFD<sub>avg</sub> 근사와 식 (3.2)의 정확해를 비교하십시오.</p>
+<p><b>풀이.</b> λ = 8.76×10<sup>−3</sup>/yr, PFD<sub>avg</sub> ≈ 4.38×10<sup>−3</sup>, 근사 H = 0.5×4.38×10<sup>−3</sup> = 2.19×10<sup>−3</sup>/yr. 정확해는 1.86×10<sup>−3</sup>/yr로 근사가 약 18% 과대(보수적)입니다. 요구율이 커질수록 차이가 커집니다(도구 1).</p>
+</details>
+
+<details class="sol"><summary>문제 7 · 2oo3과 1oo2의 선택</summary>
+<p>압력 송신기 구성으로 1oo2와 2oo3 중 무엇을 택할지 PFD, 오동작 트립, 구조적 제약, 시험 측면에서 논하십시오.</p>
+<p><b>풀이 요지.</b> 둘 다 HFT 1입니다. 독립 항은 2oo3이 1oo2의 약 3배(6 대 2)이고, CCF 항은 표 D.5 배율로 2oo3이 1.5배입니다. 그러나 CCF 항이 지배하면 차이는 그만큼 크지 않습니다. 오동작 트립은 1oo2가 약 2λ<sub>S</sub>, 2oo3은 6(λ<sub>S</sub>)<sup>2</sup>MTTR<sub>S</sub> + βλ<sub>S</sub>로 2oo3이 훨씬 낮습니다. 2oo3은 한 채널을 bypass하고 시험해도 1oo2로 보호가 유지되고, 감등 로직(1oo2/2oo2)을 SRS에서 정해야 합니다. 생산 손실이 큰 공정에서는 2oo3이 일반적입니다.</p>
+</details>
+
+<details class="sol"><summary>문제 8 · 트립 설정점 변경</summary>
+<p>운전 중 공정 조건 변경으로 SIF의 트립 설정점을 바꾸려 합니다. 61511에 따라 필요한 활동을 순서대로 쓰십시오.</p>
+<p><b>풀이 요지.</b> ① 변경 요청과 MOC 착수(§17) ② 영향 분석: H&amp;RA·LOPA 가정(공정안전시간, 응답시간 예산), 다른 SIF와의 상호작용, 오동작 트립 영향 ③ SRS 개정 ④ 응용 프로그램 변경(§12)과 검증·시험, 형상 관리(§5.2.7) ⑤ 변경된 SIF의 시험(확인) ⑥ 문서·절차·교육 갱신 ⑦ 영향 분석을 고려한 FSA(§5.2.6.1.9) ⑧ 승인 후 운전 복귀, 기록.</p>
+</details>
+</section>
+<!-- ===================== CH 15 ===================== -->
+<section class="chapter" id="ch15">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>15</span></div><div><p class="eyebrow">Formula sheet · 시험 전날용</p><h2>공식집</h2></div></div>
+
+<div class="grid2">
+<div class="card"><h4>고장 분류</h4>
+<div class="eq">\[ SFF=\frac{\lambda_S+\lambda_{DD}}{\lambda_S+\lambda_D},\quad DC=\frac{\lambda_{DD}}{\lambda_D} \]</div>
+<div class="eq">\[ \mathrm{RRF}=1/\mathrm{PFD}_{avg},\quad 1\ \mathrm{FIT}=10^{-9}/\mathrm{h} \]</div>
+</div>
+<div class="card"><h4>단순 근사(CCF·수리 제외)</h4>
+<div class="eq">\[ 1oo1:\tfrac{\lambda T}{2},\ 1oo2:\tfrac{(\lambda T)^2}{3},\ 2oo3:(\lambda T)^2,\ 1oo3:\tfrac{(\lambda T)^3}{4},\ 2oo2:\lambda T \]</div>
+</div>
+<div class="card"><h4>등가 정지시간</h4>
+<div class="eq">\[ t_{CE}=\tfrac{\lambda_{DU}}{\lambda_D}\!\left(\tfrac{T_1}{2}+MRT\right)+\tfrac{\lambda_{DD}}{\lambda_D}MTTR \]</div>
+<div class="eq">\[ t_{GE}:\ \tfrac{T_1}{3},\qquad t_{G2E}:\ \tfrac{T_1}{4} \]</div>
+</div>
+<div class="card"><h4>PFD<sub>avg</sub> (IEC 61508-6)</h4>
+<div class="eq">\[ 1oo1=(\lambda_{DU}+\lambda_{DD})t_{CE},\quad 2oo2=2\lambda_D t_{CE} \]</div>
+<div class="eq">\[ 1oo2=2\lambda_i^2 t_{CE}t_{GE}+C,\quad 2oo3=6\lambda_i^2 t_{CE}t_{GE}+C \]</div>
+<div class="eq">\[ \lambda_i=(1-\beta_D)\lambda_{DD}+(1-\beta)\lambda_{DU},\quad C=\beta_D\lambda_{DD}MTTR+\beta\lambda_{DU}\!\left(\tfrac{T_1}{2}+MRT\right) \]</div>
+</div>
+<div class="card"><h4>PFH</h4>
+<div class="eq">\[ 1oo1=\lambda_{DU},\quad 2oo2=2\lambda_{DU} \]</div>
+<div class="eq">\[ 1oo2=2\lambda_i(1-\beta)\lambda_{DU}t_{CE}+\beta\lambda_{DU},\quad 2oo3=6\lambda_i(1-\beta)\lambda_{DU}t_{CE}+\beta\lambda_{DU} \]</div>
+</div>
+<div class="card"><h4>불완전 증명시험(1oo1)</h4>
+<div class="eq">\[ \lambda_{DD}MTTR+PTC\,\lambda_{DU}\tfrac{T_1}{2}+(1-PTC)\lambda_{DU}\tfrac{T_2}{2} \]</div>
+<p class="small">중복 구조는 t<sub>CE</sub>, t<sub>GE</sub>, CCF 항의 T<sub>1</sub> 자리를 PTC·T<sub>1</sub>과 (1−PTC)·T<sub>2</sub>로 나눕니다(식 7.17–7.19).</p>
+</div>
+<div class="card"><h4>LOPA와 모드</h4>
+<div class="eq">\[ f^C=\sum_i f_i^I EC_i\prod_j PFD_{ij}\prod_k CM_k,\quad RRF=f^C_{\text{SIF 없음}}/F_t \]</div>
+<p class="small">D<sub>SIF</sub>는 SIF 이전 IPL만 곱함. D<sub>SIF</sub> &gt; 1/yr이면 PFH 목표 = F<sub>t</sub> / (8 760 × SIF 이후 PFD × CM).</p>
+</div>
+<div class="card"><h4>오동작 트립(근사)</h4>
+<div class="eq">\[ 1oo1:\lambda_S,\ 1oo2:(2-\beta)\lambda_S,\ 2oo2:2[(1-\beta)\lambda_S]^2MTTR_S+\beta\lambda_S \]</div>
+<div class="eq">\[ 2oo3:6[(1-\beta)\lambda_S]^2MTTR_S+\beta\lambda_S \]</div>
+</div>
+<div class="card"><h4>데이터 신뢰상한</h4>
+<div class="eq">\[ \lambda_U=\frac{\chi^2_{CL}(2n+2)}{2\tau},\quad n=0:\ \lambda_{70}=\frac{1.204}{\tau},\ \lambda_{90}=\frac{2.303}{\tau} \]</div>
+</div>
+<div class="card"><h4>요구율–위험사건</h4>
+<div class="eq">\[ DT_1\ll1:\ H\approx D\cdot PFD_{avg};\qquad DT_1\gg1:\ H\approx\lambda_{DU} \]</div>
+<p class="small">교차점 D = 2/T<sub>1</sub>(1판의 경계 조건). 2판 경계는 연 1회.</p>
+</div>
+</div>
+
+<div class="grid2" style="margin-top:14px">
+<div class="tbl compact" style="margin:0"><table>
+<caption>SIL 대역</caption>
+<thead><tr><th class="c">SIL</th><th>PFD<sub>avg</sub></th><th>PFH [1/h]</th></tr></thead>
+<tbody>
+<tr><td class="c">4</td><td class="num">10⁻⁵ ~ 10⁻⁴</td><td class="num">10⁻⁹ ~ 10⁻⁸</td></tr>
+<tr><td class="c">3</td><td class="num">10⁻⁴ ~ 10⁻³</td><td class="num">10⁻⁸ ~ 10⁻⁷</td></tr>
+<tr><td class="c">2</td><td class="num">10⁻³ ~ 10⁻²</td><td class="num">10⁻⁷ ~ 10⁻⁶</td></tr>
+<tr><td class="c">1</td><td class="num">10⁻² ~ 10⁻¹</td><td class="num">10⁻⁶ ~ 10⁻⁵</td></tr>
+</tbody></table></div>
+<div class="tbl compact" style="margin:0"><table>
+<caption>최소 HFT(61511 표 6) · β 배율(표 D.5)</caption>
+<thead><tr><th>항목</th><th>값</th></tr></thead>
+<tbody>
+<tr><td>SIL 1 / SIL 2 저빈도</td><td>HFT 0</td></tr>
+<tr><td>SIL 2 고빈도·연속 / SIL 3</td><td>HFT 1</td></tr>
+<tr><td>SIL 4</td><td>HFT 2</td></tr>
+<tr><td>β 배율 1oo3 / 2oo3</td><td>×0.5 / ×1.5</td></tr>
+<tr><td>β 범위(부속서 D)</td><td>로직 0.5–5%, 센서·최종요소 1–10%</td></tr>
+</tbody></table></div>
+</div>
+
+<h3><span class="sec">15.1</span>IEC 61511-1 조항 지도</h3>
+<div class="tbl compact"><table>
+<thead><tr><th>조항</th><th>내용</th><th>조항</th><th>내용</th></tr></thead>
+<tbody>
+<tr><td class="mono">§5</td><td>기능안전 관리(5.2.2 역량, 5.2.6.1 FSA, 5.2.6.2 감사, 5.2.7 형상)</td><td class="mono">§11</td><td>설계(11.3 결함 시 거동, 11.4 HFT, 11.5 장치 선정, 11.7 인터페이스, 11.9 데이터)</td></tr>
+<tr><td class="mono">§6</td><td>수명주기(6.3 응용 프로그램 수명주기)</td><td class="mono">§12</td><td>응용 프로그램(12.2.4 비간섭, 12.2.7 스캔)</td></tr>
+<tr><td class="mono">§7</td><td>검증(7.2.2 시험)</td><td class="mono">§13–15</td><td>FAT(권고), 설치·시운전, 안전 확인</td></tr>
+<tr><td class="mono">§8</td><td>H&amp;RA(8.2.4 보안 위험성 평가)</td><td class="mono">§16</td><td>운전·유지보수(16.2.3 보상 조치, 16.2.7 bypass 기록, 16.3 증명시험·점검)</td></tr>
+<tr><td class="mono">§9</td><td>할당(9.2 과정, 9.3 BPCS, 9.4 CCF)</td><td class="mono">§17–18</td><td>변경, 폐기</td></tr>
+<tr><td class="mono">§10</td><td>SRS(10.3, 응용 프로그램 SRS 10.3.3–10.3.6)</td><td class="mono">§19</td><td>정보와 문서</td></tr>
+</tbody></table></div>
+</section>
+
+<!-- ===================== CH 16 ===================== -->
+<section class="chapter" id="ch16">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>16</span></div><div><p class="eyebrow">Glossary · EN → KR</p><h2>용어집</h2></div></div>
+<div class="tbl compact"><table>
+<thead><tr><th>영문</th><th>국문</th><th>요지</th></tr></thead>
+<tbody>
+<tr><td>Architectural constraints</td><td>구조적 제약</td><td>SIL별 최소 HFT 요건(Route 1H/2H)</td></tr>
+<tr><td>Basic process control system (BPCS)</td><td>기본 공정 제어계</td><td>정상 운전 제어 시스템. 보호계층 주장 시 RRF ≤ 10</td></tr>
+<tr><td>Common cause failure (CCF)</td><td>공통원인고장</td><td>하나의 원인으로 여러 장치 고장</td></tr>
+<tr><td>Common mode failure</td><td>공통모드고장</td><td>CCF 중 같은 방식으로 고장 나는 것</td></tr>
+<tr><td>Compensating measure</td><td>보상 조치</td><td>bypass·열화 중 안전을 유지하는 임시 조치</td></tr>
+<tr><td>Conditional modifier</td><td>조건부 수정계수</td><td>점화·재실·치명상 확률 등</td></tr>
+<tr><td>Dangerous failure</td><td>위험 고장</td><td>요구 시 동작을 막거나 확률을 낮추는 고장</td></tr>
+<tr><td>Demand mode / Continuous mode</td><td>요구 모드 / 연속 모드</td><td>요구 모드는 저빈도(≤1/yr)·고빈도(&gt;1/yr)</td></tr>
+<tr><td>Diagnostic coverage (DC)</td><td>진단 커버리지</td><td>λ<sub>DD</sub>/λ<sub>D</sub></td></tr>
+<tr><td>Enabling condition</td><td>조건</td><td>원인이 결과로 진행하는 데 필요한 상태</td></tr>
+<tr><td>Equipment under control (EUC)</td><td>피제어 설비</td><td>61508의 보호 대상 설비</td></tr>
+<tr><td>Final element</td><td>최종요소</td><td>밸브, 차단기 등 공정에 작용하는 장치</td></tr>
+<tr><td>FPL / LVL / FVL</td><td>고정 / 제한 가변 / 완전 가변 언어</td><td>FVL은 61508-3 적용</td></tr>
+<tr><td>Functional safety assessment (FSA)</td><td>기능안전 평가</td><td>달성한 기능안전에 대한 독립적 판단(단계 1–5)</td></tr>
+<tr><td>Functional safety audit</td><td>기능안전 감사</td><td>절차 준수와 효과의 확인</td></tr>
+<tr><td>Hardware fault tolerance (HFT)</td><td>하드웨어 결함 허용도</td><td>N개 결함까지 기능 유지</td></tr>
+<tr><td>Independent protection layer (IPL)</td><td>독립 보호계층</td><td>독립성·유효성·신뢰성·감사 가능성</td></tr>
+<tr><td>Inspection</td><td>점검</td><td>상태를 확인하는 주기 활동(§16.3.2)</td></tr>
+<tr><td>Mean repair time (MRT)</td><td>평균 수리시간</td><td>수리 시작부터 완료까지</td></tr>
+<tr><td>Mean time to restoration (MTTR)</td><td>평균 복구시간</td><td>고장 발생부터 복귀까지(검출 포함)</td></tr>
+<tr><td>Mission time</td><td>임무 시간</td><td>전면 정비 없이 운전하는 기간. T<sub>2</sub>에 해당</td></tr>
+<tr><td>Prior use</td><td>사용 실적</td><td>61511 장치 선정 근거(§11.5.3)</td></tr>
+<tr><td>Proven in use</td><td>사용 입증</td><td>61508 SC 입증 경로(Route 2S)</td></tr>
+<tr><td>Process safety time (PST)</td><td>공정안전시간</td><td>원인 고장부터 위험사건까지의 시간</td></tr>
+<tr><td>Proof test / Proof test coverage (PTC)</td><td>증명시험 / 증명시험 커버리지</td><td>DU 고장을 드러내는 주기 시험과 그 비율</td></tr>
+<tr><td>Probability of failure on demand (PFD)</td><td>요구 시 고장확률</td><td>저빈도 모드 실패척도</td></tr>
+<tr><td>Average frequency of dangerous failure (PFH)</td><td>시간당 위험 고장 빈도</td><td>고빈도·연속 모드 실패척도</td></tr>
+<tr><td>Risk reduction factor (RRF)</td><td>위험저감계수</td><td>1/PFD<sub>avg</sub></td></tr>
+<tr><td>Safe failure fraction (SFF)</td><td>안전 고장 비율</td><td>(λ<sub>S</sub>+λ<sub>DD</sub>)/λ<sub>total</sub></td></tr>
+<tr><td>Safe state</td><td>안전 상태</td><td>SRS가 정의하는 위험이 없는 공정 상태</td></tr>
+<tr><td>Safety instrumented function (SIF)</td><td>안전계장기능</td><td>특정 위험에 대해 안전 상태를 달성·유지하는 기능</td></tr>
+<tr><td>Safety instrumented system (SIS)</td><td>안전계장시스템</td><td>센서·로직·최종요소로 SIF를 구현</td></tr>
+<tr><td>Safety integrity level (SIL)</td><td>안전무결성수준</td><td>SIF의 무결성 등급 1–4</td></tr>
+<tr><td>Safety manual</td><td>안전 매뉴얼</td><td>장치·시설의 안전 사용 조건(§11.2.13)</td></tr>
+<tr><td>Safety requirements specification (SRS)</td><td>안전 요구사항 명세</td><td>SIF의 기능·무결성 요구(§10)</td></tr>
+<tr><td>Spurious trip</td><td>오동작 트립</td><td>요구 없이 일어난 트립</td></tr>
+<tr><td>Systematic capability (SC)</td><td>체계적 능력</td><td>체계적 고장 방어 수준 SC 1–4</td></tr>
+<tr><td>Type A / Type B element</td><td>A형 / B형 요소</td><td>고장 거동이 완전히 정의되는지 여부</td></tr>
+<tr><td>Validation</td><td>안전 확인</td><td>설치된 SIS가 SRS를 만족하는지 확인(§15)</td></tr>
+<tr><td>Verification</td><td>검증</td><td>각 단계의 출력이 요건을 만족하는지 확인(§7)</td></tr>
+</tbody></table></div>
+</section>
+
+<!-- ===================== CH 17 ===================== -->
+<section class="chapter" id="ch17">
+<div class="ch-head"><div class="ch-mark" aria-hidden="true"><span>17</span></div><div><p class="eyebrow">Reference library · 웹 조사 결과</p><h2>기술교재 라이브러리</h2></div></div>
+<div class="prose"><p>웹 조사로 찾은 자료를 성격별로 정리했습니다. 무료 공개 자료는 링크로 바로 열 수 있고, 표준과 단행본은 유료입니다. 링크는 교재 작성 시점에 확인한 주소이며, 일부 사이트는 자동 접근을 막아 브라우저에서만 열릴 수 있습니다.</p></div>
+
+<h3><span class="sec">17.1</span>먼저 읽을 무료 자료</h3>
+<div class="tbl"><table>
+<thead><tr><th>자료</th><th>쓰임</th><th>장</th></tr></thead>
+<tbody>
+<tr><td><a href="https://61508.org/wp-content/uploads/2024/11/10B-SIL-Calculations-and-use-of-IEC-61508-6.pdf" target="_blank" rel="noopener">The 61508 Association — SIL Calculations: Practical Guidance in the use of IEC 61508-6:2010</a> <span class="lib-cat">PDF · 2024</span></td><td>61508-6 단순식, β 배율, PTC 식과 HIPPS 계산 예. 7·13장의 근거</td><td>7, 13</td></tr>
+<tr><td><a href="https://www.ntnu.edu/ross/books/sis/slides" target="_blank" rel="noopener">NTNU — Reliability of Safety-Critical Systems 강의 슬라이드(Lundteigen &amp; Rausand)</a></td><td>PFD 유도(RBD, FTA, Markov, 61508 식, PDS), CCF, 불완전 시험. 이 과정에서 가장 깊은 무료 이론 자료</td><td>6, 7, 9</td></tr>
+<tr><td><a href="https://www.ntnu.edu/ross/books/srt/slides" target="_blank" rel="noopener">NTNU — System Reliability Theory 강의 슬라이드</a></td><td>신뢰성 이론 일반(분포, Markov, 데이터 분석)</td><td>6</td></tr>
+<tr><td><a href="https://www.vde-verlag.de/iec-normen/preview-pdf/info_iec61511-1%7Bed2.0%7Db.pdf" target="_blank" rel="noopener">IEC 61511-1:2016 공개 미리보기</a> <span class="lib-cat">PDF</span></td><td>서문(2판 변경 요약), 적용범위, 61508과의 관계(그림 2·3), 전체 목차</td><td>1, 2</td></tr>
+<tr><td><a href="https://www.vde-verlag.de/iec-normen/preview-pdf/info_iec61508-6%7Bed2.0%7Db.pdf" target="_blank" rel="noopener">IEC 61508-6:2010 공개 미리보기</a> <span class="lib-cat">PDF</span></td><td>부속서 B·C·D·E의 구성과 그림·표 목록</td><td>7, 9, 11</td></tr>
+<tr><td><a href="https://www.vde-verlag.de/iec-normen/preview-pdf/info_iectr61511-4%7Bed1.0%7Den.pdf" target="_blank" rel="noopener">IEC TR 61511-4:2020 공개 미리보기</a> <span class="lib-cat">PDF</span></td><td>2판 변경의 근거와 흔한 오해의 목차(본문은 유료)</td><td>4, 10, 12</td></tr>
+<tr><td><a href="https://library.e.abb.com/public/52dc61cd2284462c8f66bdcafb1fefcb/11%20C%20Bratt%20ABB%20changes%20in%20IEC61511.pdf" target="_blank" rel="noopener">C. Bratt(ABB) — Changes in IEC 61511 edition 2</a> <span class="lib-cat">PDF · 2015</span></td><td>2판 변경점(FSA, 역량, 보안, SRS 29항목, HFT 표, bypass)</td><td>2, 5, 8</td></tr>
+<tr><td><a href="https://www.prelectronics.com/media/vzfoubbd/sil-poster-a1-2307.pdf" target="_blank" rel="noopener">PR electronics — SIL 포스터</a> <span class="lib-cat">PDF</span></td><td>SIL 대역, Route 1H/2H, 61511 §11.4·11.5 요약, PTC 포함 1oo1 식을 한 장에</td><td>8, 15</td></tr>
+<tr><td><a href="https://www.offshorenorge.no/en/subject-matter/guidelines/guidelines/health-working-environment-safety/technical-safety/070-guidelines/" target="_blank" rel="noopener">Offshore Norge Guideline 070</a> · <a href="https://www.offshorenorge.no/contentassets/adc7e1512f90400cb7fe9f314600bed6/070-version-4-2020-final.pdf" target="_blank" rel="noopener">Rev.04 PDF</a></td><td>61508/61511 적용 지침, 대표 기능별 최소 SIL, 데이터·CCF 처리 관행</td><td>4, 7, 9</td></tr>
+<tr><td><a href="https://sintef.no/en/publications/publication/1463030" target="_blank" rel="noopener">SINTEF — PDS Method Handbook 2013</a> · <a href="https://www.sintef.no/globalassets/project/pds/presentations/pds_method_handbook_2010_edition_ch_1-3.pdf.pdf" target="_blank" rel="noopener">2010판 1–3장 PDF</a></td><td>CSU = PFD + DTU + PTIF, C<sub>MooN</sub>, 오동작 트립 식</td><td>7, 9, 10</td></tr>
+<tr><td><a href="https://www.sintef.no/globalassets/project/pds/presentations/pds-data-handbook-2021-example-pages-2021-09-07.pdf" target="_blank" rel="noopener">SINTEF — PDS Data Handbook 2021 예시 페이지</a></td><td>장비별 고장률·β·PTC 데이터 형식(전체는 유료)</td><td>6</td></tr>
+<tr><td><a href="https://www.sintef.no/globalassets/project/pds/reports/pds-report-sis_follow_up_guideline_final_v01.pdf" target="_blank" rel="noopener">SINTEF — 운전 단계 SIS 추적 관리 지침</a></td><td>현장 고장 데이터로 성능 감시와 시험 주기 조정</td><td>12</td></tr>
+</tbody></table></div>
+
+<h3><span class="sec">17.2</span>해설·실무 자료</h3>
+<div class="tbl"><table>
+<thead><tr><th>자료</th><th>쓰임</th></tr></thead>
+<tbody>
+<tr><td><a href="https://www.kenexis.com/?p=25199" target="_blank" rel="noopener">Kenexis — 61511 §9.3 BPCS 보호계층 해설(팟캐스트 전문)</a></td><td>9.3.1–9.3.5 낭독과 해석, 두 BPCS 계층의 한계</td></tr>
+<tr><td><a href="https://www.kenexis.com/?p=1337" target="_blank" rel="noopener">Kenexis — Accuracy of SIL Calculations</a></td><td>70% 단측 신뢰한계와 계산의 안전 여유</td></tr>
+<tr><td><a href="https://www.exida.com/Blog/why-proof-test-coverage-is-so-important-for-a-sif-to-achieve-target-sill" target="_blank" rel="noopener">exida — Why proof test coverage is so important</a></td><td>PTC·mission time 예(7.6절)</td></tr>
+<tr><td><a href="https://www.exida.com/Blog/the-impact-of-ssi-selections-in-exsilentia-silver" target="_blank" rel="noopener">exida — The impact of SSI selections in exSILentia SILver</a> · <a href="https://www.exida.com/ssi" target="_blank" rel="noopener">SSI 소개</a></td><td>exSILentia의 SSI 입력이 결과에 주는 영향</td></tr>
+<tr><td><a href="https://www.exida.com/Webinars/Recordings/the-importance-of-mission-time-proof-test-interval-and-proof-test-coverage" target="_blank" rel="noopener">exida 웹세미나 — Mission time, PTI, PTC</a> · <a href="https://www.exida.com/pub/exSILentiaUserGuide.pdf" target="_blank" rel="noopener">exSILentia User Guide</a></td><td>도구 입력의 정의와 영향</td></tr>
+<tr><td><a href="https://www.isa.org/getmedia/7aa120c2-2a4e-4967-b883-f25ae3210e1c/tr_840002_preview.pdf" target="_blank" rel="noopener">ISA-TR84.00.02 미리보기</a> · <a href="https://www.isa.org/getmedia/4559072c-7452-4bf2-baa9-71920da813d7/TR_840004_Pt_1_TOC.pdf" target="_blank" rel="noopener">ISA-TR84.00.04 Part 1 목차</a></td><td>SIL 검증 기술보고서와 61511 적용 지침의 구성</td></tr>
+<tr><td><a href="https://www.aidic.it/cet/19/77/096.pdf" target="_blank" rel="noopener">Kodoth &amp; Shibutani — 신뢰성 데이터 불확실성 논문(AIDIC CET)</a></td><td>61511 §11.9.2와 데이터 불확실성 처리</td></tr>
+<tr><td><a href="https://www.hse.gov.uk/eci/functional.htm" target="_blank" rel="noopener">UK HSE — Functional safety</a> · <a href="https://www.hse.gov.uk/comah/sragtech/techmeascontsyst.htm" target="_blank" rel="noopener">COMAH 기술 조치: 제어 시스템</a> · <a href="https://www.hse.gov.uk/pubns/books/hsg238.htm" target="_blank" rel="noopener">HSG238 Out of control</a></td><td>규제 기관의 기대 수준, 제어 시스템 사고 사례 분석. 증명시험은 HSE CRR 428/2002와 운영 지침 OG54를 함께 보십시오</td></tr>
+</tbody></table></div>
+
+<h3><span class="sec">17.3</span>표준과 단행본(유료)</h3>
+<div class="tbl"><table>
+<thead><tr><th>구분</th><th>자료</th><th>이 과정에서의 가치</th></tr></thead>
+<tbody>
+<tr><td>표준</td><td>IEC 61508-1~7:2010 / IEC 61511-1:2016+AMD1:2017(통합판 Ed. 2.1), 61511-2·3:2016 / IEC TR 61511-4:2020 / ANSI/ISA-61511-1-2018</td><td>원문. 특히 61511-1 §5·9·10·11·16과 61508-6 부속서 B·D</td></tr>
+<tr><td>표준</td><td>ISO/TR 12489:2013 (Reliability modelling and calculation of safety systems)</td><td>단순식·FTA·Markov·Petri net을 하나의 틀로 설명하는 최고 수준의 계산 이론서</td></tr>
+<tr><td>이론</td><td>M. Rausand, <i>Reliability of Safety-Critical Systems: Theory and Applications</i>, Wiley, 2014 (<a href="https://doi.org/10.1002/9781118776353" target="_blank" rel="noopener">DOI</a>)</td><td>6·7·9장 심화. NTNU 슬라이드의 원전</td></tr>
+<tr><td>이론</td><td>M. Rausand, A. Barros, A. Høyland, <i>System Reliability Theory</i>, 3rd ed., Wiley, 2021</td><td>신뢰성 수학의 기초 전반</td></tr>
+<tr><td>계산</td><td>W. M. Goble, H. Cheddie, <i>Safety Instrumented Systems Verification: Practical Probabilistic Calculations</i>, ISA, 2005</td><td>Markov 기반 SIF 검증. exSILentia 계열 방법론의 배경</td></tr>
+<tr><td>계산</td><td>W. M. Goble, <i>Control Systems Safety Evaluation and Reliability</i>, 3rd ed., ISA, 2010</td><td>FMEDA, Markov, 고장 분류의 원리</td></tr>
+<tr><td>종합</td><td>D. J. Smith, K. G. L. Simpson, <i>The Safety Critical Systems Handbook</i>, 5th ed., Butterworth-Heinemann, 2020</td><td>61508·61511 조항 해설과 사례</td></tr>
+<tr><td>종합</td><td>P. Gruhn, S. Lucchini, <i>Safety Instrumented Systems: A Life-Cycle Approach</i>, ISA, 2019</td><td>수명주기 전체의 실무 해설</td></tr>
+<tr><td>SIL 결정</td><td>E. Marszal, E. Scharpf, <i>Safety Integrity Level Selection</i>, ISA, 2002</td><td>위험 그래프 보정, LOPA</td></tr>
+<tr><td>SIL 결정</td><td>CCPS, <i>Layer of Protection Analysis</i> (2001) / <i>Guidelines for Initiating Events and Independent Protection Layers in LOPA</i> (2015) / <i>Guidelines for Enabling Conditions and Conditional Modifiers in LOPA</i></td><td>IPL·원인 빈도·CM의 근거 자료</td></tr>
+<tr><td>설계</td><td>CCPS, <i>Guidelines for Safe and Reliable Instrumented Protective Systems</i>, 2007</td><td>계장 보호 시스템의 설계·운영 관행</td></tr>
+<tr><td>데이터</td><td>OREDA Handbook / SINTEF PDS Data Handbook / exida SERH</td><td>고장률·고장 모드 분포</td></tr>
+</tbody></table></div>
+
+<h3><span class="sec">17.4</span>과정·시험 정보와 국내 자료</h3>
+<div class="tbl"><table>
+<thead><tr><th>자료</th><th>내용</th></tr></thead>
+<tbody>
+<tr><td><a href="https://www.tuv.com/landingpage/en/training-functional-safety-cyber-security/detail-pages/zertifikate/fs-engineer.html" target="_blank" rel="noopener">TÜV Rheinland — FS Engineer 인증 안내</a> · <a href="https://www.tuv.com/korea/ko/functional-safety-trainings.html" target="_blank" rel="noopener">TÜV Rheinland Korea 기능안전 교육</a></td><td>응시 요건, 유효기간·연장</td></tr>
+<tr><td><a href="https://yokogawa.com/no/solutions/services/training" target="_blank" rel="noopener">Yokogawa(노르웨이) 교육</a> · <a href="https://www.yokogawa.com/kr/solutions/products-and-services/lifecycle-services/safety-and-security/functional-safety-consultancy-services/safety-training/" target="_blank" rel="noopener">한국요꼬가와 Safety Training</a></td><td>모듈 구성, 시험 형식(객관식 60 + 사례 7, 75%)</td></tr>
+<tr><td><a href="https://www.se.com/ww/en/work/services/training/isacademy/backend/public/pdfs/1659012243160_8801%20Functional%20Safety%20Engineering%20(T%C3%9CV%20Rheinland)%20Certification%20Program%20Course%20Specification.pdf" target="_blank" rel="noopener">Schneider Electric 8801 과정 명세</a> · <a href="https://library.e.abb.com/public/208a685859314d56b547e87e6e3bbd47/LR%20T245_Training.pdf" target="_blank" rel="noopener">ABB T245</a> · <a href="https://assets.new.siemens.com/siemens/assets/api/uuid:107b2749-0a58-4856-baaf-b8c6a53658b4/fs-eng-sis-v4.pdf" target="_blank" rel="noopener">Siemens FS-ENG-SIS</a></td><td>일자별 주제, 시험 형식(객관식 130 + 계산 5, 75%)</td></tr>
+<tr><td><a href="https://portal.kosha.or.kr" target="_blank" rel="noopener">KOSHA 안전보건 포털</a></td><td>C-C-62-2026 방호계층분석(LOPA)기법 기술지원규정, D-69-2020 SIS를 이용한 화학설비 안전성 향상 기술지침 검색</td></tr>
+</tbody></table></div>
+<div class="box judg"><span class="lbl">실무 판단: 이 교재 다음에 읽을 순서</span><ol>
+<li>61508 Association 계산 자료로 7장 계산을 다시 한 번 손으로 따라가기.</li>
+<li>NTNU 슬라이드의 8장(PFD 공식), 10장(CCF), 11장(불완전 시험).</li>
+<li>Bratt 자료와 61511-1 미리보기로 2판 변경점 정리.</li>
+<li>시간이 있으면 ISO/TR 12489와 Rausand 2014로 계산 이론 심화.</li>
+</ol></div>
+</section>
+</main>
+</div>
+<footer class="site">
+<p>이 교재는 IEC 61508·61511 원문을 대체하지 않습니다. 조항 번호는 공개 미리보기와 공개 해설 자료로 확인한 범위에서 적었고, 세부 문구는 원문으로 확인해야 합니다. 예시값은 학습용이며 실제 설계값이 아닙니다. 계산 도구는 IEC 61508-6 단순식과 본 교재의 유도식을 구현한 학습용이며, 결과는 61508 Association 예제로 대조했습니다.</p>
+</footer>
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']], tags: 'none' },
+  svg: { fontCache: 'global', mtextInheritFont: true },
+  options: { enableMenu: false }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js" async></script>
+<script>
+(function(){
+"use strict";
+var $ = function(id){ return document.getElementById(id); };
+var NS = "http://www.w3.org/2000/svg";
+var Y = 8760;
+
+/* ---------- helpers ---------- */
+function num(id, def){
+  var el = $(id); if(!el) return def;
+  var v = parseFloat(String(el.value).replace(/,/g,'').trim());
+  return isFinite(v) ? v : def;
+}
+function clamp01(x){ return Math.min(1, Math.max(0, x)); }
+function sci(x, d){
+  if (x === null || !isFinite(x)) return "—";
+  if (x === 0) return "0";
+  d = (d === undefined) ? 2 : d;
+  var a = Math.abs(x);
+  if (a >= 1e-2 && a < 1e5) {
+    var p = a >= 100 ? 0 : (a >= 10 ? 1 : (a >= 1 ? 2 : 3));
+    return x.toFixed(Math.max(p, 0));
+  }
+  var parts = x.toExponential(d).split("e");
+  var e = parseInt(parts[1], 10);
+  return parts[0] + "E" + (e < 0 ? "-" : "+") + String(Math.abs(e)).padStart(2, "0");
+}
+function sciE(x){ // always exponential
+  if (!isFinite(x)) return "—"; if (x === 0) return "0";
+  var parts = x.toExponential(2).split("e"); var e = parseInt(parts[1],10);
+  return parts[0] + "E" + (e < 0 ? "-" : "+") + String(Math.abs(e)).padStart(2,"0");
+}
+function kv(k, v, s){
+  var d = document.createElement("div"); d.className = "kv";
+  var a = document.createElement("span"); a.className = "k"; a.textContent = k; d.appendChild(a);
+  var b = document.createElement("span"); b.className = "v";
+  if (v instanceof Node) b.appendChild(v); else b.textContent = v;
+  d.appendChild(b);
+  if (s) { var c = document.createElement("span"); c.className = "s"; c.textContent = s; d.appendChild(c); }
+  return d;
+}
+function pill(text, ok){
+  var p = document.createElement("span"); p.className = "pill" + (ok === true ? " ok" : ok === false ? " ng" : "");
+  p.textContent = text; return p;
+}
+function fill(id, nodes){ var el = $(id); if(!el) return; el.textContent = ""; nodes.forEach(function(n){ el.appendChild(n); }); }
+function silFromPfd(p){
+  if (!(p > 0)) return "—";
+  if (p >= 0.1) return "SIL 미달(RRF ≤ 10)";
+  if (p >= 1e-2) return "SIL 1"; if (p >= 1e-3) return "SIL 2"; if (p >= 1e-4) return "SIL 3"; if (p >= 1e-5) return "SIL 4";
+  return "SIL 4 초과 영역";
+}
+function silFromPfh(h){
+  if (!(h > 0)) return "—";
+  if (h >= 1e-5) return "SIL 미달"; if (h >= 1e-6) return "SIL 1"; if (h >= 1e-7) return "SIL 2"; if (h >= 1e-8) return "SIL 3"; if (h >= 1e-9) return "SIL 4";
+  return "SIL 4 초과 영역";
+}
+function onInputs(ids, fn){
+  var queued = false;
+  function run(){ queued = false; try { fn(); } catch(e) { if (window.console) console.error(e); } }
+  ids.forEach(function(id){ var el = $(id); if (el) { el.addEventListener("input", function(){ if(!queued){ queued = true; requestAnimationFrame(run); } }); el.addEventListener("change", run); } });
+  run();
+}
+function el(tag, attrs, parent){
+  var e = document.createElementNS(NS, tag);
+  for (var k in attrs) if (attrs.hasOwnProperty(k)) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function svgText(parent, x, y, txt, attrs){
+  var t = el("text", Object.assign({x:x, y:y}, attrs || {}), parent); t.textContent = txt; return t;
+}
+
+/* ---------- generic line chart ---------- */
+function lineChart(opt){
+  var host = $(opt.host); if (!host) return;
+  host.textContent = "";
+  var W = 680, H = opt.height || 300, m = {l:62, r:96, t:14, b:42};
+  var pw = W - m.l - m.r, ph = H - m.t - m.b;
+  var svg = el("svg", {viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": opt.aria || "chart"}, host);
+  var lx = function(v){ return opt.xlog ? Math.log10(v) : v; };
+  var ly = function(v){ return opt.ylog ? Math.log10(Math.max(v, opt.ymin)) : v; };
+  var x0 = lx(opt.xmin), x1 = lx(opt.xmax), y0 = ly(opt.ymin), y1 = ly(opt.ymax);
+  var sx = function(v){ return m.l + (lx(v) - x0) / (x1 - x0) * pw; };
+  var sy = function(v){ return m.t + ph - (ly(v) - y0) / (y1 - y0) * ph; };
+  var g = el("g", {}, svg);
+  // grid + ticks
+  (opt.yticks || []).forEach(function(v){
+    var y = sy(v);
+    el("line", {x1:m.l, x2:m.l+pw, y1:y, y2:y, stroke:"var(--grid)", "stroke-width":1}, g);
+    svgText(g, m.l - 8, y + 4, opt.yfmt ? opt.yfmt(v) : String(v), {"text-anchor":"end", "font-size":11, fill:"var(--ink-3)", "font-family":"var(--f-mono)"});
+  });
+  (opt.xticks || []).forEach(function(v){
+    var x = sx(v);
+    el("line", {x1:x, x2:x, y1:m.t, y2:m.t+ph, stroke:"var(--grid)", "stroke-width":1}, g);
+    svgText(g, x, m.t + ph + 16, opt.xfmt ? opt.xfmt(v) : String(v), {"text-anchor":"middle", "font-size":11, fill:"var(--ink-3)", "font-family":"var(--f-mono)"});
+  });
+  el("line", {x1:m.l, x2:m.l+pw, y1:m.t+ph, y2:m.t+ph, stroke:"var(--axis)", "stroke-width":1}, g);
+  el("line", {x1:m.l, x2:m.l, y1:m.t, y2:m.t+ph, stroke:"var(--axis)", "stroke-width":1}, g);
+  svgText(g, m.l + pw/2, H - 6, opt.xlabel || "", {"text-anchor":"middle", "font-size":12, fill:"var(--ink-2)"});
+  var yl = svgText(g, 14, m.t + ph/2, opt.ylabel || "", {"text-anchor":"middle", "font-size":12, fill:"var(--ink-2)"});
+  yl.setAttribute("transform", "rotate(-90 14 " + (m.t + ph/2) + ")");
+  // reference lines
+  var used = [];
+  (opt.refs || []).forEach(function(r){
+    if (r.x !== undefined && r.x >= opt.xmin && r.x <= opt.xmax) {
+      var x = sx(r.x);
+      el("line", {x1:x, x2:x, y1:m.t, y2:m.t+ph, stroke:"var(--ink-3)", "stroke-width":1}, g);
+      svgText(g, x + 4, m.t + 12 + (r.dy || 0), r.label, {"font-size":10.5, fill:"var(--ink-2)"});
+    }
+    if (r.y !== undefined && r.y >= opt.ymin && r.y <= opt.ymax) {
+      var y = sy(r.y);
+      el("line", {x1:m.l, x2:m.l+pw, y1:y, y2:y, stroke: r.strong ? "var(--ink-2)" : "var(--line-strong)", "stroke-width":1}, g);
+      if (r.label) { svgText(g, m.l + pw + 6, y + 4, r.label, {"font-size":10.5, fill:"var(--ink-2)"}); used.push(y + 4); }
+    }
+  });
+  // series
+  var clipId = opt.host + "Clip";
+  var defs = el("defs", {}, svg); var cp = el("clipPath", {id: clipId}, defs);
+  el("rect", {x:m.l, y:m.t, width:pw, height:ph}, cp);
+  var sg = el("g", {"clip-path": "url(#" + clipId + ")"}, svg);
+  opt.series.forEach(function(s){
+    var d = "";
+    s.pts.forEach(function(p, i){ d += (i ? "L" : "M") + sx(p[0]).toFixed(2) + "," + sy(p[1]).toFixed(2); });
+    el("path", {d:d, fill:"none", stroke:s.color, "stroke-width":2, "stroke-linejoin":"round", "stroke-linecap":"round"}, sg);
+  });
+  // direct end labels (text in ink, key line in series colour)
+  opt.series.forEach(function(s){
+    if (!s.endLabel) return;
+    var last = s.pts[s.pts.length - 1]; var y = sy(last[1]);
+    y = Math.max(m.t + 8, Math.min(m.t + ph - 2, y));
+    for (var pass = 0; pass < 4; pass++) used.forEach(function(u){ if (Math.abs(u - y) < 13) y = (y >= u) ? u + 13 : u - 13; });
+    y = Math.max(m.t + 8, Math.min(m.t + ph + 10, y));
+    used.push(y);
+    el("line", {x1:m.l + pw + 4, x2:m.l + pw + 14, y1:y - 4, y2:y - 4, stroke:s.color, "stroke-width":2}, svg);
+    svgText(svg, m.l + pw + 18, y, s.endLabel, {"font-size":11, fill:"var(--ink-2)"});
+  });
+  // legend (>= 2 series)
+  if (opt.legend) {
+    var lg = $(opt.legend); if (lg) { lg.textContent = "";
+      if (opt.series.length > 1) opt.series.forEach(function(s){
+        var it = document.createElement("span"); var k = document.createElement("span"); k.className = "key"; k.style.borderTopColor = s.color;
+        it.appendChild(k); it.appendChild(document.createTextNode(s.name)); lg.appendChild(it);
+      });
+    }
+  }
+  // crosshair + tooltip
+  var tip = $(opt.tip); var wrap = host.parentNode;
+  var cross = el("line", {x1:0, x2:0, y1:m.t, y2:m.t+ph, stroke:"var(--ink-2)", "stroke-width":1, visibility:"hidden"}, svg);
+  var dots = opt.series.map(function(s){ return el("circle", {r:4, fill:s.color, stroke:"var(--surface)", "stroke-width":2, visibility:"hidden"}, svg); });
+  var hit = el("rect", {x:m.l, y:m.t, width:pw, height:ph, fill:"transparent", tabindex:0, style:"cursor:crosshair; outline:none"}, svg);
+  var xs = opt.series[0].pts.map(function(p){ return p[0]; });
+  var cur = Math.floor(xs.length / 2);
+  function show(i){
+    i = Math.max(0, Math.min(xs.length - 1, i)); cur = i;
+    var xv = xs[i], X = sx(xv);
+    cross.setAttribute("x1", X); cross.setAttribute("x2", X); cross.setAttribute("visibility", "visible");
+    if (!tip) return;
+    tip.textContent = "";
+    var hd = document.createElement("div"); hd.textContent = opt.xname + " = " + (opt.xfmtTip ? opt.xfmtTip(xv) : sci(xv)); hd.style.color = "var(--ink-3)"; tip.appendChild(hd);
+    opt.series.forEach(function(s, k){
+      var yv = s.pts[i][1];
+      dots[k].setAttribute("cx", X); dots[k].setAttribute("cy", sy(yv)); dots[k].setAttribute("visibility", "visible");
+      var row = document.createElement("div"); row.className = "row";
+      var key = document.createElement("i"); key.style.borderTopColor = s.color; row.appendChild(key);
+      var b = document.createElement("b"); b.textContent = sciE(yv); row.appendChild(b);
+      var n = document.createElement("span"); n.textContent = s.name; n.style.color = "var(--ink-2)"; row.appendChild(n);
+      tip.appendChild(row);
+    });
+    tip.hidden = false;
+    var box = svg.getBoundingClientRect(), wbox = wrap.getBoundingClientRect();
+    var scale = box.width / W;
+    var left = (X * scale) + (box.left - wbox.left) + 12;
+    if (left + tip.offsetWidth > wbox.width) left = (X * scale) + (box.left - wbox.left) - tip.offsetWidth - 12;
+    tip.style.left = Math.max(0, left) + "px";
+    tip.style.top = ((m.t + 6) * scale + (box.top - wbox.top)) + "px";
+  }
+  function hide(){ cross.setAttribute("visibility", "hidden"); dots.forEach(function(d){ d.setAttribute("visibility", "hidden"); }); if (tip) tip.hidden = true; }
+  function idxFromEvent(ev){
+    var box = svg.getBoundingClientRect(); var X = (ev.clientX - box.left) / box.width * W;
+    var best = 0, bd = Infinity;
+    for (var i = 0; i < xs.length; i++) { var d = Math.abs(sx(xs[i]) - X); if (d < bd) { bd = d; best = i; } }
+    return best;
+  }
+  hit.addEventListener("pointermove", function(ev){ show(idxFromEvent(ev)); });
+  hit.addEventListener("pointerdown", function(ev){ show(idxFromEvent(ev)); });
+  hit.addEventListener("pointerleave", hide);
+  hit.addEventListener("focus", function(){ show(cur); });
+  hit.addEventListener("blur", hide);
+  hit.addEventListener("keydown", function(ev){
+    var step = Math.max(1, Math.round(xs.length / 60));
+    if (ev.key === "ArrowRight") { show(cur + step); ev.preventDefault(); }
+    if (ev.key === "ArrowLeft") { show(cur - step); ev.preventDefault(); }
+  });
+}
+function decadeTicks(a, b){ var t = []; for (var e = Math.floor(Math.log10(a)); e <= Math.ceil(Math.log10(b)); e++) { var v = Math.pow(10, e); if (v >= a * 0.999 && v <= b * 1.001) t.push(v); } return t; }
+function supFmt(v){ var e = Math.round(Math.log10(v)); return "1E" + (e < 0 ? "-" : "+") + String(Math.abs(e)).padStart(2,"0"); }
+
+/* ---------- Tool 1: demand vs hazard ---------- */
+function hazard(lamY, T, D){
+  if (Math.abs(lamY - D) < 1e-12) return lamY * T * Math.exp(-lamY * T) / T;
+  var N = (1 - Math.exp(-lamY * T)) - lamY * (Math.exp(-D * T) - Math.exp(-lamY * T)) / (lamY - D);
+  return N / T;
+}
+function toolHz(){
+  var lamH = Math.max(num("hzLam", 2e-6), 1e-12), T = Math.max(num("hzT", 1), 1e-3);
+  var lamY = lamH * Y, pfd = 1 - (1 - Math.exp(-lamY * T)) / (lamY * T);
+  var Ds = [], ex = [], ap = [], as = [];
+  for (var i = 0; i <= 160; i++) {
+    var D = Math.pow(10, -3 + 5 * i / 160); Ds.push(D);
+    ex.push([D, hazard(lamY, T, D)]); ap.push([D, D * lamY * T / 2]); as.push([D, lamY]);
+  }
+  var ymax = Math.pow(10, Math.ceil(Math.log10(Math.max(ap[ap.length-1][1], lamY) * 1.0001)));
+  var ymin = Math.pow(10, Math.floor(Math.log10(ex[0][1])));
+  if (ymax / ymin > 1e7) ymin = ymax / 1e7;
+  lineChart({host:"hzChart", legend:"hzLegend", tip:"hzTip", aria:"요구율에 따른 위험사건 빈도", height:300,
+    xlog:true, ylog:true, xmin:1e-3, xmax:1e2, ymin:ymin, ymax:ymax,
+    xticks:decadeTicks(1e-3, 1e2), yticks:decadeTicks(ymin, ymax), xfmt:supFmt, yfmt:supFmt,
+    xlabel:"요구율 D [1/yr]", ylabel:"위험사건 빈도 H [1/yr]", xname:"D",
+    xfmtTip:function(v){ return sciE(v) + " /yr"; },
+    refs:[{x:1, label:"연 1회(2판)"}, {x:2/T, label:"2/T₁(1판)", dy:14}],
+    series:[
+      {name:"정확해 H(D) 식 (3.3)", color:"var(--series-1)", pts:ex, endLabel:"정확해"},
+      {name:"근사 D·PFDavg", color:"var(--series-2)", pts:ap, endLabel:"D·PFDavg"},
+      {name:"고빈도 극한 λDU", color:"var(--series-3)", pts:as, endLabel:"λDU"}
+    ]});
+  var h1 = hazard(lamY, T, 1);
+  fill("hzOut", [
+    kv("λDU [1/yr]", sci(lamY)),
+    kv("PFDavg (식 6.4)", sci(pfd)),
+    kv("교차점 2/T₁", sci(2 / T) + " /yr"),
+    kv("D = 1/yr에서 근사/정확", (1 * lamY * T / 2 / h1).toFixed(2) + " 배", "1보다 크면 근사가 보수적")
+  ]);
+}
+
+/* ---------- Tool 2: LOPA ---------- */
+function silFromRrf(r){
+  if (!(r > 0)) return "—";
+  if (r <= 10) return "SIF 불필요 수준(RRF ≤ 10)";
+  if (r <= 100) return "SIL 1"; if (r <= 1000) return "SIL 2"; if (r <= 10000) return "SIL 3"; if (r <= 100000) return "SIL 4";
+  return "단일 SIF로 불충분";
+}
+function toolLopa(){
+  var Ft = num("lpFt", 1e-5);
+  var ie = num("lpIe1", 0) * clamp01(num("lpEc1", 1)) + num("lpIe2", 0) * clamp01(num("lpEc2", 1));
+  var before = clamp01(num("lpB1", 1)) * clamp01(num("lpB2", 1));
+  var after = clamp01(num("lpA1", 1));
+  var cm = clamp01(num("lpCm1", 1)) * clamp01(num("lpCm2", 1)) * clamp01(num("lpCm3", 1));
+  var D = ie * before, fc = D * after * cm;
+  var out = [kv("원인 합계 Σf·EC", sci(ie) + " /yr"), kv("SIF 요구율 D_SIF", sci(D) + " /yr", "SIF 이전 IPL만 반영(식 4.3)"), kv("SIF 없을 때 결과 빈도", sci(fc) + " /yr")];
+  var msg = "";
+  if (!(Ft > 0) || !(fc > 0)) { fill("lpOut", out); $("lpMsg").textContent = "입력값을 확인하십시오."; return; }
+  if (D <= 1) {
+    var rrf = fc / Ft;
+    out.push(kv("모드", "저빈도 요구"), kv("필요 RRF", sci(rrf), "PFDavg ≤ " + sciE(1 / rrf)), kv("목표 SIL", silFromRrf(rrf)));
+    msg = rrf <= 10 ? "필요 위험저감이 10 이하이므로 61511의 SIF 대상이 아닙니다. 다른 보호 수단으로 관리하고 근거를 남기십시오." :
+      (rrf > 10000 ? "SIL 4 이상이 필요합니다. 공정 설계 변경이나 비계장 보호계층으로 요구를 낮추는 것을 먼저 검토하십시오." :
+      "SIL은 대역입니다. 설계는 SIL 대역의 하한이 아니라 이 목표값(RRF ≥ " + sci(rrf) + ")을 만족해야 하며, SRS에 수치 목표를 함께 적으십시오.");
+  } else {
+    var pfh = Ft / (Y * after * cm);
+    out.push(kv("모드", "고빈도 요구"), kv("목표 PFH", sciE(pfh) + " /h", "식 (4.4)"), kv("목표 SIL(표 5)", silFromPfh(pfh)));
+    msg = "SIF 요구율이 연 1회를 넘으므로 PFDavg가 아니라 PFH로 평가합니다. SIF 이전 IPL을 추가하면 저빈도 모드로 바뀔 수 있습니다.";
+  }
+  fill("lpOut", out); $("lpMsg").textContent = msg;
+}
+
+/* ---------- Tool 3: chi-square bound ---------- */
+function poissonCdf(n, m){ var s = 0, t = Math.exp(-m); for (var i = 0; i <= n; i++) { if (i > 0) t *= m / i; s += t; } return s; }
+function upperBound(n, cl){ var lo = 0, hi = 50 + 10 * n; for (var k = 0; k < 200; k++) { var mid = (lo + hi) / 2; if (poissonCdf(n, mid) > 1 - cl) lo = mid; else hi = mid; } return (lo + hi) / 2; }
+function toolChi(){
+  var n = Math.max(0, Math.round(num("chN", 0))), tau = Math.max(num("chTau", 1e6), 1), cl = parseFloat($("chCl").value);
+  var m = upperBound(n, cl);
+  fill("chOut", [
+    kv("점추정 n/τ", n === 0 ? "0" : sciE(n / tau) + " /h"),
+    kv("상한 λ_U (" + Math.round(cl * 100) + "%)", sciE(m / tau) + " /h", "χ²(" + (2 * n + 2) + ") = " + (2 * m).toFixed(3)),
+    kv("상한 / 점추정", n === 0 ? "—" : (m / n).toFixed(2) + " 배"),
+    kv("FIT 환산", (m / tau * 1e9).toFixed(0) + " FIT")
+  ]);
+}
+
+/* ---------- Tool 4: PFD / PFH ---------- */
+var D5 = {"1oo3":0.5, "2oo3":1.5};
+function arch(a){ return {"1oo1":[1,1], "1oo2":[1,2], "2oo2":[2,2], "1oo2D":[1,2], "2oo3":[2,3], "1oo3":[1,3]}[a]; }
+function pfdIEC(p){
+  var ld = p.ldu + p.ldd; if (!(ld > 0)) return null;
+  var fu = p.ldu / ld, fd = p.ldd / ld;
+  var tx = function(div){ return fu * (p.ptc * (p.T1 / div + p.mrt) + (1 - p.ptc) * (p.T2 / div + p.mrt)) + fd * p.mttr; };
+  var tce = tx(2), tge = tx(3), tg2e = tx(4);
+  var tdu = p.ptc * (p.T1 / 2 + p.mrt) + (1 - p.ptc) * (p.T2 / 2 + p.mrt);
+  var ccf = p.b * p.ldu * tdu + p.bd * p.ldd * p.mttr;
+  var li = (1 - p.bd) * p.ldd + (1 - p.b) * p.ldu;
+  var ind = 0, total;
+  // PFH uses perfect-test t_CE (IEC 61508-6 B.3.3)
+  var tceH = fu * (p.T1 / 2 + p.mrt) + fd * p.mttr, tgeH = fu * (p.T1 / 3 + p.mrt) + fd * p.mttr;
+  var pfh;
+  switch (p.arch) {
+    case "1oo1": total = ld * tce; pfh = p.ldu; ccf = 0; ind = total; break;
+    case "2oo2": total = 2 * ld * tce; pfh = 2 * p.ldu; ccf = 0; ind = total; break;
+    case "1oo2": ind = 2 * li * li * tce * tge; total = ind + ccf; pfh = 2 * li * (1 - p.b) * p.ldu * tceH + p.b * p.ldu; break;
+    case "2oo3": ind = 6 * li * li * tce * tge; total = ind + ccf; pfh = 6 * li * (1 - p.b) * p.ldu * tceH + p.b * p.ldu; break;
+    case "1oo3": ind = 6 * li * li * li * tce * tge * tg2e; total = ind + ccf; pfh = 6 * li * li * (1 - p.b) * p.ldu * tceH * tgeH + p.b * p.ldu; break;
+    case "1oo2D":
+      var tce2 = (p.ldu * tdu + (p.ldd + p.lsd) * p.mttr) / (p.ldu + p.ldd + p.lsd);
+      var tge2 = p.ptc * (p.T1 / 3 + p.mrt) + (1 - p.ptc) * (p.T2 / 3 + p.mrt);
+      var g = (1 - p.b) * p.ldu + (1 - p.bd) * p.ldd + p.lsd;
+      ind = 2 * (1 - p.b) * p.ldu * g * tce2 * tge2; total = ind + ccf;
+      var tce2H = (p.ldu * (p.T1 / 2 + p.mrt) + (p.ldd + p.lsd) * p.mttr) / (p.ldu + p.ldd + p.lsd);
+      pfh = 2 * (1 - p.b) * p.ldu * g * tce2H + p.b * p.ldu; break;
+  }
+  return {total:total, ind:ind, ccf:ccf, tce:tce, tge:tge, pfh:pfh};
+}
+function pfdAt(p, t, ptc){
+  var KN = arch(p.arch === "1oo2D" ? "1oo2" : p.arch), K = KN[0], N = KN[1];
+  var t1 = t % p.T1, t2 = t % p.T2;
+  var exp = ptc * t1 + (1 - ptc) * t2;
+  var bI = (N > 1) ? p.b : 0, bdI = (N > 1) ? p.bd : 0;
+  var qdu = 1 - Math.exp(-(1 - bI) * p.ldu * exp) + (1 - bI) * p.ldu * p.mrt;
+  var qdd = (1 - bdI) * p.ldd * p.mttr;
+  var q = Math.min(1, 1 - (1 - qdu) * (1 - qdd));
+  var fail = 0, need = N - K + 1;
+  for (var j = need; j <= N; j++) fail += comb(N, j) * Math.pow(q, j) * Math.pow(1 - q, N - j);
+  var qc = 0;
+  if (N > 1) qc = 1 - Math.exp(-p.b * p.ldu * exp) * (1 - p.bd * p.ldd * p.mttr) + p.b * p.ldu * p.mrt;
+  return 1 - (1 - fail) * (1 - Math.min(1, qc));
+}
+function comb(n, k){ var r = 1; for (var i = 1; i <= k; i++) r = r * (n - k + i) / i; return r; }
+function readPfd(){
+  var a = $("pfArch").value;
+  var p = {arch:a, ldu:Math.max(num("pfLdu", 0), 0), ldd:Math.max(num("pfLdd", 0), 0), lsd:Math.max(num("pfLsd", 0), 0),
+    T1:Math.max(num("pfT1", 8760), 1), mttr:Math.max(num("pfMttr", 8), 0), mrt:Math.max(num("pfMrt", 8), 0),
+    b:clamp01(num("pfB", 0.1)), bd:clamp01(num("pfBd", 0.1)), ptc:clamp01(num("pfPtc", 1)), T2:Math.max(num("pfT2", 87600), 1)};
+  if (p.T2 < p.T1) p.T2 = p.T1;
+  if ($("pfD5").checked && D5[a]) { p.b = Math.min(1, p.b * D5[a]); p.bd = Math.min(1, p.bd * D5[a]); }
+  return p;
+}
+function toolPfd(){
+  var p = readPfd(); var r = pfdIEC(p);
+  if (!r) { fill("pfOut", [kv("결과", "λ 입력 필요")]); return; }
+  // numeric average + curves
+  var span = p.T2, nS = Math.min(6000, Math.max(1500, Math.round(80 * span / p.T1)));
+  var pts1 = [], pts2 = [], sum = 0, peak = 0;
+  var perfect = Object.assign({}, p);
+  for (var i = 0; i <= nS; i++) {
+    var t = span * i / nS * 0.99999;
+    var v = pfdAt(p, t, p.ptc); var v2 = pfdAt(perfect, t, 1);
+    if (i < nS) { var tm = span * (i + 0.5) / nS; sum += pfdAt(p, tm, p.ptc); }
+    peak = Math.max(peak, v);
+    pts1.push([t / Y, v]); pts2.push([t / Y, v2]);
+  }
+  var avg = sum / nS;
+  var share = (r.total > 0 && r.ccf > 0) ? Math.round(100 * r.ccf / r.total) + "%" : "—";
+  var silL = silFromPfd(r.total);
+  fill("pfOut", [
+    kv("PFDavg (IEC 단순식)", sciE(r.total), "RRF " + sci(1 / r.total)),
+    kv("SIL (저빈도, 표 4)", silL),
+    kv("CCF 항 비중", share, "독립 " + sciE(r.ind) + " / CCF " + sciE(r.ccf)),
+    kv("t_CE / t_GE [h]", r.tce.toFixed(1) + " / " + r.tge.toFixed(1)),
+    kv("PFD(t) 수치 평균", sciE(avg), "최대 " + sciE(peak)),
+    kv("PFH (IEC 단순식)", sciE(r.pfh) + " /h", silFromPfh(r.pfh) + " (고빈도로 쓸 때, PTC 미반영)")
+  ]);
+  var series = [{name:"PFD(t) — 입력 PTC " + Math.round(p.ptc * 100) + "%", color:"var(--series-1)", pts:pts1, endLabel:"PTC " + Math.round(p.ptc * 100) + "%"}];
+  if (p.ptc < 1) series.push({name:"PFD(t) — PTC 100% 가정", color:"var(--series-2)", pts:pts2, endLabel:"PTC 100%"});
+  var ymax = Math.pow(10, Math.ceil(Math.log10(Math.max(peak, 1e-6) * 1.001)));
+  ymax = Math.max(ymax, 1e-3); if (ymax > 1) ymax = 1;
+  var ymin = ymax / 1e4;
+  var refs = [{y:avg, label:"평균 " + sciE(avg), strong:true}];
+  [1e-1, 1e-2, 1e-3, 1e-4, 1e-5].forEach(function(b){ if (b > ymin && b < ymax) refs.push({y:b}); });
+  var xt = []; var stepY = span / Y <= 12 ? 1 : (span / Y <= 30 ? 5 : 10);
+  for (var x = 0; x <= span / Y + 1e-9; x += stepY) xt.push(x);
+  lineChart({host:"pfChart", legend:"pfLegend", tip:"pfTip", aria:"순간 PFD(t) 곡선", height:300,
+    xlog:false, ylog:true, xmin:0, xmax:span / Y, ymin:ymin, ymax:ymax,
+    xticks:xt, yticks:decadeTicks(ymin, ymax), xfmt:function(v){ return v + "y"; }, yfmt:supFmt,
+    xlabel:"경과 시간 [년] (0 ~ T₂)", ylabel:"PFD(t)", xname:"t", xfmtTip:function(v){ return v.toFixed(2) + " 년"; },
+    refs:refs, series:series});
+}
+function setPfd(vals){ Object.keys(vals).forEach(function(k){ var e = $(k); if (!e) return; if (e.type === "checkbox") e.checked = vals[k]; else e.value = vals[k]; }); toolPfd(); }
+
+/* ---------- Tool 5: architecture ---------- */
+var R1H = {A:[[1,2,3],[2,3,4],[3,4,4],[3,4,4]], B:[[0,1,2],[1,2,3],[2,3,4],[3,4,4]]};
+function toolArch(){
+  var type = $("acType").value, sff = num("acSff", 0), hft = parseInt($("acHft").value, 10), sil = parseInt($("acSil").value, 10), mode = $("acMode").value;
+  var row = sff < 60 ? 0 : sff < 90 ? 1 : sff < 99 ? 2 : 3;
+  var max1 = R1H[type][row][hft];
+  var need2 = sil === 1 ? 0 : sil === 2 ? (mode === "low" ? 0 : 1) : sil === 3 ? 1 : 2;
+  var out = [
+    kv("Route 1H 최대 SIL", max1 === 0 ? "불허" : "SIL " + max1, "Type " + type + ", SFF " + sff + "%, HFT " + hft),
+    kv("Route 1H 판정", pill(max1 >= sil ? "목표 SIL " + sil + " 만족" : "목표 SIL " + sil + " 미달", max1 >= sil)),
+    kv("Route 2H / 61511 표 6 최소 HFT", String(need2)),
+    kv("Route 2H / 61511 판정", pill(hft >= need2 ? "만족" : "미달", hft >= need2), "prior use·§11.9 데이터 요건 충족이 전제" + (type === "B" ? ", 61508 Route 2H는 Type B에 DC ≥ 60% 요구" : ""))
+  ];
+  fill("acOut", out);
+}
+
+/* ---------- Tool 6: spurious trip ---------- */
+function toolStr(){
+  var a = $("stArch").value, ls = Math.max(num("stLs", 0), 0), ldd = Math.max(num("stLdd", 0), 0), b = clamp01(num("stB", 0.1)), m = Math.max(num("stM", 8), 0);
+  var l = ls + ($("stDd").checked ? ldd : 0), s;
+  switch (a) {
+    case "1oo1": s = l; break;
+    case "1oo2": s = (2 - b) * l; break;
+    case "1oo3": s = (3 - 2 * b) * l; break;
+    case "2oo2": s = 2 * Math.pow((1 - b) * l, 2) * m + b * l; break;
+    case "2oo3": s = 6 * Math.pow((1 - b) * l, 2) * m + b * l; break;
+  }
+  fill("stOut", [kv("STR", sciE(s) + " /h"), kv("연간 오동작 트립", sci(s * Y) + " 회/yr"), kv("MTTF_spurious", s > 0 ? sci(1 / s / Y) + " 년" : "—")]);
+}
+
+/* ---------- Quiz ---------- */
+var QZ = [
+["IEC 61508 시리즈에서 규범(normative)인 부는?", ["1–7부 전부","1–4부","1–3부","1, 2, 3, 6부"], 1, "1–4부가 규범(기본 안전 출판물), 5–7부는 참고입니다. 계산식이 있는 61508-6도 참고입니다. (1.2절)"],
+["IEC 61511-1을 적용하지 않는 경우는?", ["LVL로 안전 PLC 응용 프로그램 작성","Prior use 근거로 송신기 선정","제조사가 장치의 SIS 적합성을 주장하기 위한 개발","자산 보호 목적의 SIF"], 2, "제조사의 적합성 주장은 61508-2·3 대상입니다. 자산 보호에도 61511을 적용할 수 있습니다. (1.2절)"],
+["FVL로 SIS 응용 프로그램을 개발할 때 따르는 표준은?", ["IEC 61511-1 §12","IEC 61508-3","IEC 61511-3","IEC 61508-6 부속서 E"], 1, "61511-1 그림 3: FVL 응용 프로그램과 임베디드 소프트웨어는 61508-3. (1.2, 11.1절)"],
+["IEC 61508 2판의 저빈도 요구 모드 조건은?", ["요구 빈도 연 1회 이하","요구 빈도 연 10회 이하","요구 빈도가 증명시험 빈도의 2배 이하","요구 빈도 월 1회 이하"], 0, "2판은 연 1회. '증명시험 빈도의 2배'는 1판의 추가 조건이며 식 (3.6)의 교차점입니다. (3.4절)"],
+["PFDavg = 1.0×10⁻²인 SIF의 SIL은?", ["SIL 1","SIL 2","SIL 3","경계이므로 SIL 1·2 모두 가능"], 0, "SIL 2는 10⁻³ 이상 10⁻² 미만. 10⁻²는 SIL 1 범위입니다(RRF 100 = SIL 1). (4.1절)"],
+["위험이 존재하기 전에 반드시 수행해야 하는 FSA 단계는?", ["단계 1","단계 2","단계 3","단계 4"], 2, "단계 3: 설치·시운전·확인과 운전 절차가 갖춰진 뒤, 위험 존재 전. (2.5절)"],
+["61511의 FSA 팀 요건으로 옳은 것은?", ["외부 인증기관 평가자가 반드시 포함","프로젝트 설계팀에 속하지 않은 선임 역량자 1명 이상 포함","SIL 3 이상일 때만 독립 조직이 수행","프로젝트 관리자가 팀장"], 1, "61511은 61508-1의 독립성 표 대신 이 요건을 둡니다. (2.5절)"],
+["'설치된 SIS가 SRS를 만족하는지' 확인하는 활동은?", ["검증(verification)","안전 확인(validation)","기능안전 감사","FAT"], 1, "§15 안전 확인. 검증은 단계별 출력의 요건 충족 확인입니다. (2.4절)"],
+["FAT의 성격으로 옳은 것은?", ["안전 확인(validation)","설계 단계의 검증 활동","FSA 단계 2","운전 단계 활동"], 1, "§13 FAT는 검증 활동이며 2판에서 권고 조항입니다. (2.4절)"],
+["BPCS 보호계층 하나에 주장할 수 있는 최대 위험저감은?", ["2","10","100","제한 없음"], 1, "§9.3.2: RRF ≤ 10(PFD ≥ 0.1). (4.2절)"],
+["BPCS 고장이 원인일 때 주장할 수 있는 BPCS 보호계층 수는?", ["0개","최대 1개","최대 2개","독립이면 제한 없음"], 1, "§9.3.4: 원인이 BPCS와 무관하면 최대 2개. (4.2절)"],
+["주 컨트롤러와 hot backup 컨트롤러에 대한 설명으로 옳은 것은?", ["독립 보호계층 2개로 볼 수 있다","공통원인고장을 겪으므로 독립으로 보지 않는다","RRF 100까지 주장 가능","SIS로 분류된다"], 1, "§9.3.5 주석. (4.2절)"],
+["61511 비준수 BPCS 고장을 원인으로 쓸 때 위험 고장률 하한은?", ["10⁻³/h","10⁻⁴/h","10⁻⁵/h","10⁻⁶/h"], 2, "10⁻⁵/h보다 낮게 가정하지 않습니다(연 약 0.09회). (4.2절)"],
+["위험 그래프의 매개변수 조합은?", ["C, F, P, W","S, O, D, R","C, L, E, P","F, N, P, D"], 0, "결과, 노출, 회피 가능성, 요구율. (4.3절)"],
+["LOPA에서 SIF 요구율을 줄이는 것은?", ["SIF 뒤에 작동하는 PSV","점화 확률(CM)","SIF보다 먼저 작동하는 독립 경보·운전원 대응","방유제"], 2, "SIF 이전 IPL만 요구율을 줄입니다. 식 (4.3). (4.4.5절)"],
+["61511 2판 SRS에 새로 추가된 항목은?", ["SIF의 SIL","트립 설정점","각 SIF 관련 현장 입출력 장치 목록","수동 정지 요구"], 2, "또 하나의 신설 예는 증명시험 이행 요구입니다. 27→29항목. (5.1절)"],
+["λS 300 FIT, λDD 600 FIT, λDU 100 FIT인 요소의 SFF는?", ["75%","85.7%","90%","60%"], 2, "SFF = 900/1000 = 90%. 85.7%는 DC(600/700). (6.2절)"],
+["동시 시험되는 독립 1oo2(CCF·수리 무시)의 PFDavg는?", ["(λT)²/4","(λT)²/3","(λT)²/2","λT/2"], 1, "곱의 평균. 평균의 곱 (λT)²/4는 25% 과소. (6.4절)"],
+["2oo3(CCF·수리 무시)의 PFDavg는?", ["(λT)²/3","3(λT)²/4","(λT)²","(λT)³/4"], 2, "3·(λT)²/3 = (λT)². (6.4절)"],
+["IEC 61508-6 t_GE의 증명시험 항은?", ["T₁/2","T₁/3","T₁/4","T₁"], 1, "두 번째 고장이 겹친 상태의 평균 지속 시간. (7.2절)"],
+["고빈도 모드 1oo1의 PFH는?", ["λDU·T₁/2","λDU + λDD","λDU","λDD·MTTR"], 2, "식 (7.12). (7.4절)"],
+["IEC 61508-6 표 D.5에서 2oo3의 β 배율은?", ["0.5","1.0","1.5","2.0"], 2, "1oo3은 0.5. PDS C₂oo₃는 2.0. (7.5절)"],
+["부속서 D로 정하는 센서·최종요소의 β 범위는?", ["0.1–1%","0.5–5%","1–10%","10–20%"], 2, "로직 서브시스템은 0.5–5%. (9.3절)"],
+["PTC가 100% 미만일 때 결과를 크게 좌우하게 되는 변수는?", ["MTTR","T₂(mission time)","λSD","응답시간"], 1, "미검출 몫이 T₂/2 동안 쌓입니다. 식 (7.20). (7.6절)"],
+["Route 1H에서 Type B, SFF 75%, HFT 1 요소의 최대 SIL은?", ["SIL 1","SIL 2","SIL 3","SIL 4"], 1, "Type B 60–90% 행: HFT 0 SIL 1, HFT 1 SIL 2, HFT 2 SIL 3. (8.3절)"],
+["Route 1H에서 Type A, SFF 50%, HFT 0 요소의 최대 SIL은?", ["불허","SIL 1","SIL 2","SIL 3"], 1, "Type B였다면 불허입니다. (8.3절)"],
+["61511-1 표 6에서 저빈도 SIL 3의 최소 HFT는?", ["0","1","2","SFF에 따라 다름"], 1, "2판 표는 SFF를 쓰지 않습니다. (8.4절)"],
+["61511-1 표 6에서 고빈도 SIL 2의 최소 HFT는?", ["0","1","2","3"], 1, "저빈도 SIL 2는 0. (8.4절)"],
+["Type A 요소의 조건이 아닌 것은?", ["모든 고장 모드가 잘 정의됨","결함 상태 거동을 완전히 결정 가능","고장률 주장을 뒷받침할 신뢰 데이터","SIL 인증서 보유"], 3, "인증서는 Type 판정 조건이 아닙니다. (8.2절)"],
+["'Prior use' 장치 선정 근거를 정의하는 표준은?", ["IEC 61508-2","IEC 61511-1","IEC 61508-7","ISO 14224"], 1, "61511-1 §11.5.3. 61508의 대응 개념은 proven in use. (8.5절)"],
+["SC 3 센서, SC 2 로직, SC 3 최종요소로 된 SIF의 SC는?", ["SC 3","SC 2","가중 평균","SC 4"], 1, "가장 낮은 값으로 제한됩니다. (8.5절)"],
+["61508-3 도구 분류에서 컴파일러는?", ["T1","T2","T3","분류 대상 아님"], 2, "실행 코드에 기여하는 출력을 만듭니다. (11.5절)"],
+["응용 프로그램이 안전·비안전 기능을 함께 구현할 때 61511의 요구는?", ["비안전 부분은 적용 대상 아님","전체를 SIS로 보고 비간섭을 입증","비안전 부분만 61508-3","금지"], 1, "§12.2.4. (11.2절)"],
+["공통모드고장의 설명으로 옳은 것은?", ["다른 원인으로 같은 시각에 생긴 고장","CCF 중 같은 방식으로 고장 나는 경우","한 장치에서 여러 모드 동시 발생","BPCS와 SIS의 동시 고장 전부"], 1, "2판은 CCF와 공통모드고장 정의를 구분했습니다. (1.4절)"],
+["β를 줄이는 가장 직접적인 수단은?", ["MTTR 단축","물리적 분리와 기술 다양성","증명시험 주기 단축","SFF 향상"], 1, "결합 요인을 끊는 수단입니다. (9.5절)"],
+["같은 채널 고장률일 때 오동작 트립률이 가장 낮은 구조는?", ["1oo1","1oo2","2oo2","1oo3"], 2, "두 채널이 함께 트립해야 합니다. 대신 PFD는 나빠집니다. (10.8절)"],
+["무통전 트립의 주된 장점은?", ["오동작 트립 감소","전원·배선 상실이 안전 동작으로 이어짐","배선 감시 불필요로 PFD 0","UPS 불필요"], 1, "(10.6절)"],
+["61511 2판의 bypass 신설 요건으로 옳은 것은?", ["bypass 전면 금지","모든 bypass 상태 기록과 승인·표시","운전원 재량","bypass 중 PFD 재계산"], 1, "§16.2.7, 보상 조치는 §16.2.3. (10.7절)"],
+["61511 §11.9 신뢰성 데이터 요건이 아닌 것은?", ["신뢰할 만함(credible)","추적 가능(traceable)","제3자 인증 필수","불확실성 평가"], 2, "credible, traceable, documented, justified, 현장 피드백, 불확실성 평가. (6.6절)"],
+["누적 운전시간 τ 동안 고장이 없을 때 70% 단측 상한은?", ["0","0.5/τ","약 1.2/τ","약 2.3/τ"], 2, "−ln(0.3) = 1.204. 2.303/τ는 90% 상한. (6.6절)"]
+];
+var QKEY = "fse-quiz-answers-v1";
+function loadAns(){ try { var s = localStorage.getItem(QKEY); return s ? JSON.parse(s) : {}; } catch(e) { return {}; } }
+function saveAns(a){ try { localStorage.setItem(QKEY, JSON.stringify(a)); } catch(e) {} }
+var answers = {};
+function buildQuiz(){
+  var host = $("quiz"); if (!host) return;
+  answers = loadAns();
+  host.textContent = "";
+  QZ.forEach(function(q, i){
+    var box = document.createElement("div"); box.className = "q"; box.id = "q" + (i + 1);
+    var h = document.createElement("div"); h.className = "qh";
+    var n = document.createElement("span"); n.className = "qn"; n.textContent = "Q" + String(i + 1).padStart(2, "0");
+    var t = document.createElement("span"); t.className = "qt"; t.textContent = q[0];
+    h.appendChild(n); h.appendChild(t); box.appendChild(h);
+    var opts = document.createElement("div"); opts.className = "opts"; opts.setAttribute("role", "radiogroup");
+    q[1].forEach(function(o, j){
+      var lab = document.createElement("label");
+      var r = document.createElement("input"); r.type = "radio"; r.name = "qz" + i; r.id = "qz" + i + "_" + j; r.value = j;
+      lab.htmlFor = r.id;
+      var sp = document.createElement("span"); sp.textContent = String.fromCharCode(97 + j) + ") " + o;
+      lab.appendChild(r); lab.appendChild(sp); opts.appendChild(lab);
+      r.addEventListener("change", function(){ answers[i] = j; saveAns(answers); mark(i); score(); });
+    });
+    box.appendChild(opts);
+    var why = document.createElement("div"); why.className = "why"; why.hidden = true; box.appendChild(why);
+    host.appendChild(box);
+    if (answers[i] !== undefined) { var rr = $("qz" + i + "_" + answers[i]); if (rr) rr.checked = true; mark(i); }
+  });
+  score();
+}
+function mark(i){
+  var q = QZ[i], box = $("q" + (i + 1)); if (!box) return;
+  var labels = box.querySelectorAll("label");
+  labels.forEach(function(l, j){ l.classList.remove("right", "wrong"); if (j === q[2]) l.classList.add("right"); else if (j === answers[i]) l.classList.add("wrong"); });
+  var why = box.querySelector(".why"); why.hidden = false;
+  why.textContent = (answers[i] === q[2] ? "정답. " : "오답. 정답은 " + String.fromCharCode(97 + q[2]) + ". ") + q[3];
+}
+function score(){
+  var n = 0, c = 0; Object.keys(answers).forEach(function(k){ n++; if (answers[k] === QZ[k][2]) c++; });
+  var s = $("qzScore"); if (s) s.textContent = n + " / " + QZ.length + " 응답 · 정답 " + c + (n ? " (" + Math.round(100 * c / n) + "%)" : "");
+}
+
+/* ---------- TOC ---------- */
+function toc(){
+  var d = $("tocDetails"); if (d && window.innerWidth < 1080) d.open = false;
+  var links = {}; document.querySelectorAll(".toc a").forEach(function(a){ links[a.getAttribute("href").slice(1)] = a; });
+  if (!("IntersectionObserver" in window)) return;
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if (e.isIntersecting) { Object.keys(links).forEach(function(k){ links[k].classList.remove("active"); }); var a = links[e.target.id]; if (a) a.classList.add("active"); } });
+  }, {rootMargin: "-20% 0px -70% 0px"});
+  document.querySelectorAll("section.chapter").forEach(function(s){ io.observe(s); });
+  document.querySelectorAll(".toc a").forEach(function(a){ a.addEventListener("click", function(){ if (d && window.innerWidth < 1080) d.open = false; }); });
+}
+
+/* ---------- boot ---------- */
+function boot(){
+  toc();
+  onInputs(["hzLam","hzT"], toolHz);
+  onInputs(["lpFt","lpIe1","lpEc1","lpIe2","lpEc2","lpB1","lpB2","lpA1","lpCm1","lpCm2","lpCm3"], toolLopa);
+  onInputs(["chN","chTau","chCl"], toolChi);
+  onInputs(["pfArch","pfLdu","pfLdd","pfLsd","pfT1","pfMttr","pfMrt","pfB","pfBd","pfPtc","pfT2","pfD5"], toolPfd);
+  onInputs(["acType","acSff","acHft","acSil","acMode"], toolArch);
+  onInputs(["stArch","stLs","stLdd","stB","stM","stDd"], toolStr);
+  var e1 = $("pfEx1"), e2 = $("pfEx2"), e3 = $("pfEx3");
+  if (e1) e1.addEventListener("click", function(){ setPfd({pfArch:"2oo3", pfLdu:"5e-7", pfLdd:"8e-7", pfLsd:"0", pfT1:"8760", pfMttr:"8", pfMrt:"8", pfB:"0.10", pfBd:"0.10", pfPtc:"1", pfT2:"87600", pfD5:false}); });
+  if (e2) e2.addEventListener("click", function(){ setPfd({pfArch:"1oo2", pfLdu:"2.1e-6", pfLdd:"4e-7", pfLsd:"0", pfT1:"8760", pfMttr:"120", pfMrt:"120", pfB:"0.10", pfBd:"0.10", pfPtc:"1", pfT2:"87600", pfD5:false}); });
+  if (e3) e3.addEventListener("click", function(){ setPfd({pfArch:"1oo2", pfLdu:"2.1e-6", pfLdd:"4e-7", pfLsd:"0", pfT1:"8760", pfMttr:"120", pfMrt:"120", pfB:"0.10", pfBd:"0.10", pfPtc:"0.85", pfT2:"87600", pfD5:false}); });
+  buildQuiz();
+  var rs = $("qzReset"); if (rs) rs.addEventListener("click", function(){ answers = {}; saveAns(answers); buildQuiz(); });
+  var resizeT; window.addEventListener("resize", function(){ clearTimeout(resizeT); resizeT = setTimeout(function(){ toolHz(); toolPfd(); }, 200); });
+}
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
+})();
+</script>
+
+</html>
