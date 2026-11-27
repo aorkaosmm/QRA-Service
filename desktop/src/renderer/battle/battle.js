@@ -13,12 +13,14 @@ import {
 import { spriteCanvas, silhouette, gearSig } from '../shared/sprite-canvas.js';
 import { setSoundEnabled, sfx } from '../shared/sfx.js';
 
-const CSS_PX = 3; // 도트 1칸 = CSS 3px
+const canvasEl = document.getElementById('stage');
+// 도트 1칸 = CSS 몇 px (기본 3, 모바일처럼 좁은 곳은 <canvas data-scale="2">)
+const CSS_PX = Number(canvasEl && canvasEl.dataset.scale) || 3;
 const GRAVITY = 560; // 도트/초²
 const HERO_SPEED = 30;
 const RARITY_COLOR = { common: '#d6dae2', rare: '#4aa8ff', epic: '#c07bff', legendary: '#ffb52e' };
 
-const canvas = document.getElementById('stage');
+const canvas = canvasEl;
 const ctx = canvas.getContext('2d');
 let S = 3; // 기기 픽셀 / 도트
 let W = 400; // 도트 단위 폭
@@ -59,12 +61,17 @@ const game = {
 
 /* ───────────── 화면 크기 ───────────── */
 
+/** 캔버스를 감싼 요소 크기에 맞춘다 (Electron 전투 창에서는 창 전체, 모바일 시안에서는 전투 띠) */
 function resize() {
   dpr = window.devicePixelRatio || 1;
-  canvas.width = Math.max(1, Math.round(window.innerWidth * dpr));
-  canvas.height = Math.max(1, Math.round(window.innerHeight * dpr));
-  canvas.style.width = `${window.innerWidth}px`;
-  canvas.style.height = `${window.innerHeight}px`;
+  const host = canvas.parentElement || document.body;
+  const rect = host.getBoundingClientRect();
+  const cssW = Math.max(1, Math.round(rect.width || window.innerWidth));
+  const cssH = Math.max(1, Math.round(rect.height || window.innerHeight));
+  canvas.width = Math.max(1, Math.round(cssW * dpr));
+  canvas.height = Math.max(1, Math.round(cssH * dpr));
+  canvas.style.width = `${cssW}px`;
+  canvas.style.height = `${cssH}px`;
   S = Math.max(1, Math.round(CSS_PX * dpr));
   W = Math.ceil(canvas.width / S);
   H = Math.ceil(canvas.height / S);
@@ -865,7 +872,8 @@ function drawBubble(text, x, y, k) {
 /* ───────────── 입력 (클릭 통과 + 호버 판정) ───────────── */
 
 function worldPoint(e) {
-  return { x: (e.clientX * dpr) / S, y: (canvas.height - e.clientY * dpr) / S };
+  const r = canvas.getBoundingClientRect();
+  return { x: ((e.clientX - r.left) * dpr) / S, y: (canvas.height - (e.clientY - r.top) * dpr) / S };
 }
 
 function hitTest(p) {
@@ -1003,14 +1011,16 @@ async function main() {
   const init = await game.api.init();
   resize();
   window.addEventListener('resize', resize);
+  if (window.ResizeObserver && canvas.parentElement) new ResizeObserver(() => resize()).observe(canvas.parentElement);
   game.api.onLayout && game.api.onLayout(() => setTimeout(resize, 30));
   applyState(init.state);
   game.hero = makeHero();
   game.nextKing = game.kingEvery;
   game.api.onState(applyState);
   game.api.onEvents(onEvents);
-  window.addEventListener('mousemove', onMove);
-  window.addEventListener('mousedown', onDown);
+  // 포인터 이벤트: 마우스(Windows)와 터치(모바일) 모두
+  canvas.addEventListener('pointermove', onMove);
+  canvas.addEventListener('pointerdown', onDown);
   document.addEventListener('mouseleave', () => { game.hover = null; setIgnore(true); });
   window.addEventListener('beforeunload', flushReport);
   try { await document.fonts.load('12px Galmuri11'); } catch { /* 글꼴 없으면 기본 글꼴 */ }

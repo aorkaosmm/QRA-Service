@@ -162,7 +162,8 @@ async function main() {
     const done = dailies.filter((d) => isDailyDone(d, ctx.today)).length + tasks.filter((x) => isTaskDone(x, ctx.today)).length;
     $('today-prog').textContent = `${done}/${dailies.length + tasks.length}`;
     $('btn-pin').classList.toggle('on', s.settings.widgetAlwaysOnTop);
-    document.documentElement.dataset.theme = s.settings.theme;
+    // 웹(모바일 시안)에서는 보는 사람의 화면 테마를 따른다
+    if (!ctx.isWeb) document.documentElement.dataset.theme = s.settings.theme;
     document.documentElement.style.setProperty('--opacity', String(s.settings.widgetOpacity));
     setSoundEnabled(s.settings.sound);
     renderHp();

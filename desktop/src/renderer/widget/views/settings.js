@@ -52,7 +52,7 @@ export const settingsView = {
       <div class="section-title">위젯</div>
       <div class="row-setting"><div>항상 위에 표시<div class="desc">다른 창보다 위에 둡니다</div></div>${toggle('widgetAlwaysOnTop', s.widgetAlwaysOnTop)}</div>
       <div class="row-setting"><div>배경 불투명도</div><input type="range" min="50" max="100" value="${Math.round(s.widgetOpacity * 100)}" data-setting-range="widgetOpacity" style="width:130px"></div>
-      <div class="row-setting"><div>테마</div><div class="seg">${[['dark', '다크'], ['light', '라이트']].map(([k, l]) => `<button data-act="set" data-key="theme" data-v="${k}" class="${s.theme === k ? 'on' : ''}">${l}</button>`).join('')}</div></div>
+      ${isWeb ? '' : `<div class="row-setting"><div>테마</div><div class="seg">${[['dark', '다크'], ['light', '라이트']].map(([k, l]) => `<button data-act="set" data-key="theme" data-v="${k}" class="${s.theme === k ? 'on' : ''}">${l}</button>`).join('')}</div></div>`}
       <div class="row-setting"><div>효과음</div>${toggle('sound', s.sound)}</div>
 
       <div class="section-title">작업표시줄 전투</div>
@@ -70,7 +70,7 @@ export const settingsView = {
 
       <div class="section-title">데이터</div>
       <div class="seg" style="gap:6px">
-        <button class="btn small" data-act="export">내보내기</button>
+        ${isWeb ? '' : '<button class="btn small" data-act="export">내보내기</button>'}
         <button class="btn small" data-act="import">가져오기</button>
         ${isWeb ? '' : '<button class="btn small" data-act="open-folder">저장 폴더</button>'}
         <button class="btn small danger" data-act="reset">초기화</button>
