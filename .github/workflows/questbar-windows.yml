@@ -1,4 +1,5 @@
-# QuestBar Windows 설치 파일 빌드 (questbar/ 폴더가 바뀔 때, 또는 Actions 탭에서 수동 실행)
+# Calendar RPG (QuestBar) Windows 설치 파일 빌드 (questbar/ 폴더가 바뀔 때, 또는 Actions 탭에서 수동 실행)
+# Calendar-RPG 브랜치에 푸시하면 Releases 에 바로 받을 수 있는 다운로드 링크도 올린다.
 name: QuestBar Windows build
 
 on:
@@ -9,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write # Releases 업로드용
 
 concurrency:
   group: questbar-windows-${{ github.ref }}
@@ -50,6 +51,30 @@ jobs:
             questbar/dist/QuestBar-Setup-*.exe
             questbar/dist/QuestBar-Portable-*.exe
           if-no-files-found: error
+
+      - name: Publish download links (Calendar-RPG branch only)
+        if: github.ref == 'refs/heads/Calendar-RPG'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ver = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          $tag = "calendar-rpg-v$ver"
+          $files = @(Get-ChildItem dist -Filter 'QuestBar-*.exe' | ForEach-Object { $_.FullName })
+          if ($files.Count -lt 2) { throw "installers not found" }
+          $notes = @"
+          Calendar RPG (QuestBar) Windows 위젯 $ver
+
+          - QuestBar-Setup-$ver.exe : 설치판 (Windows 알림, 시작 메뉴, Windows 시작 시 실행)
+          - QuestBar-Portable-$ver.exe : 설치 없이 바로 실행
+
+          코드 서명이 없어 처음 실행할 때 'Windows의 PC 보호' 창이 뜨면 [추가 정보] → [실행]을 누르세요.
+          "@
+          # 같은 버전으로 다시 빌드하면 기존 릴리스를 지우고 새 파일로 올린다 (다운로드 주소는 그대로)
+          try { gh release delete $tag --yes --cleanup-tag 2>$null } catch { }
+          $global:LASTEXITCODE = 0
+          gh release create $tag @files --target $env:GITHUB_SHA --title "Calendar RPG (QuestBar) $ver" --notes $notes --prerelease
+          if ($LASTEXITCODE -ne 0) { throw "release create failed" }
 
       # 실제 Windows에서 두 창을 띄워 보상 처리·화면 캡처까지 확인 (실패해도 설치 파일은 위에서 이미 올라감)
       - name: Smoke test on Windows

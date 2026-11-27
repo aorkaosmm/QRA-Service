@@ -1,4 +1,4 @@
-# QuestBar — 일정·일일임무 RPG 캘린더 위젯 (Windows)
+# QuestBar — Calendar RPG의 Windows 위젯
 
 달력 위젯에 일정을 걸어 두고, 할 일·공부·업무·식사 같은 일일임무를 끝낼 때마다 **경험치와 전리품(골드 + 일반/희귀/영웅/전설 장비)** 을 얻어 도트 용사를 키우는 앱입니다.
 용사는 **작업표시줄 위**에서 슬라임과 싸웁니다. 맞으면 뒤로 튕겨 나가고 머리 위로 데미지 숫자가 떠오르며, 임무를 끝내면 하늘에서 보물 상자가 떨어집니다.
@@ -10,15 +10,15 @@
 ## 받기 · 실행
 
 ### 1) 설치 파일 받기 (권장)
-`questbar/` 폴더가 바뀌어 푸시되면 GitHub Actions가 Windows에서 설치 파일을 자동으로 만듭니다.
 
-1. 저장소 **Actions** 탭 → **QuestBar Windows build** → 가장 최근 실행
-2. 아래쪽 **Artifacts** 의 `QuestBar-Windows` 내려받기 → 압축 풀기
-   - `QuestBar-Setup-*.exe` : 설치판 (시작 메뉴·바탕화면 바로가기, 알림, Windows 시작 시 실행 지원)
-   - `QuestBar-Portable-*.exe` : 설치 없이 바로 실행
-3. 코드 서명이 없어서 처음 실행할 때 "Windows의 PC 보호" 창이 뜰 수 있어요 → **추가 정보 → 실행**
+| 파일 | 설명 |
+|---|---|
+| [QuestBar-Setup-0.1.0.exe](https://github.com/aorkaosmm/QRA-Service/releases/download/calendar-rpg-v0.1.0/QuestBar-Setup-0.1.0.exe) | 설치판 (시작 메뉴·바탕화면 바로가기, 알림, Windows 시작 시 실행 지원) |
+| [QuestBar-Portable-0.1.0.exe](https://github.com/aorkaosmm/QRA-Service/releases/download/calendar-rpg-v0.1.0/QuestBar-Portable-0.1.0.exe) | 설치 없이 바로 실행 |
 
-Actions 탭에서 **Run workflow** 버튼으로 직접 다시 빌드할 수도 있습니다.
+- 코드 서명이 없어서 처음 실행할 때 "Windows의 PC 보호" 창이 뜰 수 있어요 → **추가 정보 → 실행**
+- `Calendar-RPG` 브랜치에 `questbar/`가 바뀌어 푸시되면 GitHub Actions가 Windows에서 다시 빌드해 위 링크의 파일을 새로 올립니다(같은 버전이면 주소 그대로).
+- 다른 브랜치의 빌드 결과는 저장소 **Actions** 탭 → **QuestBar Windows build** → 실행 기록의 **Artifacts**(`QuestBar-Windows`)에서 받을 수 있어요.
 
 ### 2) 소스에서 바로 실행
 [Node.js](https://nodejs.org/) 22 LTS 이상을 설치한 뒤:
