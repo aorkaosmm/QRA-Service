@@ -3,6 +3,7 @@
   "productName": "QuestBar",
   "version": "0.1.0",
   "description": "일정·일일임무를 RPG처럼 — 작업표시줄 위에서 싸우는 도트 용사 캘린더 위젯",
+  "author": "QuestBar",
   "type": "module",
   "main": "src/main/main.js",
   "private": true,
@@ -18,5 +19,53 @@
   "devDependencies": {
     "electron": "45.5.0",
     "electron-builder": "26.18.0"
+  },
+  "build": {
+    "appId": "com.questbar.app",
+    "productName": "QuestBar",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "package.json",
+      "src/**/*",
+      "assets/**/*",
+      "!src/renderer/preview.html"
+    ],
+    "asar": true,
+    "asarUnpack": [
+      "assets/icons/**"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "QuestBar",
+      "runAfterFinish": true,
+      "artifactName": "QuestBar-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "QuestBar-Portable-${version}.${ext}"
+    }
   }
 }
