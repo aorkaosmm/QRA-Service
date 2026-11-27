@@ -1,0 +1,12 @@
+{
+  "name": "calendar-rpg-mobile-mockup",
+  "private": true,
+  "type": "module",
+  "description": "Calendar RPG 모바일 시안: 반응형 웹 한 파일로 묶기",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.10"
+  }
+}

@@ -19,6 +19,7 @@
 | 폴더 | 내용 |
 |---|---|
 | [`desktop/`](desktop/) | Windows 위젯 앱 (Electron) — 사용법·보상 규칙·개발 방법은 [`desktop/README.md`](desktop/README.md) |
+| [`mobile/`](mobile/) | 모바일 앱 시안 (반응형 웹) — 같은 게임 엔진으로 동작하는 앱 화면·홈 화면 위젯·플랫폼별 가능 범위 |
 | `.github/workflows/` | Windows 설치 파일 빌드·릴리스 자동화 |
 
 게임 규칙 엔진(`desktop/src/core`)은 순수 JS라 모바일 앱·온라인 소셜 서버에서 그대로 재사용합니다.
