@@ -210,13 +210,27 @@ async function main() {
       return;
     }
     const scroll = resetScroll ? 0 : viewEl.scrollTop;
-    const focusId = document.activeElement && document.activeElement.id;
+    const active = document.activeElement;
+    const focusId = active && viewEl.contains(active) ? active.id : null;
+    const caret = focusId && typeof active.selectionStart === 'number' ? [active.selectionStart, active.selectionEnd] : null;
+    // 같은 탭을 다시 그릴 때는 입력 중인 글자를 지키기 (전투 보고로 골드가 바뀌어도 입력이 사라지지 않게)
+    const drafts = {};
+    if (!resetScroll && lastTab === ctx.ui.tab) {
+      viewEl.querySelectorAll('input[id], textarea[id]').forEach((el) => { drafts[el.id] = el.value; });
+    }
     viewEl.innerHTML = view.render(ctx);
     if (view.bind) view.bind(viewEl, ctx);
+    for (const [id, value] of Object.entries(drafts)) {
+      const el = document.getElementById(id);
+      if (el && viewEl.contains(el) && el.type !== 'range') el.value = value;
+    }
     viewEl.scrollTop = scroll;
     if (focusId) {
       const f = document.getElementById(focusId);
-      if (f && viewEl.contains(f)) f.focus();
+      if (f && viewEl.contains(f)) {
+        f.focus();
+        if (caret) { try { f.setSelectionRange(caret[0], caret[1]); } catch { /* 숫자 입력 등 */ } }
+      }
     }
     lastSig = sig;
     lastTab = ctx.ui.tab;
