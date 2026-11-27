@@ -107,7 +107,29 @@ async function main() {
   $('btn-min').addEventListener('click', () => api.windowCmd('minimize'));
   $('btn-close').addEventListener('click', () => api.windowCmd('hide'));
   $('hero-portrait').addEventListener('click', () => switchTab('bag'));
-  if (ctx.isWeb) document.querySelector('.win-btns').style.display = 'none';
+  if (ctx.isWeb) {
+    document.querySelector('.win-btns').style.display = 'none';
+    $('resize-grip').style.display = 'none';
+  }
+  // 크기 조절 손잡이: 끌면 창 크기를 메인 프로세스에 요청
+  $('resize-grip').addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    const grip = e.currentTarget;
+    grip.setPointerCapture(e.pointerId);
+    const start = { x: e.screenX, y: e.screenY, w: window.outerWidth, h: window.outerHeight };
+    let raf = 0;
+    const move = (ev) => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => api.windowCmd({ type: 'resize', width: start.w + ev.screenX - start.x, height: start.h + ev.screenY - start.y }));
+    };
+    const up = () => {
+      grip.removeEventListener('pointermove', move);
+      grip.removeEventListener('pointerup', up);
+      api.windowCmd({ type: 'resize-end' });
+    };
+    grip.addEventListener('pointermove', move);
+    grip.addEventListener('pointerup', up);
+  });
 
   const portrait = $('hero-portrait');
   const dpr = () => Math.max(1, window.devicePixelRatio || 1);

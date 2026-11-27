@@ -7,8 +7,10 @@ import { rasterize } from '../src/shared/pixel.js';
 import { SLIME_FRAMES, SLIME_COLORS, CROWN, CROWN_PALETTE } from '../src/shared/sprites.js';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
-const outDir = path.join(root, 'build');
+const outDir = path.join(root, 'build'); // 설치 파일용 (electron-builder)
+const runDir = path.join(root, 'assets', 'icons'); // 앱 실행 중에 쓰는 아이콘
 fs.mkdirSync(outDir, { recursive: true });
+fs.mkdirSync(runDir, { recursive: true });
 
 // 16×16 원본 합성
 function base16() {
@@ -30,8 +32,10 @@ function scaled(img, size, pad = 0) {
 const img = base16();
 const sizes = [16, 32, 48, 64, 128, 256];
 const pngs = sizes.map((size) => ({ size, png: scaled(img, size, size >= 64 ? size / 16 : 0).png() }));
-fs.writeFileSync(path.join(outDir, 'icon.png'), pngs.find((p) => p.size === 256).png);
+const png256 = pngs.find((p) => p.size === 256).png;
+fs.writeFileSync(path.join(outDir, 'icon.png'), png256);
 fs.writeFileSync(path.join(outDir, 'icon.ico'), encodeICO(pngs));
-fs.writeFileSync(path.join(outDir, 'tray.png'), scaled(img, 16).png());
-fs.writeFileSync(path.join(outDir, 'tray@2x.png'), scaled(img, 32).png());
-console.log('icons →', outDir);
+fs.writeFileSync(path.join(runDir, 'icon.png'), png256);
+fs.writeFileSync(path.join(runDir, 'tray.png'), scaled(img, 16).png());
+fs.writeFileSync(path.join(runDir, 'tray@2x.png'), scaled(img, 32).png());
+console.log('icons →', outDir, runDir);

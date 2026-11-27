@@ -1,0 +1,67 @@
+# QuestBar Windows 설치 파일 빌드 (questbar/ 폴더가 바뀔 때, 또는 Actions 탭에서 수동 실행)
+name: QuestBar Windows build
+
+on:
+  push:
+    paths:
+      - 'questbar/**'
+      - '.github/workflows/questbar-windows.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: questbar
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: questbar/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build installer + portable exe
+        run: npx electron-builder --win nsis portable --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+      - name: Upload installers
+        uses: actions/upload-artifact@v4
+        with:
+          name: QuestBar-Windows
+          path: |
+            questbar/dist/QuestBar-Setup-*.exe
+            questbar/dist/QuestBar-Portable-*.exe
+          if-no-files-found: error
+
+      # 실제 Windows에서 두 창을 띄워 보상 처리·화면 캡처까지 확인 (실패해도 설치 파일은 위에서 이미 올라감)
+      - name: Smoke test on Windows
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $out = Join-Path $PWD 'smoke'
+          $p = Start-Process -FilePath 'dist\win-unpacked\QuestBar.exe' -ArgumentList '--smoke-test', "--smoke-out=$out" -PassThru
+          if (-not $p.WaitForExit(120000)) { $p.Kill(); throw 'smoke test timed out' }
+          Get-Content (Join-Path $out 'smoke-result.json')
+          if ($p.ExitCode -ne 0) { throw "smoke test failed: $($p.ExitCode)" }
+
+      - name: Upload smoke screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: QuestBar-smoke
+          path: questbar/smoke/
+          if-no-files-found: ignore

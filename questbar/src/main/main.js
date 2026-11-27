@@ -16,8 +16,10 @@ import { timedItemsForDay } from '../core/selectors.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..', '..');
 const PRELOAD = path.join(__dirname, 'preload.cjs');
-const ICON = path.join(ROOT, 'build', 'icon.png');
-const TRAY_ICON = path.join(ROOT, 'build', 'tray.png');
+const ICON = path.join(ROOT, 'assets', 'icons', 'icon.png');
+const TRAY_ICON = path.join(ROOT, 'assets', 'icons', 'tray.png');
+// Windows 알림은 asar 안의 파일을 못 읽으므로 풀어 둔 경로(app.asar.unpacked)를 쓴다
+const NOTIFY_ICON = ICON.replace(`app.asar${path.sep}`, `app.asar.unpacked${path.sep}`);
 
 const argValue = (name) => {
   const hit = process.argv.find((a) => a.startsWith(`${name}=`));
@@ -298,7 +300,7 @@ function checkReminders(today) {
       notified.add(key);
       const title = item.kind === 'daily' ? '⚔ 일일임무 시간이에요' : '📅 일정 알림';
       const body = `${item.time} ${item.title}${lead ? ` (${lead}분 전)` : ''}`;
-      const n = new Notification({ title, body, icon: ICON, silent: false });
+      const n = new Notification({ title, body, icon: NOTIFY_ICON, silent: false });
       n.on('click', () => showWidget());
       n.show();
     }
@@ -337,6 +339,18 @@ function registerIpc() {
   ipcMain.on('qb:window', (e, cmd) => {
     const win = BrowserWindow.fromWebContents(e.sender);
     if (!win || win !== widgetWin) return;
+    if (cmd && typeof cmd === 'object' && cmd.type === 'resize') {
+      const [minW, minH] = win.getMinimumSize();
+      const wa = screen.getDisplayMatching(win.getBounds()).workArea;
+      const width = Math.round(Math.min(wa.width, Math.max(minW, Number(cmd.width) || minW)));
+      const height = Math.round(Math.min(wa.height, Math.max(minH, Number(cmd.height) || minH)));
+      win.setSize(width, height);
+      return;
+    }
+    if (cmd && typeof cmd === 'object' && cmd.type === 'resize-end') {
+      win.emit('resized');
+      return;
+    }
     if (cmd === 'hide') win.hide();
     if (cmd === 'minimize') win.minimize();
     if (cmd === 'toggle-pin') dispatch({ type: 'settings/update', payload: { patch: { widgetAlwaysOnTop: !state.settings.widgetAlwaysOnTop } } });
