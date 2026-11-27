@@ -137,6 +137,18 @@ function scheduleNotifications(state) {
             smallIcon: 'ic_stat_quest',
           });
         }
+        // 필드 보스 5분 전 (매일 오후 8시 55분)
+        const fb = parseKey(day);
+        fb.setHours(20, 55, 0, 0);
+        if (fb.getTime() > now + 30 * 1000 && out.length < 60) {
+          out.push({
+            id: out.length + 1,
+            title: '⚔ 필드 보스 5분 전',
+            body: '오후 9시에 거대 황금 슬라임 왕이 나타나요! 던전 탭에서 입장하세요 (5분 · 20명)',
+            schedule: { at: fb, allowWhileIdle: true },
+            smallIcon: 'ic_stat_quest',
+          });
+        }
       }
       if (out.length) await LocalNotifications.schedule({ notifications: out });
     } catch (err) {

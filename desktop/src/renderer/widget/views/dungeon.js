@@ -676,6 +676,12 @@ export const dungeonView = {
       return raidBattle(el, ctx);
     }
     if (d.mode === 'day') return dayBattle(el, ctx);
+    // 오늘 1시간을 다 쓴 사냥은 바로 정산
+    const dayNow = dayStatus(ctx);
+    if (dayNow.active && dayNow.left <= 0) {
+      leave(ctx);
+      return undefined;
+    }
     // 허브: 시간 표시를 1초마다, 단계가 바뀌면(21시 등) 다시 그림
     const first = fieldBossStatus(ctx).key;
     hubTimer = setInterval(() => {

@@ -3,6 +3,7 @@ import { RARITIES } from '../../core/constants.js';
 import { dayKey, parseKey } from '../../core/dates.js';
 import { heroStats } from '../../core/progression.js';
 import { dailiesForDay, isDailyDone, tasksForDay, isTaskDone } from '../../core/selectors.js';
+import { fieldBossWindow } from '../../core/adventure.js';
 import { resolveApi } from '../shared/api.js';
 import { uiIcon, drawHero } from '../shared/sprite-canvas.js';
 import { setSoundEnabled, sfx } from '../shared/sfx.js';
@@ -191,7 +192,11 @@ async function main() {
     const unseen = ctx.state.inventory.filter((it) => !ctx.ui.seen.has(it.id)).length;
     const dailies = dailiesForDay(ctx.state, ctx.today);
     const left = dailies.filter((d) => !isDailyDone(d, ctx.today)).length;
-    const badges = { bag: unseen, today: left };
+    // 필드 보스 출현 중인데 아직 입장하지 않았으면 던전 탭에 '!'
+    const w = fieldBossWindow(Date.now());
+    const fb = ctx.state.fieldBoss;
+    const bossCall = w.phase === 'open' && !(fb.enteredAt && fb.day === w.day);
+    const badges = { bag: unseen, today: left, dungeon: bossCall ? '!' : 0 };
     $('tabs').innerHTML = TABS.map((tab) => `
       <button data-tab="${tab.key}" class="${ctx.ui.tab === tab.key ? 'active' : ''}" title="${tab.label} (Ctrl+${TABS.indexOf(tab) + 1})">
         ${uiIcon(tab.icon, 2)}<span>${tab.label}</span>
@@ -377,8 +382,9 @@ async function main() {
   ctx.chat = mountChat(ctx, api, { openGuilds });
   window.__calendarRpgBack = () => ctx.ui.tab === 'dungeon' && dungeonBack(ctx);
 
-  // 날짜가 바뀌었는지 1분마다 확인 (화면 갱신)
+  // 날짜가 바뀌었는지 1분마다 확인 (화면 갱신). 필드 보스 '!' 표시도 같이
   setInterval(() => {
+    renderTabs();
     const now = dayKey(Date.now(), ctx.state.settings.dayStartHour);
     if (now !== ctx.today) {
       ctx.today = now;

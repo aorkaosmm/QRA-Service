@@ -12,6 +12,7 @@ import { Store, migrateLegacyData } from './store.js';
 import { applyAction, createInitialState, migrate, ActionError } from '../core/engine.js';
 import { dayKey, timeToMinutes } from '../core/dates.js';
 import { timedItemsForDay } from '../core/selectors.js';
+import { FIELD_BOSS } from '../core/constants.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..', '..');
@@ -334,6 +335,18 @@ function checkReminders(today) {
       n.on('click', () => showWidget());
       n.show();
     }
+  }
+  // 필드 보스 예고: 오후 8시 55분 ~ 9시 4분 사이에 하루 한 번 (이미 입장했으면 생략)
+  const openMin = FIELD_BOSS.openHour * 60;
+  const fbKey = `${today}|fieldBoss`;
+  const fb = state.fieldBoss || {};
+  const entered = fb.enteredAt && new Date(fb.enteredAt).toDateString() === now.toDateString();
+  if (!notified.has(fbKey) && !entered && nowMin >= openMin - 5 && nowMin < openMin + 5) {
+    notified.add(fbKey);
+    const body = nowMin < openMin ? `오후 9시에 ${FIELD_BOSS.name}이(가) 나타나요! (5분 · 20명)` : `${FIELD_BOSS.name} 출현! 위젯의 던전 탭에서 입장하세요`;
+    const n = new Notification({ title: '⚔ 필드 보스', body, icon: NOTIFY_ICON, silent: false });
+    n.on('click', () => showWidget());
+    n.show();
   }
 }
 
