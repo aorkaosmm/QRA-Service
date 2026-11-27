@@ -1,0 +1,88 @@
+/* 공통: 글꼴(Galmuri, SIL OFL 1.1), 색 토큰, 리셋 */
+@font-face {
+  font-family: 'Galmuri11';
+  src: url('../../../assets/fonts/Galmuri11.woff2') format('woff2');
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Galmuri11';
+  src: url('../../../assets/fonts/Galmuri11-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Galmuri9';
+  src: url('../../../assets/fonts/Galmuri9.woff2') format('woff2');
+  font-weight: 400;
+  font-display: block;
+}
+
+:root {
+  --font: 'Galmuri11', 'Malgun Gothic', sans-serif;
+  --font-small: 'Galmuri9', 'Galmuri11', 'Malgun Gothic', sans-serif;
+  --ink: #0d0b14;
+  --bg: #17151f;
+  --panel: #211e2d;
+  --panel-2: #2a2639;
+  --line: #3a3452;
+  --line-soft: #2e2942;
+  --text: #ece9f5;
+  --muted: #9a94b0;
+  --faint: #6c6684;
+  --accent: #7fe3ff;
+  --accent-ink: #0b2a33;
+  --gold: #ffd447;
+  --hp: #ff4d6d;
+  --ok: #6fdc8c;
+  --warn: #ff9f5a;
+  --sun: #ff6b7a;
+  --sat: #6fb4ff;
+  --select: #3a3260;
+  --r-common: #c3c8d2;
+  --r-rare: #4aa8ff;
+  --r-epic: #c07bff;
+  --r-legendary: #ffb52e;
+  --opacity: 0.94;
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --ink: #2a2633;
+  --bg: #f6f2e7;
+  --panel: #fffdf7;
+  --panel-2: #f0eadb;
+  --line: #d6cdb8;
+  --line-soft: #e6dfcd;
+  --text: #2a2633;
+  --muted: #7a7387;
+  --faint: #a49eb2;
+  --accent: #1f8fb3;
+  --accent-ink: #ffffff;
+  --gold: #c28a14;
+  --sun: #e0465a;
+  --sat: #2f7de1;
+  --select: #e6ddff;
+  --r-common: #7d8594;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  font-family: var(--font);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text);
+  -webkit-font-smoothing: none;
+  user-select: none;
+}
+
+button, input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+.px { image-rendering: pixelated; image-rendering: crisp-edges; vertical-align: middle; }
