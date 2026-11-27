@@ -29,7 +29,8 @@ export function floatText(anchor, html, { cls = '', dx = 0, dy = 0, delay = 0 } 
   const host = root();
   if (!host) return;
   const hostRect = host.getBoundingClientRect();
-  const r = anchor ? anchor.getBoundingClientRect() : { left: hostRect.left + hostRect.width / 2, top: hostRect.top + 80, width: 0 };
+  let r = anchor && anchor.isConnected ? anchor.getBoundingClientRect() : null;
+  if (!r || (!r.width && !r.height)) r = { left: hostRect.left + hostRect.width / 2, top: hostRect.top + 70, width: 0 };
   const el = document.createElement('div');
   el.className = `float-text ${cls}`;
   el.innerHTML = html;

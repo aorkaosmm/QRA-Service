@@ -24,7 +24,7 @@ export const settingsView = {
           <div class="q-title">${esc(d.title)}</div>
           <div class="q-meta"><span>${CATEGORIES[d.category].label}</span><span>${daysText(d.days)}</span>${d.time ? `<span>${d.time}</span>` : ''}</div>
         </div>
-        <button class="icon-btn" data-act="edit-daily" data-id="${d.id}" title="수정">${uiIcon('edit', 1)}</button>
+        <button class="icon-btn" data-act="edit-daily" data-id="${d.id}" title="수정">${uiIcon('edit', 2)}</button>
       </div>`).join('');
 
     return `

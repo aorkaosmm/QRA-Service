@@ -25,7 +25,7 @@ const argValue = (name) => {
 };
 const IS_DEV = process.argv.includes('--dev');
 const IS_SMOKE = process.argv.includes('--smoke-test');
-const BATTLE_HEIGHT = 150;
+const BATTLE_HEIGHT = 190; // 투명·클릭 통과 영역이라 넉넉하게 (보상 연출 공간)
 
 if (IS_SMOKE) {
   // 스모크 테스트는 실제 데이터를 건드리지 않도록 임시 폴더 사용
