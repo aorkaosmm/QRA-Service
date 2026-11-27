@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 홈 화면 위젯: 용사 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/wh_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_bg"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp">
+    <ViewFlipper
+        android:id="@+id/wh_flipper"
+        android:layout_width="96dp"
+        android:layout_height="72dp"
+        android:autoStart="true"
+        android:flipInterval="600">
+        <ImageView
+            android:id="@+id/wh_f0"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/widget_hero_name"
+            android:scaleType="center" />
+        <ImageView
+            android:id="@+id/wh_f1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/widget_hero_name"
+            android:scaleType="center" />
+    </ViewFlipper>
+    <TextView
+        android:id="@+id/wh_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:maxLines="1"
+        android:textColor="#ece9f5"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+    <ProgressBar
+        android:id="@+id/wh_hp"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginTop="4dp"
+        android:max="1"
+        android:progress="1"
+        android:progressDrawable="@drawable/widget_progress_hp" />
+    <ProgressBar
+        android:id="@+id/wh_xp"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginTop="3dp"
+        android:max="1"
+        android:progress="0"
+        android:progressDrawable="@drawable/widget_progress_xp" />
+    <TextView
+        android:id="@+id/wh_gold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:maxLines="1"
+        android:textColor="#ffd447"
+        android:textSize="11sp" />
+</LinearLayout>

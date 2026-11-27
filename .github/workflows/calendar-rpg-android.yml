@@ -1,0 +1,93 @@
+# Calendar RPG 안드로이드 APK 빌드 (mobile-app/ 또는 공용 게임 코드가 바뀔 때, 또는 Actions 탭에서 수동 실행)
+# Calendar-RPG 브랜치에 푸시하면 Releases 에 바로 받을 수 있는 APK 링크를 올린다.
+name: Calendar RPG Android build
+
+on:
+  push:
+    paths:
+      - 'mobile-app/**'
+      - 'desktop/src/**'
+      - 'desktop/assets/**'
+      - '.github/workflows/calendar-rpg-android.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write # Releases 업로드용
+
+concurrency:
+  group: calendar-rpg-android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: mobile-app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: mobile-app/package-lock.json
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Install
+        run: npm ci
+
+      - name: Build web + sync to Android project
+        run: |
+          node build-web.mjs
+          npx cap sync android
+
+      - name: Android SDK packages
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" > /dev/null
+
+      - name: Build APK
+        working-directory: mobile-app/android
+        env:
+          VERSION_CODE: ${{ github.run_number }}
+        run: ./gradlew --no-daemon assembleRelease
+
+      - name: Native tests (widgets · live wallpaper)
+        continue-on-error: true
+        working-directory: mobile-app/android
+        run: ./gradlew --no-daemon testReleaseUnitTest
+
+      - name: Name APK
+        run: |
+          VER=$(node -p "require('./package.json').version")
+          cp android/app/build/outputs/apk/release/app-release.apk "CalendarRPG-$VER.apk"
+          echo "VER=$VER" >> "$GITHUB_ENV"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: CalendarRPG-Android
+          path: mobile-app/CalendarRPG-*.apk
+          if-no-files-found: error
+
+      - name: Publish download link (Calendar-RPG branch only)
+        if: github.ref == 'refs/heads/Calendar-RPG'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="calendar-rpg-android-v$VER"
+          gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
+          gh release create "$TAG" "CalendarRPG-$VER.apk" \
+            --target "$GITHUB_SHA" \
+            --title "Calendar RPG Android $VER" \
+            --prerelease \
+            --notes "Calendar RPG 안드로이드 앱 $VER
+
+          폰에서 CalendarRPG-$VER.apk 를 내려받아 설치하세요. 설치가 막히면 '출처를 알 수 없는 앱 설치'를 허용해 주세요.
+          홈 화면 위젯(오늘의 임무·용사)과 라이브 배경화면은 앱의 설정 탭 → '안드로이드 홈 화면'에서 추가할 수 있어요.
+          같은 서명으로 빌드되므로 새 버전을 설치하면 기록을 유지한 채 업데이트됩니다."

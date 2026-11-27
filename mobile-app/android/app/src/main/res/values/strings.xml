@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Calendar RPG</string>
+    <string name="title_activity_main">Calendar RPG</string>
+    <string name="package_name">com.calendarrpg.app</string>
+    <string name="custom_url_scheme">com.calendarrpg.app</string>
+    <string name="widget_quests_name">오늘의 임무</string>
+    <string name="widget_quests_title">오늘의 임무</string>
+    <string name="widget_quests_desc">오늘 할 일·일일임무를 보고 바로 체크해요</string>
+    <string name="widget_hero_name">용사</string>
+    <string name="widget_hero_desc">내 용사의 레벨·체력·경험치</string>
+    <string name="widget_check">완료 표시</string>
+    <string name="wallpaper_name">Calendar RPG 용사</string>
+    <string name="wallpaper_desc">홈 화면에서 내 용사가 슬라임과 싸워요</string>
+</resources>

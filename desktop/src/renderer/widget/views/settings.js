@@ -49,6 +49,7 @@ export const settingsView = {
         <button class="btn primary" data-act="group-add">추가</button>
       </div>
 
+      ${platformSection(ctx)}
       <div class="section-title">위젯</div>
       <div class="row-setting"><div>항상 위에 표시<div class="desc">다른 창보다 위에 둡니다</div></div>${toggle('widgetAlwaysOnTop', s.widgetAlwaysOnTop)}</div>
       <div class="row-setting"><div>배경 불투명도</div><input type="range" min="50" max="100" value="${Math.round(s.widgetOpacity * 100)}" data-setting-range="widgetOpacity" style="width:130px"></div>
@@ -113,6 +114,11 @@ export const settingsView = {
       if ((await ctx.act('hero/rename', { name: v })).ok) toast('이름을 바꿨어요.');
     },
     'new-daily': (_el, ctx) => openDailyForm(ctx),
+    platform: async (el, ctx) => {
+      if (!ctx.api.runPlatformAction) return;
+      const res = await ctx.api.runPlatformAction(el.dataset.id);
+      if (res && res.message) toast(esc(res.message), { life: 3200 });
+    },
     'group-add': async (_el, ctx) => {
       const input = document.getElementById('group-name-input');
       const res = await ctx.act('group/add', { name: input ? input.value : '' });
@@ -147,6 +153,16 @@ export const settingsView = {
     },
   },
 };
+
+/** 실행 환경(예: 안드로이드 앱)이 추가하는 설정 줄 */
+function platformSection(ctx) {
+  const list = (ctx.api.platformSettings && ctx.api.platformSettings()) || [];
+  if (!list.length) return '';
+  const title = ctx.api.platformTitle || '이 기기';
+  return `<div class="section-title">${esc(title)}</div>${list.map((x) => `
+    <div class="row-setting"><div>${esc(x.label)}<div class="desc">${esc(x.desc || '')}</div></div>
+      <button class="btn small" data-act="platform" data-id="${esc(x.id)}">${esc(x.button || '열기')}</button></div>`).join('')}`;
+}
 
 function statsHtml(state) {
   const st = state.stats;

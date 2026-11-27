@@ -1,0 +1,62 @@
+/* Calendar RPG 안드로이드 앱: 데스크톱 위젯 화면을 전체 화면 모바일 앱으로 (아래 탭 + 전투 띠).
+   시스템 바 영역은 Capacitor가 넣어 주는 --safe-area-inset-* 값만큼 비운다. */
+:root {
+  --safe-t: max(env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px));
+  --safe-b: max(env(safe-area-inset-bottom, 0px), var(--safe-area-inset-bottom, 0px));
+  --safe-l: max(env(safe-area-inset-left, 0px), var(--safe-area-inset-left, 0px));
+  --safe-r: max(env(safe-area-inset-right, 0px), var(--safe-area-inset-right, 0px));
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --ink: #2a2633; --bg: #f6f2e7; --panel: #fffdf7; --panel-2: #f0eadb; --line: #d6cdb8; --line-soft: #e6dfcd;
+    --text: #2a2633; --muted: #7a7387; --faint: #a49eb2; --accent: #1f8fb3; --accent-ink: #ffffff;
+    --gold: #c28a14; --sun: #e0465a; --sat: #2f7de1; --select: #e6ddff; --r-common: #7d8594;
+    color-scheme: light;
+  }
+}
+html, body { height: 100%; overflow: hidden; background: var(--bg); overscroll-behavior: none; }
+body { -webkit-tap-highlight-color: transparent; }
+
+#app.frame {
+  position: fixed;
+  inset: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--bg);
+  padding-left: var(--safe-l);
+  padding-right: var(--safe-r);
+}
+#app .titlebar { order: 0; padding-top: calc(8px + var(--safe-t)); -webkit-app-region: none; }
+#app #view { order: 1; overscroll-behavior: contain; }
+#battle-strip {
+  order: 2;
+  position: relative;
+  flex: none;
+  height: 112px;
+  border-top: 2px solid var(--line-soft);
+  background:
+    linear-gradient(to top, color-mix(in srgb, var(--accent) 10%, var(--bg)) 0 3px, transparent 3px),
+    radial-gradient(ellipse at 50% 120%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
+    var(--bg);
+  touch-action: manipulation;
+}
+#battle-strip #stage { position: absolute; inset: 0; display: block; image-rendering: pixelated; }
+#app .tabs {
+  order: 3;
+  border-bottom: 0;
+  border-top: 2px solid var(--line-soft);
+  padding: 2px 6px calc(6px + var(--safe-b));
+  background: var(--panel);
+}
+#app .tabs button { border-radius: 0 0 6px 6px; padding: 7px 0 5px; font-size: 11px; }
+#app .tabs button.active::after { top: 0; bottom: auto; }
+#app #toasts { bottom: calc(176px + var(--safe-b)); }
+#app .modal-backdrop { padding-top: calc(14px + var(--safe-t)); padding-bottom: calc(14px + var(--safe-b)); }
+
+/* 손가락으로 누르기 좋게 */
+#app .chk { width: 28px; height: 28px; }
+#app .quest { padding: 8px; }
+#app .btn { min-height: 32px; }
+#app .icon-btn { width: 32px; height: 32px; }
+input, select, textarea { font-size: 16px !important; } /* 입력할 때 화면이 확대되지 않도록 */

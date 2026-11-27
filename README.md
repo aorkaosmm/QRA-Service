@@ -3,12 +3,20 @@
 일정과 일일임무(할 일·공부·업무·식사…)를 끝낼 때마다 경험치와 전리품(골드 + 일반/희귀/영웅/전설 장비)을 얻어 도트 용사를 키우는 달력 위젯입니다.
 용사는 Windows 작업표시줄 위에서 슬라임과 싸웁니다. 맞으면 뒤로 튕겨 나가고, 머리 위로 데미지 숫자가 떠오릅니다.
 
-## 다운로드 (Windows)
+## 다운로드
+
+### Windows
 
 | 파일 | 설명 |
 |---|---|
 | [CalendarRPG-Setup-0.2.0.exe](https://github.com/aorkaosmm/QRA-Service/releases/download/calendar-rpg-v0.2.0/CalendarRPG-Setup-0.2.0.exe) | 설치판 — Windows 알림, 시작 메뉴, Windows 시작 시 실행 |
 | [CalendarRPG-Portable-0.2.0.exe](https://github.com/aorkaosmm/QRA-Service/releases/download/calendar-rpg-v0.2.0/CalendarRPG-Portable-0.2.0.exe) | 포터블 — 설치 없이 바로 실행 |
+
+### Android
+
+[CalendarRPG-0.3.0.apk](https://github.com/aorkaosmm/QRA-Service/releases/download/calendar-rpg-android-v0.3.0/CalendarRPG-0.3.0.apk) — 홈 화면 위젯(오늘의 임무·용사)과 라이브 배경화면 포함. 폰에서 내려받아 설치하고, 막히면 "출처를 알 수 없는 앱 설치"를 허용해 주세요.
+
+### Windows 참고
 
 코드 서명이 없어서 처음 실행할 때 "Windows의 PC 보호" 창이 뜨면 **추가 정보 → 실행**을 누르세요.
 이 브랜치(`Calendar-RPG`)에 `desktop/`이 바뀌어 푸시되면 GitHub Actions가 Windows에서 다시 빌드해 위 링크의 파일을 새로 올립니다.
@@ -19,6 +27,7 @@
 | 폴더 | 내용 |
 |---|---|
 | [`desktop/`](desktop/) | Windows 위젯 앱 (Electron) — 사용법·보상 규칙·개발 방법은 [`desktop/README.md`](desktop/README.md) |
+| [`mobile-app/`](mobile-app/) | 안드로이드 앱 (Capacitor + 네이티브 위젯·라이브 배경화면) — [`mobile-app/README.md`](mobile-app/README.md) |
 | [`mobile/`](mobile/) | 모바일 앱 시안 (반응형 웹) — 같은 게임 엔진으로 동작하는 앱 화면·홈 화면 위젯·플랫폼별 가능 범위 |
 | `.github/workflows/` | Windows 설치 파일 빌드·릴리스 자동화 |
 

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="color-scheme" content="dark light">
+<title>Calendar RPG</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div id="app" class="frame">
+  <header class="titlebar">
+    <canvas id="hero-portrait" title="가방 열기"></canvas>
+    <div class="hero-info">
+      <div class="hero-name"><span class="name" id="hero-name">용사</span><span class="lv">Lv.<span id="hero-lv">1</span></span></div>
+      <div class="bar xp" title="경험치"><i id="xp-fill"></i><span id="xp-text">0 / 60 EXP</span></div>
+      <div class="bar hp" title="용사 체력"><i id="hp-fill"></i><span id="hp-text">HP</span></div>
+      <div class="hero-sub">
+        <span class="gold" id="gold-wrap"><span id="gold-icon"></span><b id="gold">0</b>G</span>
+        <span id="today-wrap"><span id="today-icon"></span>오늘 <b id="today-prog">0/0</b></span>
+      </div>
+    </div>
+    <div class="win-btns">
+      <button class="icon-btn" id="btn-pin"></button>
+      <button class="icon-btn" id="btn-min"></button>
+      <button class="icon-btn" id="btn-close"></button>
+    </div>
+  </header>
+  <nav class="tabs" id="tabs"></nav>
+  <main id="view"></main>
+  <div id="battle-strip"><canvas id="stage" data-scale="2"></canvas></div>
+  <div class="resize-grip" id="resize-grip"></div>
+  <div id="toasts"></div>
+  <div id="modal-root"></div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

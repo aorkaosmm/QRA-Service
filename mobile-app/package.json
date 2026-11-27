@@ -1,0 +1,23 @@
+{
+  "name": "calendar-rpg-mobile-app",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "description": "Calendar RPG 안드로이드 앱 (Capacitor): 데스크톱과 같은 게임 엔진 + 홈 화면 위젯 + 라이브 배경화면",
+  "scripts": {
+    "build:web": "node build-web.mjs",
+    "sync": "npm run build:web && npx cap sync android",
+    "apk": "npm run sync && cd android && ./gradlew assembleRelease"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.6.3",
+    "@capacitor/app": "8.1.2",
+    "@capacitor/core": "8.6.3",
+    "@capacitor/local-notifications": "8.3.1",
+    "@capacitor/preferences": "8.0.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.6.3",
+    "esbuild": "0.25.10"
+  }
+}
