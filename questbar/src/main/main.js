@@ -145,6 +145,13 @@ function createWidget() {
       widgetWin.hide();
     }
   });
+  // Windows 종료·로그오프 때는 숨기지 말고 저장 후 닫히게 한다
+  const endSession = () => {
+    quitting = true;
+    if (store) store.flush();
+  };
+  widgetWin.on('query-session-end', endSession);
+  widgetWin.on('session-end', endSession);
   let t = null;
   const remember = () => {
     clearTimeout(t);
