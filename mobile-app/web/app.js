@@ -47,6 +47,7 @@ function buildSnapshot(state, hp) {
   });
   const gear = {};
   for (const slot of SLOT_ORDER) gear[slot] = st.gear[slot] ? st.gear[slot].rarity : null;
+  gear.weaponType = st.gear.weapon ? st.gear.weapon.weaponType || 'sword' : null;
   return {
     v: 1,
     updatedAt: Date.now(),

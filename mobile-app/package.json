@@ -1,6 +1,6 @@
 {
   "name": "calendar-rpg-mobile-app",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": true,
   "type": "module",
   "description": "Calendar RPG 안드로이드 앱 (Capacitor): 데스크톱과 같은 게임 엔진 + 홈 화면 위젯 + 라이브 배경화면",

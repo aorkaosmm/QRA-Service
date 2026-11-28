@@ -27,6 +27,7 @@ function myGear(state) {
   const g = heroStats(state).gear;
   const out = {};
   for (const slot of SLOT_ORDER) out[slot] = g[slot] ? g[slot].rarity : null;
+  out.weaponType = g.weapon ? g.weapon.weaponType || 'sword' : null;
   return out;
 }
 
@@ -209,14 +210,14 @@ function prefixOf(arr) {
  * 보스전 실시간 진행 (필드 보스·레이드 공통)
  * members: [{ id, name, cp, gear, isMe, party }], seriesSeed, fromSec(내가 들어온 초), T, startAt(전투 0초 시각)
  */
-function runBossFight(el, ctx, { key, members, seriesSeed, fromSec, T, startAt, hp, boss, theme, rules, onEnd, rankLabel }) {
+function runBossFight(el, ctx, { key, members, seriesSeed, fromSec, T, startAt, hp, boss, theme, rules, onEnd, rankLabel, skillName = '필살기' }) {
   const inp = inputFor(ctx, key);
   const series = members.map((m) => damageSeries(`${seriesSeed}|${m.id}`, m.cp, T, m.isMe ? fromSec : 0));
   const prefix = series.map(prefixOf);
   const meIdx = members.findIndex((m) => m.isMe);
   const myDps = dpsOf(members[meIdx].cp);
   const tapDmg = myDps * TAP_MULT;
-  const skillDmg = myDps * SKILL_MULT;
+  const skillDmg = myDps * (members[meIdx].skillMult || SKILL_MULT);
   const dmgAt = (i, t) => {
     const k = Math.max(0, Math.min(T, Math.floor(t)));
     let v = prefix[i][k] + (k < T ? series[i][k] * Math.max(0, Math.min(1, t - k)) : 0);
@@ -279,7 +280,7 @@ function runBossFight(el, ctx, { key, members, seriesSeed, fromSec, T, startAt, 
     if (skillBtn) {
       const cd = Math.max(0, rules.skillCooldownSec - (Date.now() - inp.lastSkill) / 1000);
       skillBtn.disabled = cd > 0 || t < fromSec || ended;
-      skillBtn.textContent = cd > 0 ? `필살기 ${Math.ceil(cd)}` : '필살기';
+      skillBtn.textContent = cd > 0 ? `${skillName} ${Math.ceil(cd)}` : skillName;
     }
     const board = el.querySelector('#dg-board');
     if (board) {
@@ -323,7 +324,7 @@ function fieldBossBattle(el, ctx, practice) {
     const st = heroStats(s);
     room = fieldBossRoom({
       day: ctx.today,
-      me: { name: s.profile.name, cp: combatPower(s), level: st.level, gear: myGear(s) },
+      me: { name: s.profile.name, cp: combatPower(s), level: st.level, gear: myGear(s), skillMult: st.skill.mult },
       party: playersById(s.social.party, ctx.today),
       practice: true,
     });
@@ -347,6 +348,7 @@ function fieldBossBattle(el, ctx, practice) {
     hp: room.hp,
     boss: { name: FIELD_BOSS.name, color: 'gold', crown: true, horns: false },
     theme: FB_THEME,
+    skillName: heroStats(s).skill.name,
     rules: { ...FIELD_BOSS, timerId: 'dg-timer' },
     onEnd: ({ inp, t }) => {
       setTimeout(async () => {
@@ -420,7 +422,7 @@ function raidBattle(el, ctx) {
   const ses = s.raid.session;
   const boss = raidBoss(ses.tier);
   const members = [
-    { id: 'me', name: s.profile.name, cp: ses.cp, isMe: true, party: true, gear: myGear(s) },
+    { id: 'me', name: s.profile.name, cp: ses.cp, isMe: true, party: true, gear: myGear(s), skillMult: ses.skillMult },
     ...playersById(ses.party || [], s.raid.day).map((p) => ({ ...p, party: true })),
   ];
   runBossFight(el, ctx, {
@@ -433,6 +435,7 @@ function raidBattle(el, ctx) {
     hp: boss.hp,
     boss: { name: `${ses.tier}단계 · ${boss.name}`, color: boss.color, crown: boss.crown, horns: boss.horns },
     theme: RAID_THEMES[boss.color] || RAID_THEMES.green,
+    skillName: heroStats(s).skill.name,
     rules: { ...RAID, timerId: 'dg-timer' },
     onEnd: ({ inp }) => {
       setTimeout(async () => {

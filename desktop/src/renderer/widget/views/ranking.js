@@ -2,6 +2,7 @@
 import { SLOT_ORDER } from '../../../core/constants.js';
 import { combatPower, heroStats, powerBand } from '../../../core/progression.js';
 import { powerRanking, guildById } from '../../../core/world.js';
+import { JOBS } from '../../../core/jobs.js';
 import { uiIcon, heroImg } from '../../shared/sprite-canvas.js';
 import { esc } from '../ui.js';
 
@@ -12,7 +13,8 @@ function meEntry(s) {
   const st = heroStats(s);
   const gear = {};
   for (const slot of SLOT_ORDER) gear[slot] = st.gear[slot] ? st.gear[slot].rarity : null;
-  return { name: s.profile.name, cp: combatPower(s), level: st.level, gear, guild: s.social.guild };
+  gear.weaponType = st.gear.weapon ? st.gear.weapon.weaponType || 'sword' : null;
+  return { name: s.profile.name, cp: combatPower(s), level: st.level, gear, guild: s.social.guild, job: st.job ? st.job.id : null };
 }
 
 function guildTag(id) {
@@ -26,6 +28,7 @@ function spot(p, place) {
       ${place === 1 ? `<div class="crown">${uiIcon('crown', 2)}</div>` : `<div class="medal m${place}"></div>`}
       <div class="hero">${heroImg(p.gear, place === 1 ? 3 : 2)}</div>
       <div class="nm">${esc(p.name)}${p.isMe ? ' (나)' : ''}</div>
+      <div class="jb">${p.job ? esc(JOBS[p.job].name) : '초보자'}</div>
       <div class="cp">${uiIcon('sword', 1)} ${fmt(p.cp)}</div>
       <div class="block"><span>${place}</span></div>
     </div>`;
@@ -47,7 +50,7 @@ export const rankingView = {
         <span class="r">${p.rank}</span>
         <span class="face">${heroImg(p.gear, 1)}</span>
         <span class="n">${esc(p.name)}${p.isMe ? ' (나)' : ''}${guildTag(p.guild)}</span>
-        <span class="lv">Lv.${p.level}</span>
+        <span class="lv">Lv.${p.level}<small>${p.job ? esc(JOBS[p.job].name) : '초보자'}</small></span>
         <span class="cp">${fmt(p.cp)}</span>
       </li>`).join('');
     const top = ((r.me.rank / r.total) * 100);

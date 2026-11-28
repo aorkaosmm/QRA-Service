@@ -1,6 +1,8 @@
 // 가방 탭: 용사 능력치, 장착 슬롯, 장비 목록
 import { SLOTS, SLOT_ORDER, RARITIES, PITY } from '../../../core/constants.js';
-import { heroStats } from '../../../core/progression.js';
+import { heroStats, combatPower } from '../../../core/progression.js';
+import { WEAPON_LABELS } from '../../../core/jobs.js';
+import { openJobs, jobReady, jobLabel } from '../jobs-ui.js';
 import { itemScore, sellPrice } from '../../../core/items.js';
 import { itemIcon, slotIcon, uiIcon } from '../../shared/sprite-canvas.js';
 import { esc, confirmDialog } from '../ui.js';
@@ -15,7 +17,7 @@ const SORTS = {
 export const bagView = {
   signature(ctx) {
     const { state, ui } = ctx;
-    return JSON.stringify([state.inventory.length, state.inventory.map((i) => [i.id, i.locked]), state.hero.equipment, state.hero.level, state.pity, ui.invFilter, ui.invSort]);
+    return JSON.stringify([state.inventory.length, state.inventory.map((i) => [i.id, i.locked]), state.hero.equipment, state.hero.level, state.pity, ui.invFilter, ui.invSort, state.job, state.hero.gold > 0]);
   },
 
   render(ctx) {
@@ -47,7 +49,10 @@ export const bagView = {
       <div class="hero-card">
         <canvas data-hero width="96" height="72"></canvas>
         <div>
-          <div style="font-weight:700;margin-bottom:4px">${esc(state.profile.name)} <span class="lv">Lv.${st.level}</span></div>
+          <div style="font-weight:700;margin-bottom:2px">${esc(state.profile.name)} <span class="lv">Lv.${st.level}</span></div>
+          <div class="job-line"><span class="job-tag" style="${st.job ? `--jc:${st.job.color}` : ''}">${esc(jobLabel(state.job.path))}</span>
+            <span class="muted small">전투력 ${combatPower(state).toLocaleString('ko-KR')}${st.job ? ` · ${WEAPON_LABELS[st.job.weapon]}` : ''}</span>
+            <button class="btn small ${jobReady(state) ? 'primary pulse-btn' : 'ghost'}" data-act="job-open">${jobReady(state) ? '전직 가능!' : '직업'}</button></div>
           <div class="stats">
             <div><span>공격력</span><b>${st.atk}</b></div>
             <div><span>방어력</span><b>${st.def}</b></div>
@@ -80,6 +85,7 @@ export const bagView = {
   },
 
   actions: {
+    'job-open': (_el, ctx) => openJobs(ctx),
     item: (el, ctx) => {
       const it = ctx.state.inventory.find((x) => x.id === el.dataset.id);
       if (it) openItemDetail(ctx, it);

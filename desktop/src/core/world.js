@@ -1,9 +1,10 @@
 // 가상 세계: 계정 서버가 생기기 전까지 '다른 플레이어'(랭킹·필드 보스 참가자·파티원·길드원·채팅 상대)를 흉내 낸다.
 // 고정 시드라 모든 기기에서 같은 플레이어·같은 랭킹이 나온다. 서버가 생기면 이 모듈 자리를 서버 응답으로 바꾼다.
 
-import { createRng } from './rng.js';
+import { createRng, hashString } from './rng.js';
 import { diffDays } from './dates.js';
 import { SLOT_ORDER } from './constants.js';
+import { JOBS, botJobPath } from './jobs.js';
 
 export const WORLD_SEED = 'calendar-rpg-world-1';
 /** 가상 플레이어 전투력이 자라기 시작한 날 */
@@ -76,11 +77,15 @@ export function guildById(id) {
 
 export const levelFromPower = (cp) => Math.max(1, Math.min(99, Math.round(2 + cp / 115)));
 
-/** 그 날의 모습 (전투력은 하루 0.2~0.6%씩 자란다) */
+/** 그 날의 모습 (전투력은 하루 0.2~0.6%씩 자란다). 직업은 레벨에 맞는 차수까지 */
 export function playerView(p, day) {
   const days = Math.max(0, diffDays(WORLD_EPOCH, day));
   const cp = Math.round(p.cp0 * (1 + p.growth) ** days);
-  return { id: p.id, name: p.name, cp, level: levelFromPower(cp), gear: p.gear, guild: p.guild };
+  const level = levelFromPower(cp);
+  const jobPath = botJobPath(hashString(p.id), level);
+  const job = jobPath.length ? jobPath[jobPath.length - 1] : null;
+  const weaponType = jobPath.length ? JOBS[jobPath[0]].weapon : 'sword';
+  return { id: p.id, name: p.name, cp, level, gear: { ...p.gear, weaponType }, guild: p.guild, job, jobPath };
 }
 
 export function playersById(ids, day) {

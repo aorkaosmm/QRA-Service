@@ -8,13 +8,17 @@ import {
 } from './constants.js';
 import { createRng, newId } from './rng.js';
 import { dayKey, addDays, diffDays } from './dates.js';
-import { rollRarity, generateItem, makeItem, sellPrice } from './items.js';
+import { rollRarity, generateItem, makeItem, sellPrice, weaponTypeOf } from './items.js';
+import {
+  JOBS, JOB_LEVELS, JOB_RESET_GOLD, WEAPON_LABELS, currentJob, classWeapon, jobCost, jobSkill,
+} from './jobs.js';
 import { heroStats, addXp, removeXp, combatPower, powerBand } from './progression.js';
 import {
-  fieldBossWindow, fieldBossRoom, simulateFieldBoss, raidBoss, simulateRaid, raidWeights, RAID_SLOT_NAMES,
+  fieldBossWindow, fieldBossRoom, simulateFieldBoss, raidBoss, simulateRaid, raidWeights, RAID_SLOT_NAMES, RAID_WEAPON_NAMES,
   dayDungeonFor, dungeonGems, randomGems,
 } from './adventure.js';
 import { findPlayer, playersById, guildById } from './world.js';
+import { AUCTION, marketSlot, findBotListing, listingValue, saleDelayMs, buyerName } from './market.js';
 import {
   isDailyScheduled, isDailyDone, computeStreak, dailiesForDay, occurrenceStart,
 } from './selectors.js';
@@ -78,8 +82,10 @@ export function createInitialState(now = Date.now(), { seed } = {}) {
       questsDone: 0, slimesDefeated: 0, kingsDefeated: 0, faints: 0, itemsFound: 0,
       legendaryFound: 0, goldEarned: 0, chestsOpened: 0, rewardsBought: 0,
       gemsEarned: 0, dungeonSec: 0, fieldBossRuns: 0, fieldBossBest: 0, raidClears: 0, raidBest: 0,
+      auctionSold: 0, auctionBought: 0,
     },
     daily: { day: today, coins: 0 },
+    job: { path: [], at: null },
     ...adventureDefaults(today),
     log: [],
     settings: { ...DEFAULT_SETTINGS },
@@ -115,6 +121,8 @@ export function migrate(raw, now = Date.now()) {
     dungeon: { ...base.dungeon, ...(raw.dungeon || {}) },
     fieldBoss: { ...base.fieldBoss, ...(raw.fieldBoss || {}) },
     social: { ...base.social, ...(raw.social || {}) },
+    auction: { ...base.auction, ...(raw.auction || {}) },
+    job: { ...base.job, ...(raw.job || {}) },
     settings: { ...DEFAULT_SETTINGS, ...(raw.settings || {}) },
     meta: { ...base.meta, ...(raw.meta || {}) },
   };
@@ -124,6 +132,9 @@ export function migrate(raw, now = Date.now()) {
   }
   for (const d of s.dailies) d.history = d.history || {};
   s.social.party = (Array.isArray(s.social.party) ? s.social.party : []).filter((id) => findPlayer(id)).slice(0, RAID.partyMax - 1);
+  s.job.path = validJobPath(s.job.path);
+  for (const k of ['listings', 'mailbox']) if (!Array.isArray(s.auction[k])) s.auction[k] = [];
+  if (!s.auction.bought || typeof s.auction.bought !== 'object') s.auction.bought = {};
   if (s.social.guild && !guildById(s.social.guild)) s.social.guild = null;
   if (!s.groups.some((g) => g.id === DEFAULT_GROUP_ID)) s.groups.unshift({ ...DEFAULT_GROUPS[0], createdAt: now });
   const groupIds = new Set(s.groups.map((g) => g.id));
@@ -299,6 +310,10 @@ const HANDLERS = {
   /* 장비 */
   'item/equip'(s, p, c) {
     const it = findItem(s, p.id);
+    const need = classWeapon(s.job.path);
+    if (it.slot === 'weapon' && need && weaponTypeOf(it) !== need) {
+      throw new ActionError(`${currentJob(s.job.path).name} 직업은 ${WEAPON_LABELS[need]}만 장착할 수 있어요.`);
+    }
     s.hero.equipment[it.slot] = it.id;
     c.events.push({ type: 'equip', item: it });
   },
@@ -347,7 +362,7 @@ const HANDLERS = {
     s.stats.chestsOpened += 1;
     const rng = createRng(`${s.profile.seed}|shop|${s.stats.chestsOpened}`);
     const rarity = rollRarity(rng, s.pity, prod.key === 'goldChest' ? GOLD_CHEST_WEIGHTS : undefined);
-    const item = generateItem(rng, { level: s.hero.level, rarity, source: 'shop', now: c.now });
+    const item = generateItem(rng, { level: s.hero.level, rarity, source: 'shop', now: c.now, weaponPref: classWeapon(s.job.path) });
     pushLog(s, c.now, { kind: 'shop', text: `${prod.label} 개봉 (-${prod.price}G)` });
     grant(s, c, { item, source: 'shop', title: prod.label });
   },
@@ -442,7 +457,7 @@ const HANDLERS = {
     if (w.phase === 'before') throw new ActionError('필드 보스는 오후 9시에 나타나요.');
     if (w.phase === 'closed') throw new ActionError('오늘 필드 보스는 끝났어요. 내일 오후 9시에 다시 나타나요.');
     if (s.fieldBoss.day === w.day && s.fieldBoss.enteredAt) throw new ActionError('오늘은 이미 입장했어요.');
-    s.fieldBoss = { day: w.day, enteredAt: c.now, enteredSec: w.sec, cp: combatPower(s), party: [...s.social.party], result: null };
+    s.fieldBoss = { day: w.day, enteredAt: c.now, enteredSec: w.sec, cp: combatPower(s), skillMult: jobSkill(s.job.path).mult, party: [...s.social.party], result: null };
     s.stats.fieldBossRuns += 1;
     c.events.push({ type: 'fieldBoss', action: 'enter', sec: w.sec });
   },
@@ -458,7 +473,7 @@ const HANDLERS = {
     const band = powerBand(cp);
     if (tier > band) throw new ActionError(`전투력 ${band}단계예요. ${tier}단계 레이드는 전투력을 더 올려야 열려요.`);
     if (s.raid.tickets < 1) throw new ActionError('레이드 입장권이 없어요. 매일 1개씩 채워져요.');
-    s.raid.session = { tier, startedAt: c.now, cp, party: [...s.social.party] };
+    s.raid.session = { tier, startedAt: c.now, cp, skillMult: jobSkill(s.job.path).mult, party: [...s.social.party] };
     c.events.push({ type: 'raid', action: 'start', tier });
   },
   'raid/finish'(s, p, c) {
@@ -484,6 +499,124 @@ const HANDLERS = {
     const chest = grantRaidChest(s, c, ses.tier);
     pushLog(s, c.now, { kind: 'raid', text: `레이드 ${ses.tier}단계 「${boss.name}」 토벌!` });
     c.events.push({ type: 'raidResult', win: true, tier: ses.tier, boss: boss.name, hp: boss.hp, total: res.total, damage: res.damage, sec: res.sec, chest });
+  },
+
+
+
+  /* 경매장 (지금은 가상 플레이어와 거래) */
+  'auction/buy'(s, p, c) {
+    const l = findBotListing(p.id);
+    if (!l) throw new ActionError('매물을 찾을 수 없어요.');
+    const key = String(p.id).split('|')[1];
+    if (key !== marketSlot(c.now).key && key !== marketSlot(c.now - 3600 * 1000).key) throw new ActionError('이미 내려간 매물이에요. 목록을 새로 볼게요.');
+    if (s.auction.bought[p.id]) throw new ActionError('이미 팔린 매물이에요.');
+    if (l.kind === 'item' && s.inventory.length >= INVENTORY_CAP) throw new ActionError('가방이 가득 찼어요.');
+    spendGold(s, l.price);
+    s.auction.bought[p.id] = c.today;
+    s.stats.auctionBought += 1;
+    let item = null;
+    if (l.kind === 'gem') {
+      s.gems[l.gem] = (s.gems[l.gem] || 0) + l.qty;
+    } else {
+      item = { ...structuredClone(l.item), id: newId('it_'), createdAt: c.now, source: 'auction', locked: false };
+      s.inventory.push(item);
+    }
+    const name = l.kind === 'gem' ? `${GEMS[l.gem].label} ${l.qty}개` : l.item.name;
+    pushLog(s, c.now, { kind: 'auction', text: `경매장 구매: ${name} (-${l.price}G)`, rarity: item ? item.rarity : undefined });
+    c.events.push({ type: 'auctionBuy', id: p.id, name, price: l.price, item, gem: l.gem, qty: l.qty, seller: l.seller });
+  },
+  'auction/list'(s, p, c) {
+    if (s.auction.listings.length >= AUCTION.maxListings) throw new ActionError(`경매장에는 ${AUCTION.maxListings}개까지 올릴 수 있어요.`);
+    const price = Math.floor(Number(p.price));
+    if (!Number.isFinite(price) || price < 1 || price > AUCTION.maxPrice) throw new ActionError('가격은 1~9,999,999G 사이로 정해 주세요.');
+    const hours = AUCTION.hours.includes(Number(p.hours)) ? Number(p.hours) : 24;
+    const fee = Math.max(AUCTION.minFee, Math.round(price * AUCTION.feeRate));
+    let listing;
+    if (p.itemId) {
+      const it = findItem(s, p.itemId);
+      if (it.locked) throw new ActionError('잠긴 장비는 올릴 수 없어요.');
+      if (s.hero.equipment[it.slot] === it.id) throw new ActionError('장착 중인 장비는 올릴 수 없어요.');
+      listing = { kind: 'item', item: it };
+    } else if (GEMS[p.gem]) {
+      const qty = Math.floor(Number(p.qty));
+      if (!(qty >= 1) || qty > (s.gems[p.gem] || 0)) throw new ActionError('보석 개수를 확인해 주세요.');
+      listing = { kind: 'gem', gem: p.gem, qty };
+    } else {
+      throw new ActionError('올릴 물건을 골라 주세요.');
+    }
+    spendGold(s, fee);
+    if (listing.kind === 'item') s.inventory = s.inventory.filter((x) => x.id !== listing.item.id);
+    else s.gems[listing.gem] -= listing.qty;
+    const id = newId('al_');
+    const value = listingValue(listing, c.today);
+    const delay = saleDelayMs(`${s.profile.seed}|${id}`, price / value);
+    const expiresAt = c.now + hours * 3600 * 1000;
+    const sellAt = delay !== null && c.now + delay < expiresAt ? c.now + delay : null;
+    s.auction.listings.push({ id, ...listing, price, fee, hours, value, createdAt: c.now, expiresAt, sellAt });
+    c.events.push({ type: 'auctionListed', id, name: listingName(listing), price, fee });
+  },
+  'auction/cancel'(s, p, c) {
+    const l = s.auction.listings.find((x) => x.id === p.id);
+    if (!l) throw new ActionError('등록한 매물을 찾을 수 없어요.');
+    s.auction.listings = s.auction.listings.filter((x) => x.id !== l.id);
+    if (l.kind === 'gem') s.gems[l.gem] = (s.gems[l.gem] || 0) + l.qty;
+    else if (s.inventory.length < INVENTORY_CAP) s.inventory.push(l.item);
+    else mail(s, { kind: 'item', item: l.item, text: `${l.item.name} 등록 취소`, at: c.now });
+    c.events.push({ type: 'auctionCancel', id: l.id, name: listingName(l) });
+  },
+  'auction/claim'(s, p, c) {
+    const targets = p.id ? s.auction.mailbox.filter((m) => m.id === p.id) : [...s.auction.mailbox];
+    if (!targets.length) throw new ActionError('받을 것이 없어요.');
+    const got = { gold: 0, items: 0, gems: 0, left: 0 };
+    for (const m of targets) {
+      if (m.kind === 'item' && s.inventory.length >= INVENTORY_CAP) { got.left += 1; continue; }
+      if (m.kind === 'gold') { s.hero.gold += m.amount; s.stats.goldEarned += m.amount; got.gold += m.amount; }
+      else if (m.kind === 'item') { s.inventory.push(m.item); got.items += 1; }
+      else if (m.kind === 'gem') { s.gems[m.gem] = (s.gems[m.gem] || 0) + m.qty; got.gems += m.qty; }
+      s.auction.mailbox = s.auction.mailbox.filter((x) => x.id !== m.id);
+    }
+    c.events.push({ type: 'auctionClaim', ...got });
+  },
+
+  /* 직업: 전직(레벨 10/30/60 + 골드·보석), 초기화 */
+  'job/advance'(s, p, c) {
+    const job = JOBS[p.id];
+    if (!job) throw new ActionError('직업을 찾을 수 없어요.');
+    const path = s.job.path;
+    const cur = currentJob(path);
+    if (job.tier !== path.length + 1 || (cur ? job.parent !== cur.id : job.parent !== null)) throw new ActionError('지금 고를 수 없는 직업이에요.');
+    const need = JOB_LEVELS[job.tier - 1];
+    if (s.hero.level < need) throw new ActionError(`레벨 ${need}부터 ${job.tier}차 전직을 할 수 있어요.`);
+    const cost = jobCost(job);
+    if (s.hero.gold < cost.gold) throw new ActionError(`골드가 부족해요. (${cost.gold - s.hero.gold}G 더 필요)`);
+    for (const [g, n] of Object.entries(cost.gems)) {
+      if ((s.gems[g] || 0) < n) throw new ActionError(`${GEMS[g].label}이(가) ${n - (s.gems[g] || 0)}개 더 필요해요.`);
+    }
+    s.hero.gold -= cost.gold;
+    for (const [g, n] of Object.entries(cost.gems)) s.gems[g] -= n;
+    s.job.path = [...path, job.id];
+    s.job.at = c.now;
+    let item = null;
+    if (job.tier === 1) {
+      // 전직 기념 무기(희귀, 계열 무기). 들고 있던 무기가 계열과 다르면 바꿔 든다
+      const rng = createRng(`${s.profile.seed}|job|${job.id}`);
+      item = generateItem(rng, { level: s.hero.level, rarity: 'rare', slot: 'weapon', weaponType: job.weapon, source: 'job', now: c.now });
+      item.name = `${job.name}의 증표 ${WEAPON_LABELS[job.weapon]}`;
+      addItem(s, c, item);
+      const held = s.inventory.find((it) => it.id === s.hero.equipment.weapon);
+      if (s.inventory.some((it) => it.id === item.id) && (!held || weaponTypeOf(held) !== job.weapon)) s.hero.equipment.weapon = item.id;
+    }
+    pushLog(s, c.now, { kind: 'job', text: `${job.tier}차 전직: ${job.name}` });
+    c.events.push({ type: 'jobAdvance', id: job.id, name: job.name, tier: job.tier, item, skill: job.skill });
+  },
+  'job/reset'(s, p, c) {
+    const tier = s.job.path.length;
+    if (!tier) throw new ActionError('아직 전직하지 않았어요.');
+    spendGold(s, JOB_RESET_GOLD * tier);
+    s.job.path = [];
+    s.job.at = c.now;
+    pushLog(s, c.now, { kind: 'job', text: '직업 초기화 (초보자)' });
+    c.events.push({ type: 'jobReset', gold: JOB_RESET_GOLD * tier });
   },
 
   /* 프로필·설정 */
@@ -560,7 +693,7 @@ function rollQuestReward(s, { questId, occurrence, difficulty, streak, now }) {
   let item = null;
   if (rng.chance(Math.min(0.75, d.drop + stats.dropBonus))) {
     const rarity = rollRarity(rng, s.pity);
-    item = generateItem(rng, { level: s.hero.level, rarity, source: 'quest', now });
+    item = generateItem(rng, { level: s.hero.level, rarity, source: 'quest', now, weaponPref: classWeapon(s.job.path) });
   }
   return { xp, gold, item, streak };
 }
@@ -586,7 +719,7 @@ function onLevelUp(s, c, level) {
     if (level % 5 === 0) {
       const rng = createRng(`${s.profile.seed}|lv|${level}`);
       const rarity = rollRarity(rng, s.pity, GOLD_CHEST_WEIGHTS);
-      ev.item = generateItem(rng, { level, rarity, source: 'levelup', now: c.now });
+      ev.item = generateItem(rng, { level, rarity, source: 'levelup', now: c.now, weaponPref: classWeapon(s.job.path) });
       addItem(s, c, ev.item);
     }
   }
@@ -600,7 +733,7 @@ function checkPerfectDay(s, c, day) {
   if (list.length < 2 || !list.every((d) => isDailyDone(d, day))) return;
   const rng = createRng(`${s.profile.seed}|perfect|${day}`);
   const rarity = rollRarity(rng, s.pity, PERFECT_DAY_WEIGHTS);
-  const item = generateItem(rng, { level: s.hero.level, rarity, source: 'perfect', now: c.now });
+  const item = generateItem(rng, { level: s.hero.level, rarity, source: 'perfect', now: c.now, weaponPref: classWeapon(s.job.path) });
   s.perfectDays[day] = { at: c.now, itemId: item.id };
   pushLog(s, c.now, { kind: 'perfect', text: '퍼펙트 데이! 일일임무를 모두 완료했어요' });
   grant(s, c, { xp: 30, gold: 20, item, heal: 1, source: 'perfect', title: '퍼펙트 데이 보너스' });
@@ -641,6 +774,7 @@ function adventureDefaults(today) {
     dungeon: { day: today, usedSec: 0, activeSince: null, frac: 0, count: 0 },
     fieldBoss: { day: null, enteredAt: null, enteredSec: 0, cp: 0, party: [], result: null },
     social: { party: [], guild: null },
+    auction: { listings: [], mailbox: [], bought: {} },
   };
 }
 
@@ -655,6 +789,7 @@ function rollover(s, c, type) {
     if (s.dungeon.activeSince) settleDungeon(s, c, c.now);
     s.dungeon = { day: c.today, usedSec: 0, activeSince: null, frac: 0, count: 0 };
   }
+  settleAuction(s, c);
   // 끝난 필드 보스를 화면이 정산하지 못했으면(앱을 닫음 등) 10분 뒤 자동 정산. 화면의 정산 요청은 터치 횟수를 지킨다
   const fb = s.fieldBoss;
   if (type !== 'fieldBoss/finish' && fb.enteredAt && !fb.result
@@ -697,7 +832,7 @@ export function fieldBossRoomFor(s, fb = s.fieldBoss) {
   for (const slot of SLOT_ORDER) gear[slot] = st.gear[slot] ? { rarity: st.gear[slot].rarity } : null;
   return fieldBossRoom({
     day: fb.day,
-    me: { name: s.profile.name, cp: fb.cp, level: st.level, gear, guild: s.social.guild },
+    me: { name: s.profile.name, cp: fb.cp, level: st.level, gear, guild: s.social.guild, skillMult: fb.skillMult, job: currentJob(s.job.path) ? currentJob(s.job.path).id : null },
     party: playersById(fb.party || [], fb.day),
   });
 }
@@ -717,7 +852,7 @@ function settleFieldBoss(s, c, p) {
   let item = null;
   if (tier.weights && rng.chance(tier.item)) {
     const rarity = rollRarity(rng, s.pity, tier.weights);
-    item = generateItem(rng, { level: s.hero.level, rarity, source: 'fieldBoss', now: c.now });
+    item = generateItem(rng, { level: s.hero.level, rarity, source: 'fieldBoss', now: c.now, weaponPref: classWeapon(s.job.path) });
     addItem(s, c, item);
   }
   addGems(s, gems);
@@ -735,7 +870,7 @@ function settleFieldBoss(s, c, p) {
 function raidMembers(s, ses) {
   const day = s.raid.day;
   return [
-    { id: 'me', name: s.profile.name, cp: ses.cp, isMe: true },
+    { id: 'me', name: s.profile.name, cp: ses.cp, isMe: true, skillMult: ses.skillMult },
     ...playersById(ses.party || [], day).map((p) => ({ id: p.id, name: p.name, cp: p.cp })),
   ];
 }
@@ -744,9 +879,9 @@ function raidItem(rng, s, tier, now) {
   const boss = raidBoss(tier);
   const rarity = rollRarity(rng, s.pity, raidWeights(tier));
   const slot = rng.pick(SLOT_ORDER);
-  const item = generateItem(rng, { level: Math.max(s.hero.level, tier * 5), rarity, slot, source: 'raid', now });
+  const item = generateItem(rng, { level: Math.max(s.hero.level, tier * 5), rarity, slot, source: 'raid', now, weaponPref: classWeapon(s.job.path) });
   for (const k of ['atk', 'def', 'hp', 'luck']) item[k] = Math.round(item[k] * RAID_GEAR_MULT);
-  item.name = `${boss.set}의 ${RAID_SLOT_NAMES[slot]}`;
+  item.name = `${boss.set}의 ${slot === 'weapon' ? RAID_WEAPON_NAMES[item.weaponType] : RAID_SLOT_NAMES[slot]}`;
   item.raid = tier;
   return item;
 }
@@ -758,7 +893,7 @@ function grantRaidChest(s, c, tier) {
   if (rng.chance(0.05 + 0.02 * tier)) items.push(raidItem(rng, s, tier, c.now));
   if (rng.chance(0.2)) {
     const rarity = rollRarity(rng, s.pity, GOLD_CHEST_WEIGHTS);
-    items.push(generateItem(rng, { level: s.hero.level, rarity, source: 'raid', now: c.now }));
+    items.push(generateItem(rng, { level: s.hero.level, rarity, source: 'raid', now: c.now, weaponPref: classWeapon(s.job.path) }));
   }
   const gold = Math.round(150 * tier * rng.range(0.8, 1.2));
   const colors = [rng.pick(GEM_ORDER), rng.pick(GEM_ORDER)];
@@ -768,6 +903,50 @@ function grantRaidChest(s, c, tier) {
   addGems(s, gems);
   grant(s, c, { xp, gold, source: 'raid', title: `레이드 ${tier}단계` });
   return { items, gold, gems, xp };
+}
+
+
+/* ── 경매장 ─────────────────────────────── */
+
+function listingName(l) {
+  return l.kind === 'gem' ? `${GEMS[l.gem].label} ${l.qty}개` : l.item.name;
+}
+
+function mail(s, entry) {
+  s.auction.mailbox.push({ id: newId('m_'), ...entry });
+  if (s.auction.mailbox.length > 60) s.auction.mailbox.splice(0, s.auction.mailbox.length - 60);
+}
+
+/** 팔렸거나 기간이 끝난 내 매물을 정산함으로, 오래된 구매 기록 정리 */
+function settleAuction(s, c) {
+  for (const l of [...s.auction.listings]) {
+    if (l.sellAt && c.now >= l.sellAt) {
+      const net = l.price - Math.round(l.price * AUCTION.commission);
+      const buyer = buyerName(`${s.profile.seed}|${l.id}`);
+      s.auction.listings = s.auction.listings.filter((x) => x.id !== l.id);
+      mail(s, { kind: 'gold', amount: net, text: `${listingName(l)} 판매 · ${buyer}님 구매`, at: l.sellAt });
+      s.stats.auctionSold += 1;
+      pushLog(s, c.now, { kind: 'auction', text: `경매장 판매: ${listingName(l)} (+${net}G, 정산함)` });
+      c.events.push({ type: 'auctionSold', id: l.id, name: listingName(l), price: l.price, net, buyer });
+    } else if (c.now >= l.expiresAt) {
+      s.auction.listings = s.auction.listings.filter((x) => x.id !== l.id);
+      mail(s, { kind: l.kind, item: l.item, gem: l.gem, qty: l.qty, text: `${listingName(l)} 기간 만료`, at: l.expiresAt });
+      c.events.push({ type: 'auctionExpired', id: l.id, name: listingName(l) });
+    }
+  }
+  const keep = addDays(c.today, -1);
+  for (const [id, day] of Object.entries(s.auction.bought)) if (day < keep) delete s.auction.bought[id];
+}
+
+/** 저장된 전직 경로가 나무 구조에 맞는지 (틀리면 맞는 데까지만) */
+function validJobPath(path) {
+  const out = [];
+  for (const id of Array.isArray(path) ? path : []) {
+    const j = JOBS[id];
+    if (!j || j.tier !== out.length + 1 || j.parent !== (out.length ? out[out.length - 1] : null)) break;
+    out.push(id);
+  }
+  return out;
 }
 
 /* ── 조회·검증 ─────────────────────────────── */

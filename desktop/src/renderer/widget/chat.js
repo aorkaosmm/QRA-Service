@@ -212,6 +212,13 @@ export function mountChat(ctx, api, { openGuilds } = {}) {
         case 'levelUp':
           push('system', null, `레벨 ${ev.level} 달성!`);
           break;
+        case 'jobAdvance':
+          push('system', null, `${ev.tier}차 전직! ${ev.name}이(가) 되었어요 (필살기 「${ev.skill.name}」)`);
+          if (ctx.state.social.guild) setTimeout(() => botSay('guild', { reply: true }), 1500);
+          break;
+        case 'auctionSold':
+          push('system', null, `경매장: ${ev.name} 판매 (${ev.buyer}님 구매, +${ev.net}G 정산함)`);
+          break;
         case 'raidResult':
           if (ev.win) {
             push('system', null, `레이드 ${ev.tier}단계 「${ev.boss}」 토벌 성공!`);

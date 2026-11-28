@@ -113,6 +113,80 @@ export const WEAPON_SPRITES = {
   back: { rows: flipX(SWORD_DIAG), grip: { x: 7, y: 8 } },
 };
 
+/* 활·총·지팡이 (같은 팔레트 문자: x 밝은 면, m 몸체, g 장식, p 나무, G 그림자) */
+const STAFF_UP = [
+  '..oo..',
+  '.oxmo.',
+  'oxmmGo',
+  'omGGGo',
+  '.oggo.',
+  '.oppo.',
+  '.oppo.',
+  '.oppo.',
+  '.oppo.',
+  '.oppo.',
+  '.oppo.',
+  '.oggo.',
+  '..oo..',
+];
+const STAFF_DIAG = [
+  '.......oo.',
+  '......oxmo',
+  '.....oxmGo',
+  '.....omGo.',
+  '....ogo...',
+  '...opo....',
+  '..opo.....',
+  '.opo......',
+  'opo.......',
+  'oo........',
+  '..........',
+];
+const BOW = [
+  '.oo...',
+  'o.mo..',
+  'o..mo.',
+  'o...mo',
+  'o...xo',
+  'o...mo',
+  'o..gpo',
+  'o..gpo',
+  'o..mo.',
+  'o.mo..',
+  '.oo...',
+];
+const GUN = [
+  '.oooooooo',
+  'oxxmmmmmo',
+  'ommGoooo.',
+  'oppo.....',
+  'oppo.....',
+  '.oo......',
+];
+const rotateCCW = (rows) => rotateCW(rotateCW(rotateCW(rows)));
+
+export const ARROW_FX = [
+  '......ww..',
+  'wwwwwwwwww',
+  '......ww..',
+];
+export const FLASH_FX = [
+  '..w..',
+  'w.w.w',
+  '.www.',
+  'w.w.w',
+  '..w..',
+];
+export const MAGIC_FX = [
+  '...w...',
+  '..w.w..',
+  '.w...w.',
+  'w..w..w',
+  '.w...w.',
+  '..w.w..',
+  '...w...',
+];
+
 export const SLASH = [
   '..ww....',
   '....ww..',
@@ -127,6 +201,37 @@ export const SLASH = [
   '....ww..',
   '..ww....',
 ];
+
+/** 무기 종류별 자세 그림 + 공격 효과 위치 */
+export const WEAPON_SETS = {
+  sword: { ...WEAPON_SPRITES, fx: SLASH, fxAt: { dx: 4, dy: -9 } },
+  staff: {
+    up: { rows: STAFF_UP, grip: { x: 2, y: 9 } },
+    fwd: { rows: rotateCW(STAFF_UP), grip: { x: 3, y: 2 } },
+    diagUp: { rows: STAFF_DIAG, grip: { x: 2, y: 7 } },
+    diagDown: { rows: flipY(STAFF_DIAG), grip: { x: 2, y: 3 } },
+    fx: MAGIC_FX,
+    fxAt: { dx: 9, dy: -6 },
+  },
+  bow: {
+    // 활은 팔을 앞으로 뻗어 몸 앞에서 든다
+    up: { rows: BOW, grip: { x: 4, y: 7 } },
+    fwd: { rows: BOW, grip: { x: 4, y: 7 } },
+    diagUp: { rows: BOW, grip: { x: 4, y: 7 } },
+    diagDown: { rows: BOW, grip: { x: 4, y: 7 } },
+    handDx: 3,
+    fx: ARROW_FX,
+    fxAt: { dx: 2, dy: -3 },
+  },
+  gun: {
+    up: { rows: rotateCCW(GUN), grip: { x: 3, y: 6 } },
+    fwd: { rows: GUN, grip: { x: 2, y: 3 } },
+    diagUp: { rows: GUN, grip: { x: 2, y: 3 } },
+    diagDown: { rows: GUN, grip: { x: 2, y: 3 } },
+    fx: FLASH_FX,
+    fxAt: { dx: 8, dy: -5 },
+  },
+};
 
 /* ───────────── 슬라임 (16×12, 오른쪽 바라봄) ───────────── */
 
@@ -232,6 +337,52 @@ export const POTION_PALETTE = { o: INK, n: '#a0703a', w: '#ffe4ea', r: '#ff4d6d'
 
 /* ───────────── 장비 아이콘 (12×12) ───────────── */
 // m 금속, M 금속 그림자, x 밝은 면, c 천, C 천 그림자, p 손잡이, y 장식
+
+/** 무기 종류별 장비 아이콘 (12×12, 검은 ITEM_ICONS.weapon) */
+export const WEAPON_ICONS = {
+  bow: [
+    '...oo.......',
+    '...omo......',
+    '...o.mo.....',
+    '...o..mo....',
+    '...o...mo...',
+    '...o..oppo..',
+    '...o..oppo..',
+    '...o...mo...',
+    '...o..mo....',
+    '...o.mo.....',
+    '...omo......',
+    '...oo.......',
+  ],
+  gun: [
+    '............',
+    '............',
+    '.oooooooooo.',
+    'oxxmmmmmmmmo',
+    'ommmmmmmmmo.',
+    'oMMMoooooo..',
+    'oppo.oo.....',
+    'oppo..o.....',
+    'oppo.oo.....',
+    'oppo........',
+    '.oo.........',
+    '............',
+  ],
+  staff: [
+    '.........oo.',
+    '........oxmo',
+    '.......oxmMo',
+    '.......omMo.',
+    '......opo...',
+    '.....opo....',
+    '....opo.....',
+    '...opo......',
+    '..opo.......',
+    '.opo........',
+    'opo.........',
+    'oo..........',
+  ],
+};
 
 export const ITEM_ICONS = {
   weapon: [
@@ -547,12 +698,15 @@ export function composeHero(pose, gear = {}) {
   const hand = pose === 'atk0'
     ? { x: ox + 14 + lean, y: oy + 12 } // 칼을 세워 들고 몸을 뒤로 젖힘
     : { x: ox + HERO_HAND.x + lean, y: oy + HERO_HAND.y };
-  const weapon = gear.weapon && weaponPose ? WEAPON_SPRITES[weaponPose] : null;
+  const wtype = gear.weapon ? gear.weapon.type || gear.weapon.weaponType || 'sword' : 'sword';
+  const set = WEAPON_SETS[wtype] || WEAPON_SETS.sword;
+  const weapon = gear.weapon && weaponPose ? set[weaponPose] : null;
+  if (set.handDx) hand.x += set.handDx;
   const behind = weaponPose === 'back';
   if (weapon && behind) put(weapon.rows, hand.x - weapon.grip.x, hand.y - weapon.grip.y, WMAP);
   put(body, ox + lean, oy);
   if (weapon && !behind) put(weapon.rows, hand.x - weapon.grip.x, hand.y - weapon.grip.y, WMAP);
-  if (pose === 'atk1') put(SLASH, hand.x + 4, hand.y - 9, { w: '6' });
+  if (pose === 'atk1') put(set.fx, hand.x + set.fxAt.dx, hand.y + set.fxAt.dy, { w: '6' });
   const wp = weaponPalette(gear.weapon ? gear.weapon.rarity : 'common');
   const palette = {
     ...heroPalette(gear),

@@ -310,7 +310,10 @@ function refreshTray() {
 
 function tick() {
   const today = dayKey(Date.now(), state.settings.dayStartHour);
-  if (today !== lastDay) {
+  const now = Date.now();
+  // 날짜가 바뀌었거나, 경매장 매물이 팔릴(끝날) 시각이 지났으면 엔진을 깨운다
+  const auctionDue = ((state.auction && state.auction.listings) || []).some((l) => (l.sellAt && now >= l.sellAt) || now >= l.expiresAt);
+  if (today !== lastDay || auctionDue) {
     lastDay = today;
     dispatch({ type: 'system/tick' });
   }

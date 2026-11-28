@@ -3,12 +3,13 @@ import {
   CATEGORIES, CATEGORY_ORDER, DIFFICULTIES, RARITIES, SLOTS, WEEKDAYS_KO, GROUP_COLORS, DEFAULT_GROUP_ID,
 } from '../../core/constants.js';
 import { heroStats } from '../../core/progression.js';
-import { sellPrice, itemScore } from '../../core/items.js';
+import { sellPrice, itemScore, weaponTypeOf } from '../../core/items.js';
+import { classWeapon, WEAPON_LABELS } from '../../core/jobs.js';
 import { uiIcon, catIcon, itemIcon } from '../shared/sprite-canvas.js';
 import { esc, stars, openModal, confirmDialog } from './ui.js';
 
 export const STAT_LABELS = { atk: '공격력', def: '방어력', hp: '체력', luck: '행운' };
-export const SOURCE_LABELS = { quest: '임무 보상', daily: '임무 보상', task: '임무 보상', perfect: '퍼펙트 데이', levelup: '레벨 달성 보상', shop: '상점', starter: '기본 지급', fieldBoss: '필드 보스', raid: '레이드' };
+export const SOURCE_LABELS = { quest: '임무 보상', daily: '임무 보상', task: '임무 보상', perfect: '퍼펙트 데이', levelup: '레벨 달성 보상', shop: '상점', starter: '기본 지급', fieldBoss: '필드 보스', raid: '레이드', job: '전직 기념', auction: '경매장' };
 
 const seg = (name, options, value) => `<div class="seg" data-name="${name}">${options
   .map((o) => `<button type="button" data-v="${o.v}" class="${String(o.v) === String(value) ? 'on' : ''}">${o.html}</button>`)
@@ -274,13 +275,17 @@ function statRows(item, compare) {
 }
 
 export function itemSubline(item) {
-  return `${RARITIES[item.rarity].label} · ${SLOTS[item.slot].label} · Lv ${item.level} · ${SOURCE_LABELS[item.source] || ''}`;
+  const slot = item.slot === 'weapon' ? `무기(${WEAPON_LABELS[weaponTypeOf(item)]})` : SLOTS[item.slot].label;
+  return `${RARITIES[item.rarity].label} · ${slot} · Lv ${item.level} · ${SOURCE_LABELS[item.source] || ''}${item.raid ? ' · 레이드 전용' : ''}`;
 }
 
-export function openItemDetail(ctx, item) {
+export function openItemDetail(ctx, item, { preview = false } = {}) {
   const st = heroStats(ctx.state);
   const current = st.gear[item.slot];
   const equipped = current && current.id === item.id;
+  // 직업이 있으면 계열 무기만
+  const need = classWeapon(ctx.state.job ? ctx.state.job.path : []);
+  const wrongWeapon = item.slot === 'weapon' && need && weaponTypeOf(item) !== need;
   const compare = current && !equipped ? current : null;
   const better = compare ? itemScore(item) - itemScore(compare) : 0;
   const html = `
@@ -292,14 +297,17 @@ export function openItemDetail(ctx, item) {
       </div>
     </div>
     <div class="item-stats">${statRows(item, compare)}</div>
+    ${wrongWeapon ? `<div class="sub" style="color:var(--warn);margin-top:6px">${esc(st.job.name)} 직업은 ${WEAPON_LABELS[need]}만 장착할 수 있어요 (경매장에 팔 수 있어요)</div>` : ''}
+    ${preview ? `<div class="modal-actions"><span class="muted small">경매장 매물 미리보기</span><span class="spacer"></span><button class="btn primary" data-a="close">닫기</button></div>` : `
     <div class="modal-actions">
       <button class="btn small ghost" data-a="lock">${uiIcon('lock', 1)} ${item.locked ? '잠금 해제' : '잠금'}</button>
       <button class="btn small" data-a="sell" ${item.locked || equipped ? 'disabled' : ''}>판매 <span class="price">${sellPrice(item)}G</span></button>
       <span class="spacer"></span>
-      ${equipped ? '<button class="btn" data-a="unequip">해제</button>' : '<button class="btn primary" data-a="equip">장착</button>'}
-    </div>`;
+      ${equipped ? '<button class="btn" data-a="unequip">해제</button>' : `<button class="btn primary" data-a="equip" ${wrongWeapon ? 'disabled' : ''}>장착</button>`}
+    </div>`}`;
   openModal(html, (el, close) => {
     const on = (a, fn) => { const b = el.querySelector(`[data-a=${a}]`); if (b) b.addEventListener('click', fn); };
+    on('close', close);
     on('equip', async () => { if ((await ctx.act('item/equip', { id: item.id })).ok) close(); });
     on('unequip', async () => { if ((await ctx.act('item/unequip', { slot: item.slot })).ok) close(); });
     on('lock', async () => { if ((await ctx.act('item/lock', { id: item.id })).ok) close(); });

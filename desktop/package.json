@@ -1,7 +1,7 @@
 {
   "name": "calendar-rpg",
   "productName": "Calendar RPG",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "일정·일일임무를 RPG처럼 — 작업표시줄 위에서 싸우는 도트 용사 캘린더 위젯",
   "author": "Calendar RPG",
   "type": "module",

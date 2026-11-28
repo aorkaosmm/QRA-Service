@@ -1,7 +1,7 @@
 // 스프라이트 → 캔버스/이미지 변환 (캐시). 렌더러 전용.
 import { rasterize, flipX } from '../../shared/pixel.js';
 import {
-  UI_ICONS, CATEGORY_ICONS, ITEM_ICONS, itemIconPalette, composeHero,
+  UI_ICONS, CATEGORY_ICONS, ITEM_ICONS, WEAPON_ICONS, itemIconPalette, composeHero,
   CHEST_CLOSED, CHEST_OPEN, CHEST_PALETTE, CHEST_GOLD_PALETTE, POTION, POTION_PALETTE,
   GEM_ROWS, gemPalette, HORN, HORN_PALETTE, CHEST_RAID_PALETTE, MONSTER_COLORS, SLIME_FRAMES, SLIME_COLORS, CROWN, CROWN_PALETTE,
 } from '../../shared/sprites.js';
@@ -72,8 +72,15 @@ export function catIcon(category, scale = 2, cls = '') {
 }
 
 export function itemIcon(item, scale = 3, cls = '') {
-  const rows = ITEM_ICONS[item.slot];
-  return img(spriteURL(`item:${item.slot}:${item.rarity}`, rows, itemIconPalette(item.rarity)), 12, 12, scale, cls);
+  const wt = item.slot === 'weapon' ? item.weaponType || 'sword' : '';
+  const rows = wt && wt !== 'sword' ? WEAPON_ICONS[wt] : ITEM_ICONS[item.slot];
+  return img(spriteURL(`item:${item.slot}:${wt}:${item.rarity}`, rows, itemIconPalette(item.rarity)), 12, 12, scale, cls);
+}
+
+/** 무기 종류 아이콘 (직업 화면) */
+export function weaponIcon(type, scale = 2, rarity = 'rare') {
+  const rows = type && type !== 'sword' ? WEAPON_ICONS[type] : ITEM_ICONS.weapon;
+  return img(spriteURL(`wicon:${type}:${rarity}`, rows, itemIconPalette(rarity)), 12, 12, scale);
 }
 
 export function slotIcon(slot, scale = 3, cls = '') {
@@ -102,7 +109,8 @@ export function drawHero(canvas, pose, gear, { scale = 3, flip = false } = {}) {
 }
 
 export function gearSig(gear) {
-  return ['weapon', 'helmet', 'armor', 'cape'].map((s) => (gear[s] ? gear[s].rarity[0] : '-')).join('');
+  const w = gear.weapon ? (gear.weapon.type || gear.weapon.weaponType || 'sword')[0] : '';
+  return ['weapon', 'helmet', 'armor', 'cape'].map((s) => (gear[s] ? gear[s].rarity[0] : '-')).join('') + w;
 }
 
 /* ── 던전 · 레이드 ─────────────────────────────── */
@@ -122,8 +130,9 @@ export function gearFrom(g = {}) {
   const out = {};
   for (const slot of ['weapon', 'helmet', 'armor', 'cape']) {
     const v = g[slot];
-    out[slot] = !v ? null : typeof v === 'string' ? { rarity: v } : { rarity: v.rarity };
+    out[slot] = !v ? null : typeof v === 'string' ? { rarity: v } : { rarity: v.rarity, type: v.type || v.weaponType };
   }
+  if (out.weapon && !out.weapon.type) out.weapon.type = g.weaponType || 'sword';
   return out;
 }
 

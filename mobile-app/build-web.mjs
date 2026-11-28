@@ -70,6 +70,9 @@ const sprites = {
   hero: {
     w: 32, h: 24, footX: 16,
     poses: Object.fromEntries(poses.map((p) => [p, composeHero(p, { weapon: { rarity: 'common' } }).rows])),
+    // 무기 종류별 자세 (궁수 활 · 거너 총 · 마법사 지팡이). 색은 parts.weapon 팔레트를 같이 쓴다
+    posesByWeapon: Object.fromEntries(['sword', 'bow', 'gun', 'staff'].map((t) => [t,
+      Object.fromEntries(poses.map((p) => [p, composeHero(p, { weapon: { rarity: 'common', type: t } }).rows]))])),
     base,
     parts,
   },

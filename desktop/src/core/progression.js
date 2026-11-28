@@ -1,6 +1,7 @@
 // 레벨·경험치·능력치 계산.
 
 import { xpToNext, SLOT_ORDER, POWER_BANDS } from './constants.js';
+import { jobBonus, currentJob, jobSkill } from './jobs.js';
 
 export function equippedItems(state) {
   const byId = new Map(state.inventory.map((it) => [it.id, it]));
@@ -24,15 +25,20 @@ export function heroStats(state) {
     sum.hp += it.hp;
     sum.luck += it.luck;
   }
-  const luck = sum.luck;
+  // 직업 보너스(전직 경로 합)를 비율로 곱한다
+  const path = state.job ? state.job.path : [];
+  const jb = jobBonus(path);
+  const luck = Math.round(sum.luck * (1 + jb.luck) + jb.luck * 30);
   return {
     level,
     xp,
     xpNext: xpToNext(level),
-    maxHp: 60 + (level - 1) * 12 + sum.hp,
-    atk: 6 + (level - 1) * 2 + sum.atk,
-    def: 2 + (level - 1) + sum.def,
+    maxHp: Math.round((60 + (level - 1) * 12 + sum.hp) * (1 + jb.hp)),
+    atk: Math.round((6 + (level - 1) * 2 + sum.atk) * (1 + jb.atk)),
+    def: Math.round((2 + (level - 1) + sum.def) * (1 + jb.def)),
     luck,
+    job: currentJob(path),
+    skill: jobSkill(path),
     critChance: Math.min(0.5, 0.05 + luck * 0.006),
     critMult: 1.8,
     dropBonus: Math.min(0.25, luck * 0.004),

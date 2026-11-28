@@ -18,6 +18,7 @@ import { dungeonView, dungeonBack, openGuilds } from './views/dungeon.js';
 import { rankingView } from './views/ranking.js';
 import { rowActions } from './views/rows.js';
 import { mountChat } from './chat.js';
+import { jobReady, jobLabel } from './jobs-ui.js';
 
 const TABS = [
   { key: 'calendar', label: '캘린더', icon: 'calendar', view: calendarView },
@@ -159,6 +160,17 @@ async function main() {
     const s = ctx.state;
     const st = heroStats(s);
     $('hero-name').textContent = s.profile.name;
+    // 이름 옆 직업 표시
+    let jobTag = document.getElementById('hero-job');
+    if (!jobTag) {
+      jobTag = document.createElement('span');
+      jobTag.id = 'hero-job';
+      jobTag.className = 'hero-job';
+      $('hero-name').after(jobTag);
+    }
+    jobTag.textContent = st.job ? st.job.name : '';
+    jobTag.hidden = !st.job;
+    if (st.job) jobTag.style.setProperty('--jc', st.job.color);
     $('hero-lv').textContent = st.level;
     $('xp-fill').style.width = `${Math.min(100, (st.xp / st.xpNext) * 100)}%`;
     $('xp-text').textContent = `${st.xp} / ${st.xpNext} EXP`;
@@ -196,7 +208,7 @@ async function main() {
     const w = fieldBossWindow(Date.now());
     const fb = ctx.state.fieldBoss;
     const bossCall = w.phase === 'open' && !(fb.enteredAt && fb.day === w.day);
-    const badges = { bag: unseen, today: left, dungeon: bossCall ? '!' : 0 };
+    const badges = { bag: unseen || (jobReady(ctx.state) ? '!' : 0), today: left, dungeon: bossCall ? '!' : 0, shop: ctx.state.auction.mailbox.length };
     $('tabs').innerHTML = TABS.map((tab) => `
       <button data-tab="${tab.key}" class="${ctx.ui.tab === tab.key ? 'active' : ''}" title="${tab.label} (Ctrl+${TABS.indexOf(tab) + 1})">
         ${uiIcon(tab.icon, 2)}<span>${tab.label}</span>
@@ -356,6 +368,13 @@ async function main() {
         case 'equip':
           if (ev.item) toast(`<span class="t-${ev.item.rarity}">${esc(ev.item.name)}</span> 장착!`, { life: 1600 });
           break;
+        case 'auctionSold':
+          sfx('coin');
+          toast(`${uiIcon('coin', 1)} 경매장: <b>${esc(ev.name)}</b> 판매! 정산함에 +${ev.net.toLocaleString('ko-KR')}G`, { life: 3600 });
+          break;
+        case 'auctionExpired':
+          toast(`경매장: ${esc(ev.name)} 기간이 끝나 정산함으로 돌아왔어요`, { life: 3000 });
+          break;
         case 'dayChanged':
           ctx.today = ev.day;
           toast('새로운 하루가 시작됐어요. 오늘의 임무를 확인하세요!', { life: 3000 });
@@ -382,9 +401,11 @@ async function main() {
   ctx.chat = mountChat(ctx, api, { openGuilds });
   window.__calendarRpgBack = () => ctx.ui.tab === 'dungeon' && dungeonBack(ctx);
 
-  // 날짜가 바뀌었는지 1분마다 확인 (화면 갱신). 필드 보스 '!' 표시도 같이
+  // 날짜가 바뀌었는지 1분마다 확인 (화면 갱신). 필드 보스 '!' 표시, 경매장 판매 판정도 같이
   setInterval(() => {
     renderTabs();
+    const nowMs = Date.now();
+    if (ctx.state.auction.listings.some((l) => (l.sellAt && nowMs >= l.sellAt) || nowMs >= l.expiresAt)) ctx.act('system/tick', {});
     const now = dayKey(Date.now(), ctx.state.settings.dayStartHour);
     if (now !== ctx.today) {
       ctx.today = now;

@@ -2,6 +2,7 @@
 
 import { RARITIES, RARITY_ORDER, SLOT_ORDER, PITY } from './constants.js';
 import { newId } from './rng.js';
+import { WEAPON_TYPES } from './jobs.js';
 
 const NAMES = {
   weapon: {
@@ -30,7 +31,34 @@ const NAMES = {
   },
 };
 
+/** 검 말고 다른 무기 이름 (검은 NAMES.weapon) */
+const WEAPON_NAMES = {
+  bow: {
+    common: ['훈련용 단궁', '낡은 나무활', '사냥꾼의 활', '견습 궁수의 활'],
+    rare: ['푸른 깃 장궁', '바람결 활', '청람 사냥활', '은빛 시위 활'],
+    epic: ['자수정 정령궁', '폭풍을 부르는 활', '월광 장궁', '심연의 흑궁'],
+    legendary: ['여명을 쏘는 성궁', '태양왕의 황금활', '별을 꿰는 활 「유성」', '천둥 날개 대궁'],
+  },
+  gun: {
+    common: ['녹슨 권총', '훈련용 소총', '낡은 화승총', '견습 거너의 권총'],
+    rare: ['푸른 강철 권총', '파도결 리볼버', '청람 머스킷', '은빛 연발총'],
+    epic: ['자수정 마도총', '폭풍 연발포', '월광 저격총', '심연의 흑총'],
+    legendary: ['여명의 황금 리볼버', '태양왕의 성포', '별을 쏘는 총 「혜성」', '천둥 비늘 대포'],
+  },
+  staff: {
+    common: ['나무 지팡이', '견습 마법사의 지팡이', '낡은 참나무 지팡이', '훈련용 완드'],
+    rare: ['푸른 수정 지팡이', '파도결 완드', '청람 마도봉', '은빛 별 지팡이'],
+    epic: ['자수정 룬스태프', '폭풍을 부르는 지팡이', '월광 마도봉', '심연의 해골 지팡이'],
+    legendary: ['여명의 성스러운 지팡이', '태양왕의 황금 홀', '별을 품은 지팡이 「은하」', '천둥 용의 지팡이'],
+  },
+};
+
 const PREFIXES = ['튼튼한', '가벼운', '날렵한', '반짝이는', '단단한', '오래된', '행운의'];
+
+/** 무기 종류 (예전 무기는 모두 검) */
+export function weaponTypeOf(item) {
+  return item && item.slot === 'weapon' ? item.weaponType || 'sword' : null;
+}
 
 /** 천장 반영 등급 추첨. pity 객체를 갱신한다. */
 export function rollRarity(rng, pity, weights) {
@@ -49,21 +77,27 @@ export function rollRarity(rng, pity, weights) {
   return rarity;
 }
 
-/** 무작위 장비 생성 */
-export function generateItem(rng, { level, rarity, slot, source = 'quest', now = Date.now() }) {
+/**
+ * 무작위 장비 생성. 무기는 weaponType 을 정하거나, weaponPref(내 계열 무기)가 있으면 75% 확률로 그 무기
+ */
+export function generateItem(rng, { level, rarity, slot, source = 'quest', now = Date.now(), weaponType = null, weaponPref = null }) {
   const s = slot || rng.pick(SLOT_ORDER);
   const r = RARITIES[rarity];
   const base = (3 + level * 1.2) * r.mult;
   const power = Math.max(1, Math.round(base * rng.range(0.85, 1.15)));
-  let name = rng.pick(NAMES[s][rarity]);
+  let wt = null;
+  if (s === 'weapon') wt = weaponType || (weaponPref && rng.chance(0.75) ? weaponPref : rng.pick(WEAPON_TYPES));
+  let name = rng.pick(wt && wt !== 'sword' ? WEAPON_NAMES[wt][rarity] : NAMES[s][rarity]);
   if ((rarity === 'common' || rarity === 'rare') && rng.chance(0.5)) {
     name = `${rng.pick(PREFIXES)} ${name}`;
   }
   const stats = { atk: 0, def: 0, hp: 0, luck: 0 };
   switch (s) {
     case 'weapon':
-      stats.atk = power;
-      if (r.rank >= 2) stats.luck = Math.round(power * 0.15);
+      // 무기 종류마다 조금씩 다르게: 활 = 행운↑, 총 = 공격↑, 지팡이 = 체력·행운
+      stats.atk = Math.round(power * ({ bow: 0.9, gun: 1.05, staff: 0.95 }[wt] || 1));
+      stats.luck = Math.round(power * ({ bow: 0.3, gun: 0.15, staff: 0.2 }[wt] || 0)) + (r.rank >= 2 ? Math.round(power * 0.15) : 0);
+      if (wt === 'staff') stats.hp = Math.round(power * 0.5);
       break;
     case 'helmet':
       stats.def = Math.max(1, Math.round(power * 0.5));
@@ -78,11 +112,11 @@ export function generateItem(rng, { level, rarity, slot, source = 'quest', now =
       stats.atk = Math.round(power * 0.3);
       break;
   }
-  return makeItem({ slot: s, rarity, name, level, ...stats, source, now });
+  return makeItem({ slot: s, rarity, name, level, ...stats, source, now, weaponType: wt });
 }
 
-export function makeItem({ slot, rarity, name, level = 1, atk = 0, def = 0, hp = 0, luck = 0, source = 'quest', now = Date.now() }) {
-  return {
+export function makeItem({ slot, rarity, name, level = 1, atk = 0, def = 0, hp = 0, luck = 0, source = 'quest', now = Date.now(), weaponType = null }) {
+  const it = {
     id: newId('it_'),
     slot,
     rarity,
@@ -96,6 +130,8 @@ export function makeItem({ slot, rarity, name, level = 1, atk = 0, def = 0, hp =
     source,
     createdAt: now,
   };
+  if (slot === 'weapon') it.weaponType = weaponType || 'sword';
+  return it;
 }
 
 export function sellPrice(item) {

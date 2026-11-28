@@ -9,12 +9,12 @@
 
 | 파일 | 설명 |
 |---|---|
-| [CalendarRPG-Setup-0.3.0.exe](https://github.com/aorkaosmm/QRA-Service/releases/download/calendar-rpg-v0.3.0/CalendarRPG-Setup-0.3.0.exe) | 설치판 — Windows 알림, 시작 메뉴, Windows 시작 시 실행 |
-| [CalendarRPG-Portable-0.3.0.exe](https://github.com/aorkaosmm/QRA-Service/releases/download/calendar-rpg-v0.3.0/CalendarRPG-Portable-0.3.0.exe) | 포터블 — 설치 없이 바로 실행 |
+| [CalendarRPG-Setup-0.4.0.exe](https://github.com/aorkaosmm/QRA-Service/releases/download/calendar-rpg-v0.4.0/CalendarRPG-Setup-0.4.0.exe) | 설치판 — Windows 알림, 시작 메뉴, Windows 시작 시 실행 |
+| [CalendarRPG-Portable-0.4.0.exe](https://github.com/aorkaosmm/QRA-Service/releases/download/calendar-rpg-v0.4.0/CalendarRPG-Portable-0.4.0.exe) | 포터블 — 설치 없이 바로 실행 |
 
 ### Android
 
-[CalendarRPG-0.5.0.apk](https://github.com/aorkaosmm/QRA-Service/releases/download/calendar-rpg-android-v0.5.0/CalendarRPG-0.5.0.apk) — 던전(필드 보스·요일 던전·레이드)·전투력 랭킹·채팅, 화면 위 용사(다른 앱 위에서 슬라임과 싸움), 홈 화면 위젯(오늘의 임무·용사 전투 장면), 라이브 배경화면 포함. 폰에서 내려받아 설치하고, 막히면 "출처를 알 수 없는 앱 설치"를 허용해 주세요.
+[CalendarRPG-0.6.0.apk](https://github.com/aorkaosmm/QRA-Service/releases/download/calendar-rpg-android-v0.6.0/CalendarRPG-0.6.0.apk) — 직업(3차 전직까지 84개)·경매장, 던전(필드 보스·요일 던전·레이드)·전투력 랭킹·채팅, 화면 위 용사(다른 앱 위에서 슬라임과 싸움), 홈 화면 위젯(오늘의 임무·용사 전투 장면), 라이브 배경화면 포함. 폰에서 내려받아 설치하고, 막히면 "출처를 알 수 없는 앱 설치"를 허용해 주세요.
 
 ### Windows 참고
 
@@ -34,6 +34,16 @@
 | **채팅** | 필드(지금 필드의 무작위 대화) · 파티 · 길드 · 시스템(내 전설 획득·레벨 업·레이드 토벌·필드 보스 결과·오후 9시 예고) |
 
 > 계정 서버 연결 전이라 **다른 플레이어(필드 보스 참가자·파티원·길드원·랭킹·채팅 상대)는 고정 시드로 만든 가상 플레이어 300명**입니다. 모든 기기에서 같은 플레이어가 보이고, 서버가 생기면 `src/core/world.js` 자리를 서버 응답으로 바꿉니다.
+
+## 직업 · 경매장
+
+| 콘텐츠 | 규칙 |
+|---|---|
+| **직업** | 1차 **전사·궁수·거너·마법사** → 전직마다 4갈래로 나뉘어 2차 16개 → 3차 64개 (모두 84개). 전직 레벨 **10 / 30 / 60**. 비용: 1차 300G · 2차 2,000G + 직업 보석 30 · 3차 10,000G + 직업 보석 100 + 다른 색 보석 각 20 (직업 보석: 전사 루비 · 궁수 에메랄드 · 거너 호박석 · 마법사 자수정) |
+| **직업 효과** | 직업마다 성향(공격·방어·치명·균형·마력·체력·지원)에 따라 능력치 보너스가 쌓이고(→ 전투력), 던전 **필살기** 이름과 배율이 바뀝니다(×6 → 7 → 8.5 → 10.5). 계열마다 무기가 달라요: 전사 검 · 궁수 활 · 거너 총 · 마법사 지팡이 (직업이 있으면 계열 무기만 장착, 장비 드롭도 계열 무기가 75%). 1차 전직 때 기념 무기(희귀)를 받아 바로 장착. 직업 초기화는 차수 × 1,000G |
+| **경매장** | 상점 탭 → 경매장. **구매**: 매시간 바뀌는 매물 36개(내 레벨 근처 장비·가끔 레이드 장비·보석 묶음), 시세 대비 '싸요/시세/비싸요' 표시. **판매**: 장비·보석을 가격과 기간(12·24·48시간)으로 등록(등록비 1%, 최소 5G) → 팔리면 수수료 5%를 뺀 금액이 **정산함**으로. 시세보다 싸면 몇 분, 비슷하면 몇 시간, 많이 비싸면 안 팔리고 기간이 끝나면 돌아옵니다. 최대 10개 등록 |
+
+> 경매장에서 사고파는 상대도 지금은 가상 플레이어입니다(계정 서버 연결은 다음 단계).
 
 ## 구성
 

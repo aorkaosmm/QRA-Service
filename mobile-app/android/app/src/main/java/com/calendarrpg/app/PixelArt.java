@@ -115,12 +115,23 @@ final class PixelArt {
         return pal;
     }
 
+    /** 장착한 무기 종류 (sword · bow · gun · staff). 예전 요약에는 없어서 검 */
+    static String weaponType(JSONObject gear) {
+        String wt = gear == null || gear.isNull("weaponType") ? "sword" : gear.optString("weaponType", "sword");
+        return wt.isEmpty() ? "sword" : wt;
+    }
+
     static synchronized Bitmap hero(Context c, String pose, JSONObject gear, int scale, boolean flip) {
-        String key = "h|" + pose + "|" + gearSig(gear) + "|" + scale + "|" + flip;
+        String wt = weaponType(gear);
+        String key = "h|" + pose + "|" + gearSig(gear) + "|" + wt + "|" + scale + "|" + flip;
         Bitmap b = cache.get(key);
         if (b != null) return b;
         JSONObject hero = data(c).optJSONObject("hero");
-        JSONArray rows = hero == null ? null : hero.optJSONObject("poses").optJSONArray(pose);
+        JSONObject byWeapon = hero == null ? null : hero.optJSONObject("posesByWeapon");
+        JSONObject poses = byWeapon != null && byWeapon.optJSONObject(wt) != null
+                ? byWeapon.optJSONObject(wt)
+                : (hero == null ? null : hero.optJSONObject("poses"));
+        JSONArray rows = poses == null ? null : poses.optJSONArray(pose);
         if (rows == null) rows = new JSONArray().put(".");
         b = render(rows, heroPalette(c, gear), scale, flip);
         trim();

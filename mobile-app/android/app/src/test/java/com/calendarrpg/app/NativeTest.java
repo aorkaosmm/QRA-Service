@@ -94,6 +94,27 @@ public class NativeTest {
     }
 
     @Test
+    public void heroHoldsJobWeapon() throws Exception {
+        JSONObject sword = new JSONObject("{\"weapon\":\"rare\",\"weaponType\":\"sword\"}");
+        JSONObject bow = new JSONObject("{\"weapon\":\"rare\",\"weaponType\":\"bow\"}");
+        JSONObject staff = new JSONObject("{\"weapon\":\"rare\",\"weaponType\":\"staff\"}");
+        JSONObject old = new JSONObject("{\"weapon\":\"rare\"}");
+        Bitmap s = PixelArt.hero(ctx, "atk1", sword, 6, false);
+        Bitmap b = PixelArt.hero(ctx, "atk1", bow, 6, false);
+        Bitmap st = PixelArt.hero(ctx, "atk1", staff, 6, false);
+        assertFalse("궁수는 활", s.sameAs(b));
+        assertFalse("마법사는 지팡이", s.sameAs(st));
+        assertTrue("예전 요약(무기 종류 없음)은 검", s.sameAs(PixelArt.hero(ctx, "atk1", old, 6, false)));
+        Bitmap sheet = Bitmap.createBitmap(s.getWidth() * 3, s.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas cv = new Canvas(sheet);
+        cv.drawColor(Color.parseColor("#191626"));
+        cv.drawBitmap(s, 0, 0, null);
+        cv.drawBitmap(b, s.getWidth(), 0, null);
+        cv.drawBitmap(st, s.getWidth() * 2, 0, null);
+        save(sheet, "hero-weapons.png");
+    }
+
+    @Test
     public void wallpaperDrawsScene() throws Exception {
         WallpaperScene s = new WallpaperScene(ctx);
         s.reloadState();

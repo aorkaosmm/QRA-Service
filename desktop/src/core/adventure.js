@@ -93,7 +93,8 @@ export function simulateFieldBoss(room, { enteredSec = 0, reportSec = room.durat
   const series = room.members.map((m) => damageSeries(`${room.seed}|${m.id}`, m.cp, T, m.isMe ? from : 0));
   const meIdx = room.members.findIndex((m) => m.isMe);
   const myDps = dpsOf(room.members[meIdx].cp);
-  const extraPerSec = (inputs.taps * myDps * TAP_MULT + inputs.skills * myDps * SKILL_MULT) / (until - from);
+  const skillMult = room.members[meIdx].skillMult || SKILL_MULT;
+  const extraPerSec = (inputs.taps * myDps * TAP_MULT + inputs.skills * myDps * skillMult) / (until - from);
   const damage = new Array(room.members.length).fill(0);
   let total = 0;
   let deathSec = null;
@@ -137,7 +138,8 @@ export function simulateRaid(boss, members, { seed, reportSec = RAID.durationSec
   const series = members.map((m) => damageSeries(`${seed}|${m.id}`, m.cp, T));
   const meIdx = members.findIndex((m) => m.isMe);
   const myDps = dpsOf(members[meIdx].cp);
-  const extraPerSec = (inputs.taps * myDps * TAP_MULT + inputs.skills * myDps * SKILL_MULT) / until;
+  const skillMult = members[meIdx].skillMult || SKILL_MULT;
+  const extraPerSec = (inputs.taps * myDps * TAP_MULT + inputs.skills * myDps * skillMult) / until;
   const damage = new Array(members.length).fill(0);
   let total = 0;
   let killSec = null;
@@ -168,6 +170,7 @@ export function raidWeights(tier) {
 }
 
 export const RAID_SLOT_NAMES = { weapon: '대검', helmet: '투구', armor: '갑주', cape: '망토' };
+export const RAID_WEAPON_NAMES = { sword: '대검', bow: '장궁', gun: '대포', staff: '지팡이' };
 
 /* ── 요일 던전 ─────────────────────────────── */
 
